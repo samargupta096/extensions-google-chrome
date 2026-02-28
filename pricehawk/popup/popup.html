@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PriceHawk</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <style>
+    .product-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .form-row { display: flex; gap: 8px; }
+    .product-list { max-height: 380px; overflow-y: auto; }
+    .product-item { padding: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 10px; transition: all 0.2s; }
+    .product-item:hover { border-color: var(--border-glow); background: var(--bg-card-hover); }
+    .product-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .product-domain { font-size: 11px; color: var(--accent-cyan); margin-bottom: 10px; font-weight: 500; }
+    .price-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .price-current { font-size: 22px; font-weight: 800; color: var(--accent-green); letter-spacing: -0.5px; }
+    .price-stats { display: flex; gap: 14px; font-size: 11px; color: var(--text-tertiary); margin-bottom: 10px; }
+    .price-stat span { font-weight: 700; color: var(--text-secondary); }
+    .chart-mini { height: 80px; margin-bottom: 10px; border-radius: 6px; overflow: hidden; }
+    .fake-sale-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; background: rgba(255,107,107,0.15); color: var(--accent-red); margin-left: 8px; }
+    .good-deal-badge { background: rgba(0,184,148,0.15); color: var(--accent-green); }
+    .ai-analysis { margin-top: 10px; padding: 12px; background: rgba(108,92,231,0.06); border: 1px solid rgba(108,92,231,0.1); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); line-height: 1.6; animation: fadeIn 0.3s ease; }
+    .section-title { font-size: 11px; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin: 18px 0 10px; }
+  </style>
+</head>
+<body>
+  <div class="popup-container">
+    <div class="header">
+      <div class="header-title">
+        <span style="font-size:22px;">💰</span>
+        <h1>PriceHawk</h1>
+      </div>
+      <div class="ollama-status disconnected" id="ollama-status"><span class="status-dot offline"></span><span>AI</span></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="track">🏷️ Track</button>
+      <button class="tab" data-tab="products">📦 Products</button>
+      <button class="tab" data-tab="stats">📊 Stats</button>
+    </div>
+
+    <div class="tab-content active" id="tab-track">
+      <div class="product-form">
+        <input type="text" class="input" id="input-name" placeholder="Product name">
+        <input type="text" class="input" id="input-url" placeholder="Product URL">
+        <div class="form-row">
+          <input type="number" class="input" id="input-price" placeholder="Current price" step="0.01">
+          <input type="number" class="input" id="input-target" placeholder="Target price" step="0.01">
+        </div>
+        <button class="btn btn-primary" id="btn-add" style="width:100%;">🎯 Start Tracking</button>
+      </div>
+      <button class="btn btn-secondary" id="btn-autofill" style="width:100%;">📎 Auto-fill from Current Tab</button>
+    </div>
+
+    <div class="tab-content" id="tab-products" style="display:none;">
+      <div id="product-list" class="product-list"></div>
+    </div>
+
+    <div class="tab-content" id="tab-stats" style="display:none;">
+      <div class="grid grid-2 stagger" style="margin-bottom:12px;">
+        <div class="card stat-card slide-up">
+          <div class="stat-icon" style="background:rgba(108,92,231,0.12);">📦</div>
+          <div class="stat-value" id="stat-products">0</div>
+          <div class="stat-label">Tracked</div>
+        </div>
+        <div class="card stat-card slide-up">
+          <div class="stat-icon" style="background:rgba(0,184,148,0.12);">💰</div>
+          <div class="stat-value" id="stat-savings">₹0</div>
+          <div class="stat-label">Savings</div>
+        </div>
+      </div>
+      <div class="card slide-up">
+        <div class="card-header"><div class="card-title">Stores Tracked</div></div>
+        <div class="chart-container" style="height:160px;"><canvas id="chart-stores"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/chart-utils.js"></script>
+  <script src="../shared/ollama-client.js"></script>
+  <script>
+    const COLORS = ['#6C5CE7','#00CEC9','#FD79A8','#FDCB6E','#00B894','#E17055','#74B9FF','#A29BFE'];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setupTabs();
+      loadProducts();
+      loadStats();
+      checkOllama();
+
+      document.getElementById('btn-add').addEventListener('click', addProduct);
+      document.getElementById('btn-autofill').addEventListener('click', autofill);
+    });
+
+    function setupTabs() {
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.style.display='none');
+          tab.classList.add('active');
+          document.getElementById('tab-'+tab.dataset.tab).style.display='block';
+          if (tab.dataset.tab === 'products') loadProducts();
+          if (tab.dataset.tab === 'stats') loadStats();
+        });
+      });
+    }
+
+    async function addProduct() {
+      const name = document.getElementById('input-name').value.trim();
+      const url = document.getElementById('input-url').value.trim();
+      const price = parseFloat(document.getElementById('input-price').value) || 0;
+      const target = parseFloat(document.getElementById('input-target').value) || null;
+      if (!name || !url) return;
+      await chrome.runtime.sendMessage({ type:'ADD_PRODUCT', name, url, currentPrice: price, targetPrice: target });
+      document.getElementById('input-name').value = '';
+      document.getElementById('input-url').value = '';
+      document.getElementById('input-price').value = '';
+      document.getElementById('input-target').value = '';
+      showToast('Product tracked! 📦');
+    }
+
+    async function autofill() {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab) {
+        document.getElementById('input-name').value = tab.title?.slice(0, 80) || '';
+        document.getElementById('input-url').value = tab.url || '';
+      }
+    }
+
+    async function loadProducts() {
+      const { products } = await chrome.runtime.sendMessage({ type:'GET_PRODUCTS' });
+      const container = document.getElementById('product-list');
+      if (!products || !products.length) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📦</div><div class="empty-state-title">No products tracked</div><div class="empty-state-text">Add a product to start tracking prices</div></div>';
+        return;
+      }
+
+      container.innerHTML = products.map(p => {
+        const prices = p.priceHistory.map(h => h.price);
+        const current = prices[prices.length - 1] || 0;
+        const avg = prices.length > 0 ? prices.reduce((a,b)=>a+b,0)/prices.length : 0;
+        const min = prices.length > 0 ? Math.min(...prices) : 0;
+        const max = prices.length > 0 ? Math.max(...prices) : 0;
+        const isFakeSale = current > avg * 0.95 && prices.length > 2;
+        const isGoodDeal = current <= min * 1.05 && prices.length > 2;
+
+        return `<div class="product-item">
+          <div class="product-name">${esc(p.name)}
+            ${isFakeSale ? '<span class="fake-sale-badge">⚠️ Possible Fake Sale</span>' : ''}
+            ${isGoodDeal ? '<span class="fake-sale-badge good-deal-badge">✅ Good Deal</span>' : ''}
+          </div>
+          <div class="product-domain">${p.domain}</div>
+          <div class="price-row">
+            <div class="price-current">${p.currency}${current.toLocaleString()}</div>
+            ${p.targetPrice ? `<span class="badge badge-purple">Target: ${p.currency}${p.targetPrice}</span>` : ''}
+          </div>
+          <div class="price-stats">
+            <div class="price-stat">Avg: <span>${p.currency}${avg.toFixed(0)}</span></div>
+            <div class="price-stat">Low: <span>${p.currency}${min}</span></div>
+            <div class="price-stat">High: <span>${p.currency}${max}</span></div>
+          </div>
+          ${prices.length > 1 ? `<div class="chart-mini"><canvas id="chart-${p.id}"></canvas></div>` : ''}
+          <div class="form-row">
+            <input type="number" class="input" id="price-update-${p.id}" placeholder="Update price" step="0.01" style="font-size:12px;padding:8px 10px;">
+            <button class="btn btn-secondary btn-sm" onclick="updatePrice('${p.id}')">Update</button>
+            <button class="btn btn-secondary btn-sm" onclick="analyzeDeal('${p.id}')">🤖 AI</button>
+            <button class="btn btn-ghost btn-sm" onclick="deleteProduct('${p.id}')" style="color:var(--accent-red);">🗑️</button>
+          </div>
+          <div id="analysis-${p.id}"></div>
+        </div>`;
+      }).join('');
+
+      setTimeout(() => {
+        products.forEach(p => {
+          const canvas = document.getElementById('chart-'+p.id);
+          if (canvas && p.priceHistory.length > 1) {
+            ChartUtils.lineChart(canvas, {}, {
+              labels: p.priceHistory.map(h => h.date?.slice(5) || ''),
+              datasets: [{ values: p.priceHistory.map(h => h.price), color: '#6C5CE7', fill: true }],
+              showDots: p.priceHistory.length < 20, dotRadius: 3, lineWidth: 2, animate: false
+            });
+          }
+        });
+      }, 100);
+    }
+
+    window.updatePrice = async function(id) {
+      const price = parseFloat(document.getElementById('price-update-'+id).value);
+      if (!price) return;
+      await chrome.runtime.sendMessage({ type:'UPDATE_PRICE', id, price });
+      loadProducts();
+    };
+    window.analyzeDeal = async function(id) {
+      const el = document.getElementById('analysis-'+id);
+      el.innerHTML = '<div class="ai-analysis">🧠 Analyzing deal...</div>';
+      const result = await chrome.runtime.sendMessage({ type:'ANALYZE_DEAL', id });
+      el.innerHTML = `<div class="ai-analysis">${result.success ? result.text : '❌ '+result.text}</div>`;
+    };
+    window.deleteProduct = async function(id) {
+      await chrome.runtime.sendMessage({ type:'DELETE_PRODUCT', id });
+      loadProducts();
+    };
+
+    async function loadStats() {
+      const stats = await chrome.runtime.sendMessage({ type:'GET_STATS' });
+      document.getElementById('stat-products').textContent = stats.totalProducts;
+      document.getElementById('stat-savings').textContent = '₹'+Math.round(stats.totalSavings).toLocaleString();
+      const domains = Object.entries(stats.domainCounts||{}).sort(([,a],[,b])=>b-a).slice(0,5);
+      if (domains.length > 0) {
+        ChartUtils.horizontalBarChart(document.getElementById('chart-stores'),{},{
+          labels: domains.map(([d])=>d), values: domains.map(([,v])=>v), colors: COLORS,
+          formatValue: v=>`${v}`, barHeight: 24, barGap: 8
+        });
+      }
+    }
+
+    async function checkOllama() {
+      try {
+        const r = await fetch('http://localhost:11434/api/tags',{signal:AbortSignal.timeout(2000)});
+        const el = document.getElementById('ollama-status');
+        el.className = r.ok ? 'ollama-status connected' : 'ollama-status disconnected';
+        el.innerHTML = `<span class="status-dot ${r.ok?'online':'offline'}"></span><span>AI</span>`;
+      } catch {}
+    }
+
+    function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+    function showToast(m) { const t=document.createElement('div'); t.className='toast success'; t.textContent=m; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
+  </script>
+</body>
+</html>

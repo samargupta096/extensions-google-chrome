@@ -1,0 +1,42 @@
+/* NeuroTab Popup Styles */
+
+.pages-list { max-height: 320px; overflow-y: auto; }
+
+.page-item {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  margin-bottom: 8px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+.page-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-glow);
+}
+.page-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.page-domain { font-size: 11px; color: var(--accent-cyan); margin-bottom: 6px; }
+.page-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.page-meta { display: flex; justify-content: space-between; align-items: center; }
+.page-tags { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+.page-tag { font-size: 10px; padding: 2px 8px; background: rgba(108,92,231,0.12); color: var(--accent-purple-light); border-radius: 10px; }
+.page-time { font-size: 10px; color: var(--text-tertiary); flex-shrink: 0; }
+.page-delete { opacity: 0; transition: opacity 0.15s; background: none; border: none; color: var(--accent-red); cursor: pointer; font-size: 12px; padding: 2px 6px; }
+.page-item:hover .page-delete { opacity: 1; }
+
+/* Ask Tab */
+.ask-container { display: flex; flex-direction: column; height: 400px; }
+.ask-messages { flex: 1; overflow-y: auto; padding: 8px 0; display: flex; flex-direction: column; gap: 8px; }
+.ask-welcome { text-align: center; padding: 40px 20px; color: var(--text-tertiary); }
+.ask-welcome h3 { margin: 8px 0 4px; color: var(--text-secondary); font-size: 16px; }
+.ask-welcome p { font-size: 13px; }
+
+.ask-msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; max-width: 85%; animation: fadeIn 0.2s ease; }
+.ask-msg.user { background: var(--accent-purple); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+.ask-msg.ai { background: var(--bg-card); color: var(--text-secondary); margin-right: auto; border-bottom-left-radius: 4px; }
+.ask-msg.loading { color: var(--text-tertiary); }
+
+/* Tags Cloud */
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0; }
+.tag-pill { padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+.tag-pill:hover { transform: scale(1.05); }

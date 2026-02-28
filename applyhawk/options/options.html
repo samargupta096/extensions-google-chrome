@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApplyHawk - Profile Settings</title>
+  <link rel="stylesheet" href="options.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <div class="glow top-left"></div>
+  <div class="glow bottom-right"></div>
+  <div class="glow top-right"></div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo-container">
+        <img src="../icons/icon48.png" alt="Logo" class="logo">
+        <h2>ApplyHawk</h2>
+      </div>
+      <nav class="nav-menu">
+        <a href="#personal" class="nav-item active">Personal Info</a>
+        <a href="#links" class="nav-item">Links & Socials</a>
+        <a href="#experience" class="nav-item">Experience & Resume</a>
+        <a href="#history" class="nav-item">Application History</a>
+      </nav>
+      <div class="version-label">v1.0.0</div>
+    </aside>
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <h1>Your Profile</h1>
+          <p>Fill out your details once. We'll handle the rest.</p>
+        </div>
+        <button id="save-btn" class="btn primary-btn">
+          <span>Save Changes</span>
+        </button>
+      </header>
+
+      <form id="profile-form" class="settings-form">
+        <section id="personal" class="card">
+          <h3>Personal Information</h3>
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="John" />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="Doe" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="john.doe@example.com" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" placeholder="+91 9876543210" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="location">Location (City, Country)</label>
+            <input type="text" id="location" placeholder="Bangalore, India" />
+          </div>
+        </section>
+
+        <section id="links" class="card">
+          <h3>Links & Socials</h3>
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="linkedin">LinkedIn URL</label>
+              <input type="url" id="linkedin" placeholder="https://linkedin.com/in/johndoe" />
+            </div>
+            <div class="form-group">
+              <label for="github">GitHub URL</label>
+              <input type="url" id="github" placeholder="https://github.com/johndoe" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="portfolio">Portfolio / Personal Website</label>
+            <input type="url" id="portfolio" placeholder="https://johndoe.com" />
+          </div>
+        </section>
+
+        <section id="experience" class="card">
+          <h3>Experience & Resume</h3>
+          <div class="form-group">
+            <label for="currentCompany">Current/Latest Company</label>
+            <input type="text" id="currentCompany" placeholder="Google" />
+          </div>
+          <div class="form-group">
+            <label for="currentTitle">Current/Latest Title</label>
+            <input type="text" id="currentTitle" placeholder="Software Engineer" />
+          </div>
+          <div class="form-group">
+            <label for="resumeText">Plain Text Resume (For AI parsing & complex fields)</label>
+            <textarea id="resumeText" rows="10" placeholder="Paste the plain text content of your resume here..."></textarea>
+          </div>
+        </section>
+
+        <section id="history" class="card">
+          <h3>Application History</h3>
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+            A list of jobs you've applied to while ApplyHawk was active.
+          </p>
+          <div id="historyList" class="history-list">
+            <!-- Dynamic history items will go here -->
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+
+  <div id="toast" class="toast hidden">Profile saved successfully!</div>
+
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ApplyHawk</title>
+  <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-container">
+        <img src="../icons/icon48.png" alt="ApplyHawk Logo" class="logo">
+      </div>
+      <h1 class="title">ApplyHawk</h1>
+      <p class="subtitle">Job Applications on Autopilot</p>
+    </div>
+    
+    <div class="status-card">
+      <div class="status-info">
+        <span class="status-label">Profile Status</span>
+        <span class="status-value" id="profile-status">Checking...</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="autofill-btn" class="btn primary-btn">
+        <span class="icon">⚡</span> Autofill Current Page
+      </button>
+      <button id="cover-letter-btn" class="btn primary-btn" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);">
+        <span class="icon">🤖</span> Generate AI Cover Letter
+      </button>
+      <button id="options-btn" class="btn secondary-btn">
+        <span class="icon">⚙️</span> Manage Profile
+      </button>
+    </div>
+
+    <!-- Hidden by default until generated -->
+    <div id="cover-letter-result" class="cover-letter-card hidden">
+      <div class="status-info">
+        <span class="status-label" style="color: #ec4899;">AI Generated Cover Letter</span>
+      </div>
+      <textarea id="cover-letter-text" readonly></textarea>
+      <button id="copy-btn" class="btn secondary-btn" style="margin-top: 8px; padding: 8px; font-size: 13px;">
+        Copy to Clipboard
+      </button>
+    </div>
+    
+    <div class="footer">
+      <span id="version-text">v1.0.0</span>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

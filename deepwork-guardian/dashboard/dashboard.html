@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepWork Guardian — Dashboard</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Header -->
+    <div class="dash-header">
+      <div class="header-title">
+        <span style="font-size: 28px;">⏱️</span>
+        <div>
+          <h1>DeepWork Guardian</h1>
+          <p class="header-subtitle">Your browsing analytics & focus dashboard</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="ollama-status disconnected" id="ollama-status">
+          <span class="status-dot offline"></span>
+          <span>Ollama</span>
+        </div>
+        <div class="btn-group" id="period-selector">
+          <button class="btn active" data-period="today">Today</button>
+          <button class="btn" data-period="7d">7 Days</button>
+          <button class="btn" data-period="30d">30 Days</button>
+        </div>
+        <button class="btn btn-ghost btn-icon" id="btn-settings" title="Settings">⚙️</button>
+      </div>
+    </div>
+
+    <!-- Overview Stats -->
+    <div class="grid grid-4 stagger" id="stats-row">
+      <div class="card stat-card slide-up">
+        <div class="stat-icon" style="background: rgba(108, 92, 231, 0.15);">🕐</div>
+        <div class="stat-value" id="stat-total-time">0h 0m</div>
+        <div class="stat-label">Total Screen Time</div>
+        <div class="stat-change positive" id="stat-time-change">↑ 0%</div>
+      </div>
+      <div class="card stat-card slide-up">
+        <div class="stat-icon" style="background: rgba(0, 184, 148, 0.15);">🎯</div>
+        <div class="stat-value" id="stat-focus-score">0%</div>
+        <div class="stat-label">Focus Score</div>
+        <div class="stat-change positive" id="stat-focus-change">↑ 0%</div>
+      </div>
+      <div class="card stat-card slide-up">
+        <div class="stat-icon" style="background: rgba(253, 121, 168, 0.15);">🔥</div>
+        <div class="stat-value" id="stat-sessions">0</div>
+        <div class="stat-label">Focus Sessions</div>
+        <div class="stat-change positive" id="stat-sessions-change">↑ 0</div>
+      </div>
+      <div class="card stat-card slide-up">
+        <div class="stat-icon" style="background: rgba(253, 203, 110, 0.15);">🌐</div>
+        <div class="stat-value" id="stat-sites">0</div>
+        <div class="stat-label">Sites Visited</div>
+        <div class="stat-change positive" id="stat-sites-change">↑ 0</div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="grid grid-2">
+      <div class="card slide-up">
+        <div class="card-header">
+          <div class="card-title">📊 Daily Screen Time</div>
+        </div>
+        <div class="chart-container" style="height: 260px;">
+          <canvas id="chart-daily-time"></canvas>
+        </div>
+      </div>
+      <div class="card slide-up">
+        <div class="card-header">
+          <div class="card-title">🎯 Focus Score Trend</div>
+        </div>
+        <div class="chart-container" style="height: 260px;">
+          <canvas id="chart-focus-trend"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="grid grid-2" style="margin-top: 16px;">
+      <div class="card slide-up">
+        <div class="card-header">
+          <div class="card-title">🏷️ Time by Category</div>
+        </div>
+        <div class="chart-container" style="height: 240px;">
+          <canvas id="chart-categories"></canvas>
+        </div>
+        <div class="chart-legend" id="legend-categories"></div>
+      </div>
+      <div class="card slide-up">
+        <div class="card-header">
+          <div class="card-title">🏆 Top Websites</div>
+        </div>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="chart-top-sites"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Tables & AI Insights -->
+    <div class="grid grid-2" style="margin-top: 16px;">
+      <!-- All Sites Table -->
+      <div class="card slide-up">
+        <div class="card-header">
+          <div class="card-title">🌐 All Sites</div>
+          <input type="text" class="input" id="site-search" placeholder="Search sites..." style="width: 180px; padding: 6px 12px; font-size: 12px;">
+        </div>
+        <div class="sites-table" id="sites-table"></div>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="card slide-up ai-insights-card">
+        <div class="card-header">
+          <div class="card-title">🤖 AI Insights</div>
+          <button class="btn btn-secondary btn-sm" id="btn-generate-insights">
+            ✨ Generate
+          </button>
+        </div>
+        <div id="ai-insights">
+          <div class="empty-state" style="padding: 24px;">
+            <div class="empty-state-icon">🧠</div>
+            <div class="empty-state-title">AI-Powered Insights</div>
+            <div class="empty-state-text">Click Generate to analyze your browsing patterns using your local Ollama instance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hourly Heatmap -->
+    <div class="card slide-up" style="margin-top: 16px;">
+      <div class="card-header">
+        <div class="card-title">🕐 Hourly Activity</div>
+      </div>
+      <div class="chart-container" style="height: 200px;">
+        <canvas id="chart-hourly"></canvas>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal" style="display:none;">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>⚙️ Settings</h2>
+          <button class="btn btn-ghost btn-icon" id="close-settings">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-group">
+            <h3>Focus Timer</h3>
+            <div class="setting-row">
+              <label>Focus Duration (minutes)</label>
+              <input type="number" class="input" id="set-focus-duration" value="25" min="1" max="120" style="width:80px;">
+            </div>
+            <div class="setting-row">
+              <label>Short Break (minutes)</label>
+              <input type="number" class="input" id="set-break-duration" value="5" min="1" max="30" style="width:80px;">
+            </div>
+            <div class="setting-row">
+              <label>Long Break (minutes)</label>
+              <input type="number" class="input" id="set-long-break" value="15" min="5" max="60" style="width:80px;">
+            </div>
+            <div class="setting-row">
+              <label>Sessions before Long Break</label>
+              <input type="number" class="input" id="set-sessions-count" value="4" min="2" max="8" style="width:80px;">
+            </div>
+          </div>
+          <div class="setting-group">
+            <h3>Blocked Sites</h3>
+            <p class="setting-hint">One domain per line. These are blocked during focus sessions.</p>
+            <textarea class="input" id="set-blocked-sites" rows="6" placeholder="facebook.com&#10;instagram.com&#10;twitter.com"></textarea>
+          </div>
+          <div class="setting-group">
+            <h3>Notifications</h3>
+            <div class="setting-row">
+              <label>Enable notifications</label>
+              <label class="toggle">
+                <input type="checkbox" id="set-notifications" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="btn-save-settings" style="width:100%;margin-top:16px;">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/chart-utils.js"></script>
+  <script src="../shared/ollama-client.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ClipWise</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <link rel="stylesheet" href="clipwise.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="header">
+      <div class="header-title"><span style="font-size:22px;">📋</span><h1>ClipWise</h1></div>
+      <div class="ollama-status disconnected" id="ollama-status"><span class="status-dot offline"></span><span>AI</span></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="clips">📋 Clips</button>
+      <button class="tab" data-tab="snippets">💾 Snippets</button>
+      <button class="tab" data-tab="stats">📊 Stats</button>
+    </div>
+    <div class="tab-content active" id="tab-clips">
+      <div class="input-group" style="margin-bottom:10px;">
+        <input type="text" class="input" id="clip-search" placeholder="Search clips...">
+        <select class="input" id="clip-filter" style="width:100px;padding:8px;"><option value="">All</option><option value="code">Code</option><option value="url">URL</option><option value="command">Cmd</option><option value="text">Text</option></select>
+      </div>
+      <button class="btn btn-primary" id="btn-paste-clip" style="width:100%;margin-bottom:12px;">📋 Save from Clipboard</button>
+      <div id="clip-list" class="clip-list"></div>
+    </div>
+    <div class="tab-content" id="tab-snippets" style="display:none;">
+      <div class="snippet-form">
+        <input type="text" class="input" id="snippet-title" placeholder="Snippet title">
+        <select class="input" id="snippet-lang"><option>javascript</option><option>python</option><option>bash</option><option>html</option><option>css</option><option>sql</option><option>json</option><option>text</option></select>
+        <textarea class="input" id="snippet-code" placeholder="Paste code here..." rows="4" style="font-family:monospace;font-size:12px;"></textarea>
+        <button class="btn btn-primary" id="btn-save-snippet" style="width:100%;">💾 Save Snippet</button>
+      </div>
+      <div id="snippet-list"></div>
+    </div>
+    <div class="tab-content" id="tab-stats" style="display:none;">
+      <div class="grid grid-2 stagger" style="margin-bottom:12px;">
+        <div class="card stat-card slide-up"><div class="stat-icon" style="background:rgba(108,92,231,0.12);">📋</div><div class="stat-value" id="stat-clips">0</div><div class="stat-label">Clips</div></div>
+        <div class="card stat-card slide-up"><div class="stat-icon" style="background:rgba(0,206,201,0.12);">💾</div><div class="stat-value" id="stat-snippets">0</div><div class="stat-label">Snippets</div></div>
+      </div>
+      <div class="card slide-up" style="margin-bottom:12px;"><div class="card-header"><div class="card-title">Clip Types</div></div><div class="chart-container" style="height:170px;"><canvas id="chart-types"></canvas></div></div>
+      <div class="card slide-up"><div class="card-header"><div class="card-title">Daily Activity</div></div><div class="chart-container" style="height:150px;"><canvas id="chart-daily"></canvas></div></div>
+    </div>
+  </div>
+  <script src="../shared/chart-utils.js"></script>
+  <script src="clipwise.js"></script>
+</body>
+</html>

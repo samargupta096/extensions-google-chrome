@@ -1,0 +1,22 @@
+.clip-list { max-height: 340px; overflow-y: auto; }
+.clip-item { padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 6px; transition: all 0.15s; cursor: pointer; }
+.clip-item:hover { border-color: var(--border-glow); background: var(--bg-card-hover); }
+.clip-text { font-size: 12px; color: var(--text-secondary); line-height: 1.5; max-height: 56px; overflow: hidden; word-break: break-word; margin-bottom: 8px; }
+.clip-text.is-code { font-family: 'Fira Code', monospace; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 6px; font-size: 11px; color: var(--accent-cyan); }
+.clip-meta { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.clip-type { font-size: 10px; padding: 2px 10px; border-radius: 12px; font-weight: 700; }
+.clip-type.url { background: rgba(116,185,255,0.15); color: #74B9FF; }
+.clip-type.code { background: rgba(0,206,201,0.15); color: #00CEC9; }
+.clip-type.email { background: rgba(253,121,168,0.15); color: #FD79A8; }
+.clip-type.command { background: rgba(225,112,85,0.15); color: #E17055; }
+.clip-type.text { background: rgba(255,255,255,0.06); color: var(--text-tertiary); }
+.clip-time { font-size: 10px; color: var(--text-tertiary); font-weight: 500; }
+.clip-actions { display: flex; gap: 2px; }
+.clip-actions button { opacity: 0; transition: opacity 0.15s; }
+.clip-item:hover .clip-actions button { opacity: 1; }
+.snippet-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.snippet-item { padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 8px; }
+.snippet-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.snippet-code { font-family: monospace; font-size: 11px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; max-height: 80px; overflow: hidden; color: var(--accent-cyan); line-height: 1.5; }
+.snippet-meta { display: flex; gap: 6px; margin-top: 8px; align-items: center; }
+.ai-result { margin-top: 8px; padding: 12px; background: rgba(108,92,231,0.06); border: 1px solid rgba(108,92,231,0.1); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
