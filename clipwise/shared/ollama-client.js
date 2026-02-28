@@ -3,9 +3,17 @@
  * Used by all extensions for AI features
  */
 class OllamaClient {
-  constructor(baseUrl = "http://localhost:11434") {
+  constructor(baseUrl = 'http://localhost:11434') {
     this.baseUrl = baseUrl;
-    this.defaultModel = "llama3.2";
+    this.defaultModel = 'qwen3:latest';
+  }
+
+  setModel(modelName) {
+    this.defaultModel = modelName;
+  }
+
+  getModel() {
+    return this.defaultModel;
   }
 
   /**

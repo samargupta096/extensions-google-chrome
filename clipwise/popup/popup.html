@@ -10,7 +10,17 @@
   <div class="popup-container">
     <div class="header">
       <div class="header-title"><span style="font-size:22px;">📋</span><h1>ClipWise</h1></div>
-      <div class="ollama-status disconnected" id="ollama-status"><span class="status-dot offline"></span><span>AI</span></div>
+      <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+        <div class="model-selector-wrapper">
+          <select class="model-select loading" id="model-select" title="Select AI Model">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+        <div class="ollama-status disconnected" id="ollama-status">
+          <span class="status-dot offline"></span>
+          <span>AI</span>
+        </div>
+      </div>
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="clips">📋 Clips</button>

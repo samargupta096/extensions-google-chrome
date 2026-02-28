@@ -36,11 +36,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (!prompt) return;
 
   try {
+    const data = await chrome.storage.local.get('cw_settings');
+    const model = data.cw_settings?.ollamaModel || 'qwen3:latest';
+
     const response = await fetch('http://localhost:11434/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'llama3.2', prompt, stream: false,
+        model, prompt, stream: false,
         options: { temperature: 0.3, num_predict: 400 }
       })
     });
@@ -139,9 +142,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           translate: `Translate to English. Return ONLY translation:\n\n${msg.text}`
         };
         try {
+          const data = await chrome.storage.local.get('cw_settings');
+          const model = data.cw_settings?.ollamaModel || 'qwen3:latest';
+
           const r = await fetch('http://localhost:11434/api/generate', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model:'llama3.2', prompt: prompts[msg.action], stream:false, options:{ temperature:0.3, num_predict:400 } })
+            body: JSON.stringify({ model, prompt: prompts[msg.action], stream:false, options:{ temperature:0.3, num_predict:400 } })
           });
           const d = await r.json();
           sendResponse({ success: true, text: d.response });

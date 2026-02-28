@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btn-increase').addEventListener('click', () => adjustDuration(5));
   document.getElementById('btn-open-dashboard').addEventListener('click', openDashboard);
   document.getElementById('open-dashboard').addEventListener('click', openDashboard);
+  
+  if (document.getElementById('model-select')) {
+    document.getElementById('model-select').addEventListener('change', saveSelectedModel);
+  }
 });
 
 async function refreshState() {
@@ -235,10 +239,55 @@ async function checkOllama() {
   if (available) {
     el.className = 'ollama-status connected';
     el.innerHTML = '<span class="status-dot online"></span><span>Ollama</span>';
+    loadModels(ollama);
   } else {
     el.className = 'ollama-status disconnected';
     el.innerHTML = '<span class="status-dot offline"></span><span>Ollama</span>';
+    const select = document.getElementById('model-select');
+    if (select) { select.innerHTML = '<option value="">Ollama offline</option>'; select.classList.add('loading'); }
   }
+}
+
+async function loadModels(ollama) {
+  const select = document.getElementById('model-select');
+  if (!select) return;
+  try {
+    const models = await ollama.listModels();
+    if (models.length === 0) {
+      select.innerHTML = '<option value="">No models</option>';
+      select.classList.add('loading');
+      return;
+    }
+
+    const savedModel = (await chrome.storage.local.get('dwg_settings')).dwg_settings?.ollamaModel || 'qwen3:latest';
+
+    select.innerHTML = models.map(m => {
+      const name = m.name || m.model;
+      const size = m.details?.parameter_size || '';
+      const label = size ? `${name} (${size})` : name;
+      return `<option value="${name}" ${name === savedModel ? 'selected' : ''}>${label}</option>`;
+    }).join('');
+
+    select.classList.remove('loading');
+
+    if (!models.some(m => (m.name || m.model) === savedModel)) {
+      select.selectedIndex = 0;
+      saveSelectedModel();
+    }
+  } catch {
+    select.innerHTML = '<option value="">Error</option>';
+    select.classList.add('loading');
+  }
+}
+
+async function saveSelectedModel() {
+  const select = document.getElementById('model-select');
+  const model = select.value;
+  if (!model) return;
+  
+  const data = await chrome.storage.local.get('dwg_settings');
+  const settings = data.dwg_settings || {};
+  await chrome.storage.local.set({ dwg_settings: { ...settings, ollamaModel: model } });
 }
 
 function openDashboard() {

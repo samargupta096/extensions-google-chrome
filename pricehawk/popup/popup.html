@@ -26,11 +26,18 @@
 <body>
   <div class="popup-container">
     <div class="header">
-      <div class="header-title">
-        <span style="font-size:22px;">💰</span>
-        <h1>PriceHawk</h1>
+      <div class="header-title"><span style="font-size: 22px;">🦅</span><h1>PriceHawk</h1></div>
+      <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+        <div class="model-selector-wrapper">
+          <select class="model-select loading" id="model-select" title="Select AI Model">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+        <div class="ollama-status disconnected" id="ollama-status">
+          <span class="status-dot offline"></span>
+          <span>Ollama</span>
+        </div>
       </div>
-      <div class="ollama-status disconnected" id="ollama-status"><span class="status-dot offline"></span><span>AI</span></div>
     </div>
 
     <div class="tabs">
@@ -78,152 +85,6 @@
 
   <script src="../shared/chart-utils.js"></script>
   <script src="../shared/ollama-client.js"></script>
-  <script>
-    const COLORS = ['#6C5CE7','#00CEC9','#FD79A8','#FDCB6E','#00B894','#E17055','#74B9FF','#A29BFE'];
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setupTabs();
-      loadProducts();
-      loadStats();
-      checkOllama();
-
-      document.getElementById('btn-add').addEventListener('click', addProduct);
-      document.getElementById('btn-autofill').addEventListener('click', autofill);
-    });
-
-    function setupTabs() {
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.style.display='none');
-          tab.classList.add('active');
-          document.getElementById('tab-'+tab.dataset.tab).style.display='block';
-          if (tab.dataset.tab === 'products') loadProducts();
-          if (tab.dataset.tab === 'stats') loadStats();
-        });
-      });
-    }
-
-    async function addProduct() {
-      const name = document.getElementById('input-name').value.trim();
-      const url = document.getElementById('input-url').value.trim();
-      const price = parseFloat(document.getElementById('input-price').value) || 0;
-      const target = parseFloat(document.getElementById('input-target').value) || null;
-      if (!name || !url) return;
-      await chrome.runtime.sendMessage({ type:'ADD_PRODUCT', name, url, currentPrice: price, targetPrice: target });
-      document.getElementById('input-name').value = '';
-      document.getElementById('input-url').value = '';
-      document.getElementById('input-price').value = '';
-      document.getElementById('input-target').value = '';
-      showToast('Product tracked! 📦');
-    }
-
-    async function autofill() {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (tab) {
-        document.getElementById('input-name').value = tab.title?.slice(0, 80) || '';
-        document.getElementById('input-url').value = tab.url || '';
-      }
-    }
-
-    async function loadProducts() {
-      const { products } = await chrome.runtime.sendMessage({ type:'GET_PRODUCTS' });
-      const container = document.getElementById('product-list');
-      if (!products || !products.length) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📦</div><div class="empty-state-title">No products tracked</div><div class="empty-state-text">Add a product to start tracking prices</div></div>';
-        return;
-      }
-
-      container.innerHTML = products.map(p => {
-        const prices = p.priceHistory.map(h => h.price);
-        const current = prices[prices.length - 1] || 0;
-        const avg = prices.length > 0 ? prices.reduce((a,b)=>a+b,0)/prices.length : 0;
-        const min = prices.length > 0 ? Math.min(...prices) : 0;
-        const max = prices.length > 0 ? Math.max(...prices) : 0;
-        const isFakeSale = current > avg * 0.95 && prices.length > 2;
-        const isGoodDeal = current <= min * 1.05 && prices.length > 2;
-
-        return `<div class="product-item">
-          <div class="product-name">${esc(p.name)}
-            ${isFakeSale ? '<span class="fake-sale-badge">⚠️ Possible Fake Sale</span>' : ''}
-            ${isGoodDeal ? '<span class="fake-sale-badge good-deal-badge">✅ Good Deal</span>' : ''}
-          </div>
-          <div class="product-domain">${p.domain}</div>
-          <div class="price-row">
-            <div class="price-current">${p.currency}${current.toLocaleString()}</div>
-            ${p.targetPrice ? `<span class="badge badge-purple">Target: ${p.currency}${p.targetPrice}</span>` : ''}
-          </div>
-          <div class="price-stats">
-            <div class="price-stat">Avg: <span>${p.currency}${avg.toFixed(0)}</span></div>
-            <div class="price-stat">Low: <span>${p.currency}${min}</span></div>
-            <div class="price-stat">High: <span>${p.currency}${max}</span></div>
-          </div>
-          ${prices.length > 1 ? `<div class="chart-mini"><canvas id="chart-${p.id}"></canvas></div>` : ''}
-          <div class="form-row">
-            <input type="number" class="input" id="price-update-${p.id}" placeholder="Update price" step="0.01" style="font-size:12px;padding:8px 10px;">
-            <button class="btn btn-secondary btn-sm" onclick="updatePrice('${p.id}')">Update</button>
-            <button class="btn btn-secondary btn-sm" onclick="analyzeDeal('${p.id}')">🤖 AI</button>
-            <button class="btn btn-ghost btn-sm" onclick="deleteProduct('${p.id}')" style="color:var(--accent-red);">🗑️</button>
-          </div>
-          <div id="analysis-${p.id}"></div>
-        </div>`;
-      }).join('');
-
-      setTimeout(() => {
-        products.forEach(p => {
-          const canvas = document.getElementById('chart-'+p.id);
-          if (canvas && p.priceHistory.length > 1) {
-            ChartUtils.lineChart(canvas, {}, {
-              labels: p.priceHistory.map(h => h.date?.slice(5) || ''),
-              datasets: [{ values: p.priceHistory.map(h => h.price), color: '#6C5CE7', fill: true }],
-              showDots: p.priceHistory.length < 20, dotRadius: 3, lineWidth: 2, animate: false
-            });
-          }
-        });
-      }, 100);
-    }
-
-    window.updatePrice = async function(id) {
-      const price = parseFloat(document.getElementById('price-update-'+id).value);
-      if (!price) return;
-      await chrome.runtime.sendMessage({ type:'UPDATE_PRICE', id, price });
-      loadProducts();
-    };
-    window.analyzeDeal = async function(id) {
-      const el = document.getElementById('analysis-'+id);
-      el.innerHTML = '<div class="ai-analysis">🧠 Analyzing deal...</div>';
-      const result = await chrome.runtime.sendMessage({ type:'ANALYZE_DEAL', id });
-      el.innerHTML = `<div class="ai-analysis">${result.success ? result.text : '❌ '+result.text}</div>`;
-    };
-    window.deleteProduct = async function(id) {
-      await chrome.runtime.sendMessage({ type:'DELETE_PRODUCT', id });
-      loadProducts();
-    };
-
-    async function loadStats() {
-      const stats = await chrome.runtime.sendMessage({ type:'GET_STATS' });
-      document.getElementById('stat-products').textContent = stats.totalProducts;
-      document.getElementById('stat-savings').textContent = '₹'+Math.round(stats.totalSavings).toLocaleString();
-      const domains = Object.entries(stats.domainCounts||{}).sort(([,a],[,b])=>b-a).slice(0,5);
-      if (domains.length > 0) {
-        ChartUtils.horizontalBarChart(document.getElementById('chart-stores'),{},{
-          labels: domains.map(([d])=>d), values: domains.map(([,v])=>v), colors: COLORS,
-          formatValue: v=>`${v}`, barHeight: 24, barGap: 8
-        });
-      }
-    }
-
-    async function checkOllama() {
-      try {
-        const r = await fetch('http://localhost:11434/api/tags',{signal:AbortSignal.timeout(2000)});
-        const el = document.getElementById('ollama-status');
-        el.className = r.ok ? 'ollama-status connected' : 'ollama-status disconnected';
-        el.innerHTML = `<span class="status-dot ${r.ok?'online':'offline'}"></span><span>AI</span>`;
-      } catch {}
-    }
-
-    function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-    function showToast(m) { const t=document.createElement('div'); t.className='toast success'; t.textContent=m; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
-  </script>
+  <script src="popup.js"></script>
 </body>
 </html>

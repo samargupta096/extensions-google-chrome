@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('clip-filter').addEventListener('change', () => loadClips());
   document.getElementById('btn-paste-clip').addEventListener('click', saveFromClipboard);
   document.getElementById('btn-save-snippet').addEventListener('click', saveSnippet);
+  if (document.getElementById('model-select')) {
+    document.getElementById('model-select').addEventListener('change', saveSelectedModel);
+  }
 });
 
 function setupTabs() {
@@ -139,12 +142,62 @@ async function loadStats() {
 }
 
 async function checkOllama() {
+  const ollama = new OllamaClient();
+  const available = await ollama.isAvailable();
+  const el = document.getElementById('ollama-status');
+  
+  if (available) {
+    el.className = 'ollama-status connected';
+    el.innerHTML = '<span class="status-dot online"></span><span>AI</span>';
+    loadModels(ollama);
+  } else {
+    el.className = 'ollama-status disconnected';
+    el.innerHTML = '<span class="status-dot offline"></span><span>AI</span>';
+    const select = document.getElementById('model-select');
+    if (select) { select.innerHTML = '<option value="">Ollama offline</option>'; select.classList.add('loading'); }
+  }
+}
+
+async function loadModels(ollama) {
+  const select = document.getElementById('model-select');
+  if (!select) return;
   try {
-    const r = await fetch('http://localhost:11434/api/tags',{signal:AbortSignal.timeout(2000)});
-    const el = document.getElementById('ollama-status');
-    el.className = r.ok ? 'ollama-status connected' : 'ollama-status disconnected';
-    el.innerHTML = `<span class="status-dot ${r.ok?'online':'offline'}"></span><span>AI</span>`;
-  } catch {}
+    const models = await ollama.listModels();
+    if (models.length === 0) {
+      select.innerHTML = '<option value="">No models</option>';
+      select.classList.add('loading');
+      return;
+    }
+
+    const savedModel = (await chrome.storage.local.get('cw_settings')).cw_settings?.ollamaModel || 'qwen3:latest';
+
+    select.innerHTML = models.map(m => {
+      const name = m.name || m.model;
+      const size = m.details?.parameter_size || '';
+      const label = size ? `${name} (${size})` : name;
+      return `<option value="${name}" ${name === savedModel ? 'selected' : ''}>${label}</option>`;
+    }).join('');
+
+    select.classList.remove('loading');
+
+    if (!models.some(m => (m.name || m.model) === savedModel)) {
+      select.selectedIndex = 0;
+      saveSelectedModel();
+    }
+  } catch {
+    select.innerHTML = '<option value="">Error</option>';
+    select.classList.add('loading');
+  }
+}
+
+async function saveSelectedModel() {
+  const select = document.getElementById('model-select');
+  const model = select.value;
+  if (!model) return;
+  
+  const data = await chrome.storage.local.get('cw_settings');
+  const settings = data.cw_settings || {};
+  await chrome.storage.local.set({ cw_settings: { ...settings, ollamaModel: model } });
 }
 
 function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }

@@ -81,32 +81,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       case 'ANALYZE_DEAL': {
         const product = products.find(p => p.id === message.id);
-        if (!product || product.priceHistory.length < 2) {
-          sendResponse({ success: false, text: 'Need more price history data to analyze.' });
-          break;
-        }
+        const data = await chrome.storage.local.get(['ph_products', 'ph_settings']);
+        const products = data.ph_products || [];
+        const p = products.find(x => x.id === message.id);
+        if (!p) { sendResponse({ success: false, text: 'Product not found' }); break; }
 
-        const prices = product.priceHistory.map(h => h.price);
-        const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+        const prices = p.priceHistory.map(h => h.price);
+        const current = prices[prices.length - 1];
         const min = Math.min(...prices);
         const max = Math.max(...prices);
-        const current = prices[prices.length - 1];
+        
+        const model = data.ph_settings?.ollamaModel || 'qwen3:latest';
 
         try {
-          const response = await fetch('http://localhost:11434/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              model: 'llama3.2',
-              prompt: `Analyze this product deal and tell me if it's a good time to buy.\n\nProduct: ${product.name}\nCurrent Price: ${product.currency}${current}\nAverage Price: ${product.currency}${avg.toFixed(2)}\nLowest: ${product.currency}${min}\nHighest: ${product.currency}${max}\nPrice History (last ${prices.length} records): ${prices.join(', ')}\n\nRespond in 3-4 sentences. Is this a good deal? Is it likely a fake sale?`,
-              stream: false,
-              options: { temperature: 0.4, num_predict: 300 }
-            })
+          const prompt = `Analyze this product deal:\nProduct: ${p.name}\nCurrent Price: ${current}\nLowest Price: ${min}\nHighest Price: ${max}\nPrice History (${prices.length} points): ${prices.join(', ')}\n\nIs this a good deal right now? Are there signs of a fake sale (e.g. price increased recently then dropped)? Answer in 2-3 concise sentences.`;
+          const r = await fetch('http://localhost:11434/api/generate', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model, prompt, stream: false, options: { temperature: 0.3, num_predict: 200 } })
           });
-          const result = await response.json();
-          sendResponse({ success: true, text: result.response });
-        } catch (err) {
-          sendResponse({ success: false, text: 'Ollama not available. Start with: ollama serve' });
+          const d = await r.json();
+          sendResponse({ success: true, text: d.response });
+        } catch (e) {
+          sendResponse({ success: false, text: 'Ollama not running. Start with: ollama serve' });
         }
         break;
       }
