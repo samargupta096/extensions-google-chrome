@@ -8,6 +8,7 @@
 
 ### ⏱️ DeepWork Guardian — Focus & Productivity
 
+<a href=".github/screenshots/deepwork-guardian_screenshot.png"><img src=".github/screenshots/deepwork-guardian_screenshot.png" width="250" align="right" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></a>
 <img src=".github/images/deepwork-guardian.png" width="80" align="left" style="margin-right: 16px;" />
 
 **AI-powered focus timer, distraction blocking, and browsing analytics.**
@@ -22,6 +23,7 @@ Track time on every website automatically. Use Pomodoro-style focus sessions wit
 
 ### 🧠 NeuroTab — AI Second Brain
 
+<a href=".github/screenshots/neurotab_screenshot.png"><img src=".github/screenshots/neurotab_screenshot.png" width="250" align="right" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></a>
 <img src=".github/images/neurotab.png" width="80" align="left" style="margin-right: 16px;" />
 
 **Save, summarize, and search everything you read online.**
@@ -36,6 +38,7 @@ One-click save any page or text selection to your local knowledge base. Ollama a
 
 ### 💰 PriceHawk — Local Price Tracker
 
+<a href=".github/screenshots/pricehawk_screenshot.png"><img src=".github/screenshots/pricehawk_screenshot.png" width="250" align="right" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></a>
 <img src=".github/images/pricehawk.png" width="80" align="left" style="margin-right: 16px;" />
 
 **Track product prices locally, detect fake sales, and get AI deal analysis.**
@@ -50,6 +53,7 @@ Add products with one click (auto-fills from current tab). Record price history 
 
 ### 📋 ClipWise — Smart Clipboard Manager
 
+<a href=".github/screenshots/clipwise_screenshot.png"><img src=".github/screenshots/clipwise_screenshot.png" width="250" align="right" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></a>
 <img src=".github/images/clipwise.png" width="80" align="left" style="margin-right: 16px;" />
 
 **AI-powered clipboard history, code snippets, and text enhancement.**
@@ -64,6 +68,7 @@ Save clipboard contents with smart type detection (code, URLs, commands, emails,
 
 ### 🔍 PagePilot — AI Page Assistant & Dev Toolkit
 
+<a href=".github/screenshots/pagepilot_screenshot.png"><img src=".github/screenshots/pagepilot_screenshot.png" width="250" align="right" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /></a>
 <img src=".github/images/pagepilot.png" width="80" align="left" style="margin-right: 16px;" />
 
 **Chat with any page using AI, plus 8 essential developer quick tools.**
