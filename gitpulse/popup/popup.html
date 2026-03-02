@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitPulse</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container" id="app">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">
+        <span class="header-icon">🔍</span>
+        <h1>GitPulse</h1>
+      </div>
+      <div class="header-actions">
+        <div class="ollama-status" id="ollamaStatus">
+          <span class="status-dot offline" id="statusDot"></span>
+          <span id="statusText">AI Offline</span>
+        </div>
+        <button class="btn btn-ghost btn-icon" id="settingsBtn" title="Settings (S)">⚙️</button>
+        <button class="btn btn-ghost btn-icon" id="refreshBtn" title="Refresh (R)">🔄</button>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel card" id="settingsPanel" style="display: none;">
+      <div class="card-header">
+        <span class="card-title">⚙️ Settings</span>
+        <button class="btn btn-ghost btn-sm" id="closeSettings">✕</button>
+      </div>
+      <div class="settings-body">
+        <label class="input-label">GitHub Personal Access Token</label>
+        <div class="input-group" style="margin-bottom: 10px;">
+          <input type="password" class="input" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
+          <button class="btn btn-primary btn-sm" id="saveToken">Save</button>
+        </div>
+        <p class="input-hint">Needs <code>repo</code> scope. Token stored locally only.</p>
+
+        <label class="input-label" style="margin-top: 14px;">Notifications</label>
+        <div class="setting-row compact">
+          <span>Desktop alerts for new review requests</span>
+          <label class="toggle"><input type="checkbox" id="toggleNotifications"><span class="toggle-slider"></span></label>
+        </div>
+
+        <label class="input-label" style="margin-top: 14px;">Poll Interval</label>
+        <select class="input" id="pollInterval" style="margin-bottom: 10px;">
+          <option value="3">Every 3 min</option>
+          <option value="5" selected>Every 5 min</option>
+          <option value="10">Every 10 min</option>
+          <option value="30">Every 30 min</option>
+        </select>
+
+        <div style="margin-top: 12px; display: flex; gap: 6px;">
+          <button class="btn btn-danger btn-sm" id="clearToken">Disconnect</button>
+          <button class="btn btn-secondary btn-sm" id="exportData">📤 Export</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Token State -->
+    <div class="empty-state" id="noTokenState" style="display: none;">
+      <div class="empty-state-icon">🔑</div>
+      <div class="empty-state-title">Connect GitHub</div>
+      <div class="empty-state-text">Add your GitHub Personal Access Token to see your PRs.</div>
+      <button class="btn btn-primary" id="setupBtn" style="margin-top: 16px;">Setup Token</button>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" style="display: none;">
+      <!-- User Info Bar -->
+      <div class="user-bar" id="userBar">
+        <img class="user-avatar" id="userAvatar" src="" alt="">
+        <span class="user-name" id="userName"></span>
+        <span class="last-fetch" id="lastFetch"></span>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-bar" id="searchBar">
+        <span class="search-icon">🔎</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search PRs... (/)">
+        <button class="btn btn-ghost btn-sm search-clear" id="searchClear" style="display: none;">✕</button>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar" id="filterBar">
+        <select class="input filter-select" id="repoFilter">
+          <option value="all">All Repos</option>
+        </select>
+        <select class="input filter-select" id="urgencyFilter">
+          <option value="all">All Urgency</option>
+          <option value="stale">🔴 Stale</option>
+          <option value="aging">🟡 Aging</option>
+          <option value="fresh">🟢 Fresh</option>
+        </select>
+        <select class="input filter-select" id="labelFilter">
+          <option value="all">All Labels</option>
+        </select>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="review" title="1">
+          Review <span class="tab-count" id="reviewCount">0</span>
+        </button>
+        <button class="tab" data-tab="authored" title="2">
+          My PRs <span class="tab-count" id="authoredCount">0</span>
+        </button>
+        <button class="tab" data-tab="mentioned" title="3">
+          Mentioned <span class="tab-count" id="mentionedCount">0</span>
+        </button>
+        <button class="tab" data-tab="stats" title="4">
+          Stats
+        </button>
+      </div>
+
+      <!-- Batch Actions Bar (review tab only) -->
+      <div class="batch-bar" id="batchBar" style="display: none;">
+        <label class="batch-select-all">
+          <input type="checkbox" id="selectAll"> Select All
+        </label>
+        <span class="batch-count" id="batchCount">0 selected</span>
+        <button class="btn btn-primary btn-sm" id="batchReviewed">✅ Mark All Reviewed</button>
+      </div>
+
+      <!-- Review Tab -->
+      <div class="tab-content active" id="tab-review">
+        <div id="reviewList" class="pr-list stagger"></div>
+        <div class="empty-state" id="reviewEmpty" style="display: none;">
+          <div class="empty-state-icon">🎉</div>
+          <div class="empty-state-title">Inbox Zero!</div>
+          <div class="empty-state-text">No PRs waiting for your review.</div>
+        </div>
+      </div>
+
+      <!-- Authored Tab -->
+      <div class="tab-content" id="tab-authored" style="display: none;">
+        <div id="authoredList" class="pr-list stagger"></div>
+        <div class="empty-state" id="authoredEmpty" style="display: none;">
+          <div class="empty-state-icon">📝</div>
+          <div class="empty-state-title">No Open PRs</div>
+          <div class="empty-state-text">You have no open pull requests.</div>
+        </div>
+      </div>
+
+      <!-- Mentioned Tab -->
+      <div class="tab-content" id="tab-mentioned" style="display: none;">
+        <div id="mentionedList" class="pr-list stagger"></div>
+        <div class="empty-state" id="mentionedEmpty" style="display: none;">
+          <div class="empty-state-icon">💬</div>
+          <div class="empty-state-title">No Mentions</div>
+          <div class="empty-state-text">You haven't been mentioned in any open PRs.</div>
+        </div>
+      </div>
+
+      <!-- Stats Tab -->
+      <div class="tab-content" id="tab-stats" style="display: none;">
+        <div class="grid grid-4" style="margin-bottom: 16px;">
+          <div class="card stat-card">
+            <div class="stat-icon" style="background: rgba(108, 92, 231, 0.15);">📥</div>
+            <div class="stat-value" id="statPending">0</div>
+            <div class="stat-label">Pending</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon" style="background: rgba(0, 184, 148, 0.15);">✅</div>
+            <div class="stat-value" id="statReviewed">0</div>
+            <div class="stat-label">Reviewed</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon" style="background: rgba(253, 203, 110, 0.15);">📊</div>
+            <div class="stat-value" id="statAuthored">0</div>
+            <div class="stat-label">My PRs</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon" style="background: rgba(116, 185, 255, 0.15);">💬</div>
+            <div class="stat-value" id="statMentioned">0</div>
+            <div class="stat-label">Mentioned</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 12px;">
+          <div class="card-header"><span class="card-title">📈 Review Inbox (7 days)</span></div>
+          <div class="chart-container" style="height: 160px;"><canvas id="velocityChart"></canvas></div>
+        </div>
+
+        <div class="card" style="margin-bottom: 12px;">
+          <div class="card-header"><span class="card-title">🏷️ PR Age Breakdown</span></div>
+          <div class="chart-container" style="height: 160px;"><canvas id="ageChart"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">📦 By Repository</span></div>
+          <div class="chart-container" style="height: 160px;"><canvas id="repoChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Summary Modal -->
+    <div class="ai-modal-overlay" id="aiModal" style="display: none;">
+      <div class="ai-modal card">
+        <div class="card-header">
+          <span class="card-title">🧠 AI Summary</span>
+          <button class="btn btn-ghost btn-sm" id="closeAiModal">✕</button>
+        </div>
+        <div class="ai-modal-body" id="aiModalBody">
+          <div class="ai-loading"><span class="spinner"></span><span>Generating summary...</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Checklist Modal -->
+    <div class="checklist-modal-overlay" id="checklistModal" style="display: none;">
+      <div class="checklist-modal card">
+        <div class="card-header">
+          <span class="card-title">📋 Review Checklist</span>
+          <button class="btn btn-ghost btn-sm" id="closeChecklist">✕</button>
+        </div>
+        <div class="checklist-body" id="checklistBody">
+          <div class="checklist-items" id="checklistItems"></div>
+          <div class="checklist-add">
+            <input type="text" class="input" id="checklistNewItem" placeholder="Add checklist item...">
+            <button class="btn btn-primary btn-sm" id="addChecklistItem">+</button>
+          </div>
+          <div class="checklist-presets">
+            <button class="btn btn-ghost btn-sm preset-btn" data-preset="code">📝 Code</button>
+            <button class="btn btn-ghost btn-sm preset-btn" data-preset="security">🔒 Security</button>
+            <button class="btn btn-ghost btn-sm preset-btn" data-preset="tests">🧪 Tests</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Help -->
+    <div class="shortcuts-modal" id="shortcutsModal" style="display: none;">
+      <div class="shortcuts-content card">
+        <div class="card-header">
+          <span class="card-title">⌨️ Keyboard Shortcuts</span>
+          <button class="btn btn-ghost btn-sm" id="closeShortcuts">✕</button>
+        </div>
+        <div class="shortcuts-list">
+          <div class="shortcut-item"><kbd>/</kbd> <span>Search PRs</span></div>
+          <div class="shortcut-item"><kbd>R</kbd> <span>Refresh</span></div>
+          <div class="shortcut-item"><kbd>S</kbd> <span>Settings</span></div>
+          <div class="shortcut-item"><kbd>1-4</kbd> <span>Switch tabs</span></div>
+          <div class="shortcut-item"><kbd>A</kbd> <span>Select all</span></div>
+          <div class="shortcut-item"><kbd>?</kbd> <span>Show shortcuts</span></div>
+          <div class="shortcut-item"><kbd>Esc</kbd> <span>Close modals</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/ollama-client.js"></script>
+  <script src="../shared/storage-utils.js"></script>
+  <script src="../shared/chart-utils.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

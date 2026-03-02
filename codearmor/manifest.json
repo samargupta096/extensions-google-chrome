@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "CodeArmor",
+  "version": "1.0.0",
+  "description": "AI-powered API key leak scanner — prevents accidental secret exposure, scans pages, and guards your credentials. 100% local, zero cloud.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "notifications",
+    "clipboardRead"
+  ],
+  "host_permissions": [
+    "http://localhost:11434/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/scanner.js"],
+      "css": ["content/scanner.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

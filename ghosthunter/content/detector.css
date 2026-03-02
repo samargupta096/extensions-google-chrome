@@ -1,0 +1,129 @@
+/* GhostHunter — Content Script Styles */
+
+.gh-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  z-index: 1000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  line-height: 1;
+}
+
+.gh-badge:hover {
+  transform: scale(1.05);
+}
+
+.gh-risk-low {
+  background: rgba(0, 184, 148, 0.15);
+  border: 1px solid rgba(0, 184, 148, 0.3);
+  color: #00B894;
+}
+
+.gh-risk-medium {
+  background: rgba(253, 203, 110, 0.15);
+  border: 1px solid rgba(253, 203, 110, 0.3);
+  color: #FDCB6E;
+}
+
+.gh-risk-high {
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #FF6B6B;
+}
+
+.gh-badge-icon {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.gh-badge-label {
+  letter-spacing: 0.3px;
+}
+
+.gh-badge-score {
+  opacity: 0.7;
+  font-size: 10px;
+}
+
+/* Tooltip */
+.gh-tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 200px;
+  padding: 12px;
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 10001;
+  font-size: 12px;
+  color: #f0f0f5;
+}
+
+.gh-badge:hover .gh-tooltip {
+  display: block;
+  animation: ghFadeIn 0.2s ease;
+}
+
+.gh-tooltip-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(240, 240, 245, 0.7);
+}
+
+.gh-tooltip-item {
+  padding: 3px 0;
+  font-size: 12px;
+  color: #f0f0f5;
+}
+
+.gh-tooltip-action {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.gh-track-btn {
+  width: 100%;
+  padding: 7px 12px;
+  background: linear-gradient(135deg, #6C5CE7, #5B4CC9);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gh-track-btn:hover {
+  background: linear-gradient(135deg, #7B6EF1, #6C5CE7);
+  box-shadow: 0 2px 12px rgba(108, 92, 231, 0.3);
+}
+
+.gh-track-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+@keyframes ghFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

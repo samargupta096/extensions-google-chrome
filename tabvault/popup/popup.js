@@ -1,0 +1,280 @@
+/**
+ * TabVault — Popup Controller
+ * Current tabs, named session save/restore, stale tab detection, AI summaries
+ */
+
+const ollama = new OllamaClient();
+const $ = (id) => document.getElementById(id);
+let currentTabs = [];
+let savedSessions = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initTabs();
+  await loadCurrentTabs();
+});
+
+// ─── Tabs ───
+function initTabs() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+      tab.classList.add('active');
+      $(`tab-${tab.dataset.tab}`).style.display = '';
+      if (tab.dataset.tab === 'sessions') loadSessions();
+      if (tab.dataset.tab === 'stale') loadStaleTabs();
+      if (tab.dataset.tab === 'current') loadCurrentTabs();
+    });
+  });
+}
+
+// ─── Current Tabs ───
+async function loadCurrentTabs() {
+  return new Promise(resolve => {
+    chrome.runtime.sendMessage({ action: 'getCurrentTabs' }, (r) => {
+      if (!r?.success) { resolve(); return; }
+      currentTabs = r.tabs || [];
+      $('ramMB').textContent = r.estimatedRamMB;
+      $('currentTabCount').textContent = `${r.count} tabs`;
+      $('currentRamEst').textContent = `~${r.estimatedRamMB} MB RAM`;
+
+      renderDomainGroups(r.domainGroups);
+      renderCurrentTabs(currentTabs);
+      resolve();
+    });
+  });
+}
+
+function renderDomainGroups(groups) {
+  $('domainGroups').innerHTML = (groups || []).map(g =>
+    `<span class="domain-group-chip">${g.domain} (${g.count})</span>`
+  ).join('');
+}
+
+function renderCurrentTabs(tabs) {
+  const list = $('currentTabList');
+  const empty = $('currentEmpty');
+  if (!tabs.length) { list.innerHTML = ''; empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  list.innerHTML = tabs.map(t => `
+    <div class="tab-item ${t.isStale ? 'is-stale' : ''}">
+      ${t.favIconUrl ? `<img class="tab-favicon" src="${t.favIconUrl}" onerror="this.style.display='none'">` : '<span class="tab-favicon">🌐</span>'}
+      <span class="tab-title" title="${escapeHtml(t.title || t.url)}">${escapeHtml(t.title || t.url)}</span>
+      ${t.isStale ? `<span class="tab-days">${t.daysOpen}d</span>` : ''}
+      <button class="tab-close-btn" data-id="${t.id}" title="Close tab">✕</button>
+    </div>
+  `).join('');
+  list.querySelectorAll('.tab-close-btn').forEach(btn =>
+    btn.addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: 'closeTab', tabId: parseInt(btn.dataset.id) }, () => {
+        showToast('Tab closed', 'success');
+        loadCurrentTabs();
+      });
+    })
+  );
+}
+
+// Save all tabs as session
+$('saveAllBtn').addEventListener('click', () => {
+  const name = $('sessionNameInput').value.trim() || `Session ${new Date().toLocaleDateString()}`;
+  chrome.runtime.sendMessage({ action: 'saveSession', name }, (r) => {
+    if (r?.success) {
+      showToast(`💾 Saved ${r.tabCount} tabs`, 'success');
+      $('sessionNameInput').value = '';
+    }
+  });
+});
+
+$('sessionNameInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') $('saveAllBtn').click();
+});
+
+// ─── Saved Sessions ───
+async function loadSessions() {
+  return new Promise(resolve => {
+    chrome.runtime.sendMessage({ action: 'getSessions' }, (r) => {
+      if (!r?.success) { resolve(); return; }
+      savedSessions = r.sessions || [];
+      const list = $('sessionList');
+      const empty = $('sessionsEmpty');
+      const count = $('sessionsCount');
+
+      count.textContent = `${savedSessions.length} sessions`;
+
+      if (!savedSessions.length) { list.innerHTML = ''; empty.style.display = ''; resolve(); return; }
+      empty.style.display = 'none';
+      renderSessionList(savedSessions);
+      resolve();
+    });
+  });
+}
+
+function renderSessionList(sessions) {
+  $('sessionList').innerHTML = sessions.map(s => `
+    <div class="session-card" id="sc-${s.id}">
+      <div class="session-card-top">
+        <div class="session-name" title="Double-click to rename" ondblclick="renameSession('${s.id}', this)">${escapeHtml(s.name)}</div>
+      </div>
+      <div class="session-meta">
+        <span class="session-tab-count">📑 ${s.tabCount} tabs</span>
+        <span class="session-ram">💾 ~${s.estimatedRamMB}MB</span>
+        <span class="session-date">🗓 ${new Date(s.createdAt).toLocaleDateString()}</span>
+      </div>
+      <div class="session-domains">
+        ${(s.domainGroups || []).slice(0, 5).map(d => `<span class="session-domain-chip">${d.domain}</span>`).join('')}
+      </div>
+      ${s.aiSummary ? `<div class="session-ai-summary">🤖 ${escapeHtml(s.aiSummary)}</div>` : ''}
+      <div class="session-actions">
+        <button class="btn btn-primary btn-sm" onclick="restoreSession('${s.id}')">↩️ Restore</button>
+        <button class="btn btn-secondary btn-sm" onclick="generateSummary('${s.id}')">🤖 Summary</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportSession('${s.id}')">📤 Export</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--accent-red)" onclick="deleteSession('${s.id}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.restoreSession = (id) => {
+  chrome.runtime.sendMessage({ action: 'restoreSession', sessionId: id }, (r) => {
+    if (r?.success) showToast('Session restored in new window! 🚀', 'success');
+    else showToast('Restore failed', 'error');
+  });
+};
+
+window.deleteSession = (id) => {
+  chrome.runtime.sendMessage({ action: 'deleteSession', sessionId: id }, () => {
+    showToast('Session deleted', 'success');
+    loadSessions();
+  });
+};
+
+window.exportSession = (id) => {
+  chrome.runtime.sendMessage({ action: 'exportSession', sessionId: id }, (r) => {
+    if (r?.success) {
+      navigator.clipboard.writeText(r.markdown);
+      showToast('Copied as Markdown! 📝', 'success');
+    }
+  });
+};
+
+window.renameSession = (id, el) => {
+  const current = el.textContent;
+  const input = document.createElement('input');
+  input.value = current;
+  input.className = 'input';
+  input.style.fontSize = '13px';
+  el.replaceWith(input);
+  input.focus(); input.select();
+  input.addEventListener('blur', () => {
+    const newName = input.value.trim() || current;
+    chrome.runtime.sendMessage({ action: 'renameSession', sessionId: id, name: newName }, () => {
+      input.replaceWith(el);
+      el.textContent = newName;
+      showToast('Renamed!', 'success');
+    });
+  });
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
+};
+
+window.generateSummary = async (id) => {
+  const session = savedSessions.find(s => s.id === id);
+  if (!session) return;
+
+  const available = await ollama.isAvailable();
+  if (!available) { showToast('AI offline', 'error'); return; }
+
+  // Find existing summary element or create one
+  const card = document.getElementById(`sc-${id}`);
+  let summaryEl = card.querySelector('.session-ai-summary');
+  if (!summaryEl) {
+    summaryEl = document.createElement('div');
+    summaryEl.className = 'session-ai-summary';
+    card.querySelector('.session-actions').before(summaryEl);
+  }
+  summaryEl.innerHTML = '<span class="spinner"></span> Summarizing...';
+
+  const tabList = session.tabs.slice(0, 20).map(t => t.title || t.url).join(', ');
+  const prompt = `In 1-2 sentences, describe what a developer was researching/working on based on these browser tabs:\n\n${tabList}\n\nBe specific and technical. Focus on what they were likely doing (e.g. debugging auth issues, researching React hooks, reviewing PRs).`;
+  const r = await ollama.generate(prompt, { temperature: 0.3, maxTokens: 150 });
+
+  if (r.success) {
+    summaryEl.textContent = `🤖 ${r.text}`;
+    // Save summary
+    chrome.runtime.sendMessage({ action: 'getSessions' }, (sr) => {
+      const s = (sr?.sessions || []).find(s => s.id === id);
+      if (s) {
+        s.aiSummary = r.text;
+        chrome.storage.local.get('tabSessions', ({ tabSessions }) => {
+          if (tabSessions?.[id]) { tabSessions[id].aiSummary = r.text; chrome.storage.local.set({ tabSessions }); }
+        });
+      }
+    });
+  } else {
+    summaryEl.textContent = '⚠️ AI unavailable';
+  }
+};
+
+// Session search
+$('sessionSearch').addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  const filtered = savedSessions.filter(s =>
+    s.name.toLowerCase().includes(q) ||
+    (s.tabs || []).some(t => (t.title || '').toLowerCase().includes(q))
+  );
+  renderSessionList(filtered);
+});
+
+// ─── Stale Tabs ───
+async function loadStaleTabs() {
+  chrome.runtime.sendMessage({ action: 'getStaleTabs' }, (r) => {
+    const staleTabs = r?.staleTabs || [];
+    const list = $('staleTabList');
+    const empty = $('staleEmpty');
+
+    if (!staleTabs.length) { list.innerHTML = ''; empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    list.innerHTML = staleTabs.map(t => `
+      <div class="stale-tab-item">
+        <span class="stale-tab-title" title="${escapeHtml(t.url)}">${escapeHtml(t.title || t.url)}</span>
+        <span class="stale-tab-days">${t.daysOpen}d old</span>
+        <button class="stale-tab-close" data-id="${t.id}" title="Close this tab">✕</button>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('.stale-tab-close').forEach(btn =>
+      btn.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ action: 'closeTab', tabId: parseInt(btn.dataset.id) }, () => {
+          btn.closest('.stale-tab-item').remove();
+          showToast('Tab closed', 'success');
+        });
+      })
+    );
+  });
+}
+
+$('saveStaleBtn').addEventListener('click', () => {
+  chrome.runtime.sendMessage({ action: 'getStaleTabs' }, (r) => {
+    const staleTabs = r?.staleTabs || [];
+    if (!staleTabs.length) { showToast('No stale tabs', 'error'); return; }
+    const name = `Stale Tabs — ${new Date().toLocaleDateString()}`;
+    const tabIds = staleTabs.map(t => t.id);
+    chrome.runtime.sendMessage({ action: 'saveSession', name, tabIds }, (sr) => {
+      if (sr?.success) {
+        chrome.runtime.sendMessage({ action: 'closeSession', sessionId: sr.sessionId });
+        showToast(`Saved ${sr.tabCount} stale tabs & closed ✅`, 'success');
+        loadStaleTabs();
+      }
+    });
+  });
+});
+
+// ─── Utils ───
+function escapeHtml(str) {
+  if (!str) return '';
+  const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+}
+function showToast(msg, type = 'success') {
+  const existing = document.querySelector('.toast'); if (existing) existing.remove();
+  const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2200);
+}

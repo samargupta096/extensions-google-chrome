@@ -1,6 +1,6 @@
 # 🚀 Chrome Extensions Suite
 
-> **5 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
+> **8 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
 
 ---
 
@@ -115,6 +115,69 @@
       <a href=".github/screenshots/pagepilot_screenshot.png">
         <img src=".github/screenshots/pagepilot_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PagePilot Screenshot" />
       </a>
+    </td>
+  </tr>
+</table>
+
+---
+
+### 🔍 GitPulse — GitHub PR Review Inbox
+
+<table>
+  <tr>
+    <td width="60%" valign="top">
+      <img src="gitpulse/icons/icon128.png" width="80" align="left" style="margin-right: 16px;" alt="GitPulse Icon" />
+      <br>
+      <strong>AI-powered unified PR inbox — never miss a review again.</strong>
+      <br><br>
+      Combat PR review fatigue with a unified dashboard. See all PRs waiting for your review, your authored PRs, and mentions — all in one popup. AI generates TL;DR summaries of PR descriptions. Track your review velocity with stats and charts. Color-coded urgency indicators highlight stale, aging, and fresh PRs.
+      <br><br>
+      <strong>Key Features:</strong> Review Inbox · AI PR Summaries · Urgency Badges · Review Velocity Stats · GitHub Token Auth · Badge Count
+    </td>
+    <td width="40%" valign="top" align="center">
+      <img src="gitpulse/icons/icon128.png" width="160" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GitPulse" />
+    </td>
+  </tr>
+</table>
+
+---
+
+### 👻 GhostHunter — Fake Job Detector
+
+<table>
+  <tr>
+    <td width="60%" valign="top">
+      <img src="ghosthunter/icons/icon128.png" width="80" align="left" style="margin-right: 16px;" alt="GhostHunter Icon" />
+      <br>
+      <strong>Spot ghost jobs and fake listings before you waste time applying.</strong>
+      <br><br>
+      GhostHunter runs on LinkedIn, Indeed, Glassdoor, and Wellfound. It scans job listings in real-time and overlays 🟢/🟡/🔴 risk badges based on ghost signals: reposted jobs, vague descriptions, unrealistic requirements, no salary info, and more. Built-in application tracker with status management and AI-powered job description analysis.
+      <br><br>
+      <strong>Key Features:</strong> Ghost Risk Badges · 8 Signal Detection · Application Tracker · AI Job Analysis · Stats Dashboard · 4 Job Boards
+    </td>
+    <td width="40%" valign="top" align="center">
+      <img src="ghosthunter/icons/icon128.png" width="160" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GhostHunter" />
+    </td>
+  </tr>
+</table>
+
+---
+
+### 🛡️ CodeArmor — API Key Leak Scanner
+
+<table>
+  <tr>
+    <td width="60%" valign="top">
+      <img src="codearmor/icons/icon128.png" width="80" align="left" style="margin-right: 16px;" alt="CodeArmor Icon" />
+      <br>
+      <strong>Stop accidental API key exposure — intercepts secrets before they leak.</strong>
+      <br><br>
+      CodeArmor monitors your paste events and alerts you before accidentally exposing secrets on public websites. Scans 24+ secret patterns including AWS, GitHub, OpenAI, Stripe, Slack, Google, Discord, and more. Secret Vault lets you register your own keys for extra protection. Full dashboard with interception history and AI-powered analysis.
+      <br><br>
+      <strong>Key Features:</strong> Paste Guard · Page Scanner · 24 Secret Patterns · Secret Vault · AI Analysis · Interception Stats
+    </td>
+    <td width="40%" valign="top" align="center">
+      <img src="codearmor/icons/icon128.png" width="160" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="CodeArmor" />
     </td>
   </tr>
 </table>

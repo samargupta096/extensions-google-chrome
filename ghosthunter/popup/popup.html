@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GhostHunter</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container" id="app">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">
+        <span class="header-icon">👻</span>
+        <h1>GhostHunter</h1>
+      </div>
+      <div class="header-actions">
+        <div class="ollama-status" id="ollamaStatus">
+          <span class="status-dot offline" id="statusDot"></span>
+          <span id="statusText">AI Offline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="tracker">📋 Tracker</button>
+      <button class="tab" data-tab="kanban">📌 Board</button>
+      <button class="tab" data-tab="add">➕ Add</button>
+      <button class="tab" data-tab="analyze">🧠 AI</button>
+      <button class="tab" data-tab="stats">📊 Stats</button>
+    </div>
+
+    <!-- Tracker Tab -->
+    <div class="tab-content active" id="tab-tracker">
+      <div class="filter-bar">
+        <div class="search-bar-mini">
+          <span>🔎</span>
+          <input type="text" class="search-input" id="appSearch" placeholder="Search jobs...">
+        </div>
+        <select class="input filter-select" id="statusFilter">
+          <option value="all">All Status</option>
+          <option value="applied">Applied</option>
+          <option value="interviewing">Interviewing</option>
+          <option value="rejected">Rejected</option>
+          <option value="ghosted">Ghosted</option>
+          <option value="offered">Offered</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" id="exportCSV" title="Export CSV">📤</button>
+      </div>
+
+      <div id="applicationList" class="app-list stagger"></div>
+
+      <div class="empty-state" id="trackerEmpty" style="display: none;">
+        <div class="empty-state-icon">📭</div>
+        <div class="empty-state-title">No Applications Yet</div>
+        <div class="empty-state-text">Add jobs manually or track them from job boards with GhostHunter active.</div>
+      </div>
+    </div>
+
+    <!-- Add Tab -->
+    <div class="tab-content" id="tab-add" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">➕ Add Application</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Job Title *</label>
+            <input type="text" class="input" id="addTitle" placeholder="Senior Software Engineer">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Company *</label>
+            <input type="text" class="input" id="addCompany" placeholder="Acme Corp">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Job URL</label>
+            <input type="url" class="input" id="addUrl" placeholder="https://...">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Salary Range</label>
+            <input type="text" class="input" id="addSalary" placeholder="$120k - $180k">
+          </div>
+          <div class="form-group flex-1">
+            <label class="input-label">Location</label>
+            <input type="text" class="input" id="addLocation" placeholder="Remote / NYC">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Platform</label>
+            <select class="input" id="addPlatform">
+              <option value="linkedin">LinkedIn</option>
+              <option value="indeed">Indeed</option>
+              <option value="glassdoor">Glassdoor</option>
+              <option value="wellfound">Wellfound</option>
+              <option value="company_site">Company Site</option>
+              <option value="referral">Referral</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label class="input-label">Applied Date</label>
+            <input type="date" class="input" id="addDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="input-label">Contact Email</label>
+          <input type="email" class="input" id="addContact" placeholder="recruiter@company.com">
+        </div>
+        <div class="form-group">
+          <label class="input-label">Notes</label>
+          <textarea class="input" id="addNotes" placeholder="Any additional notes..." rows="2"></textarea>
+        </div>
+        <button class="btn btn-primary" id="addSubmit" style="width: 100%; margin-top: 8px;">Add Application</button>
+      </div>
+    </div>
+
+    <!-- Kanban Board Tab -->
+    <div class="tab-content" id="tab-kanban" style="display: none;">
+      <div class="kanban-board" id="kanbanBoard">
+        <div class="kanban-column" data-status="applied">
+          <div class="kanban-header"><span class="kanban-dot dot-blue"></span> Applied <span class="kanban-col-count" id="kanbanApplied">0</span></div>
+          <div class="kanban-cards" id="kanbanAppliedCards"></div>
+        </div>
+        <div class="kanban-column" data-status="interviewing">
+          <div class="kanban-header"><span class="kanban-dot dot-cyan"></span> Interviewing <span class="kanban-col-count" id="kanbanInterviewing">0</span></div>
+          <div class="kanban-cards" id="kanbanInterviewingCards"></div>
+        </div>
+        <div class="kanban-column" data-status="offered">
+          <div class="kanban-header"><span class="kanban-dot dot-green"></span> Offered <span class="kanban-col-count" id="kanbanOffered">0</span></div>
+          <div class="kanban-cards" id="kanbanOfferedCards"></div>
+        </div>
+        <div class="kanban-column" data-status="rejected">
+          <div class="kanban-header"><span class="kanban-dot dot-red"></span> Rejected <span class="kanban-col-count" id="kanbanRejected">0</span></div>
+          <div class="kanban-cards" id="kanbanRejectedCards"></div>
+        </div>
+        <div class="kanban-column" data-status="ghosted">
+          <div class="kanban-header"><span class="kanban-dot dot-grey"></span> Ghosted <span class="kanban-col-count" id="kanbanGhosted">0</span></div>
+          <div class="kanban-cards" id="kanbanGhostedCards"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analyze Tab -->
+    <div class="tab-content" id="tab-analyze" style="display: none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">🔍 Ghost Analysis</span>
+        </div>
+        <p class="analyze-desc">Paste a job description to detect red flags and ghost signals.</p>
+        <div class="form-group">
+          <textarea class="input" id="analyzeInput" placeholder="Paste the full job description here..." rows="4"></textarea>
+        </div>
+        <div class="form-row">
+          <button class="btn btn-primary flex-1" id="analyzeBtn">🔍 Ghost Scan</button>
+          <button class="btn btn-secondary flex-1" id="salaryBtn">💰 Salary</button>
+        </div>
+        <div id="analyzeResult" class="analyze-result" style="display: none;"></div>
+      </div>
+
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">✉️ AI Cover Letter</span>
+        </div>
+        <p class="analyze-desc">Generate a tailored cover letter from a job description + your experience.</p>
+        <div class="form-group">
+          <label class="input-label">Job Description</label>
+          <textarea class="input" id="coverLetterJD" placeholder="Paste the job description..." rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="input-label">Your Experience (brief)</label>
+          <textarea class="input" id="coverLetterExp" placeholder="5 years full-stack, React/Node, led team of 4..." rows="2"></textarea>
+        </div>
+        <button class="btn btn-primary" id="generateCoverLetter" style="width: 100%;">✉️ Generate Cover Letter</button>
+        <div id="coverLetterResult" class="analyze-result" style="display: none;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🎯 Interview Prep</span>
+        </div>
+        <p class="analyze-desc">Get AI-generated interview questions based on a job description.</p>
+        <div class="form-group">
+          <textarea class="input" id="interviewJD" placeholder="Paste the job description..." rows="3"></textarea>
+        </div>
+        <button class="btn btn-secondary" id="generateInterviewPrep" style="width: 100%;">🎯 Generate Questions</button>
+        <div id="interviewResult" class="analyze-result" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- Stats Tab -->
+    <div class="tab-content" id="tab-stats" style="display: none;">
+      <div class="grid grid-3" style="margin-bottom: 16px;">
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(108, 92, 231, 0.15);">📨</div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Applied</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(0, 184, 148, 0.15);">📬</div>
+          <div class="stat-value" id="statResponseRate">0%</div>
+          <div class="stat-label">Response</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(255, 107, 107, 0.15);">👻</div>
+          <div class="stat-value" id="statGhostRate">0%</div>
+          <div class="stat-label">Ghost Rate</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">📊 Status Breakdown</span>
+        </div>
+        <div class="chart-container" style="height: 160px;">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">📈 Weekly Trend</span>
+        </div>
+        <div class="chart-container" style="height: 140px;">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🌐 By Platform</span>
+        </div>
+        <div class="chart-container" style="height: 160px;">
+          <canvas id="platformChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="edit-modal-overlay" id="editModal" style="display: none;">
+      <div class="edit-modal card">
+        <div class="card-header">
+          <span class="card-title">✏️ Edit Application</span>
+          <button class="btn btn-ghost btn-sm" id="closeEdit">✕</button>
+        </div>
+        <div class="form-group">
+          <label class="input-label">Notes</label>
+          <textarea class="input" id="editNotes" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="input-label">Salary</label>
+          <input type="text" class="input" id="editSalary" placeholder="$120k - $180k">
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Follow-up Reminder</label>
+            <input type="date" class="input" id="editReminder">
+          </div>
+          <div class="form-group flex-1">
+            <label class="input-label">Contact</label>
+            <input type="email" class="input" id="editContact">
+          </div>
+        </div>
+        <div class="form-row" style="margin-top: 8px;">
+          <button class="btn btn-primary flex-1" id="saveEdit">Save Changes</button>
+          <button class="btn btn-ghost" id="cancelEdit">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/ollama-client.js"></script>
+  <script src="../shared/storage-utils.js"></script>
+  <script src="../shared/chart-utils.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

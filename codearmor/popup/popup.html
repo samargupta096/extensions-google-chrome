@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeArmor</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container" id="app">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">
+        <span class="header-icon">🛡️</span>
+        <h1>CodeArmor</h1>
+      </div>
+      <div class="header-actions">
+        <div class="ollama-status" id="ollamaStatus">
+          <span class="status-dot offline" id="statusDot"></span>
+          <span id="statusText">AI Offline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+      <button class="tab" data-tab="vault">🔐 Vault</button>
+      <button class="tab" data-tab="scanner">🔍 Scanner</button>
+      <button class="tab" data-tab="patterns">🧬 Patterns</button>
+      <button class="tab" data-tab="settings">⚙️ Settings</button>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div class="tab-content active" id="tab-dashboard">
+      <!-- Protection Score -->
+      <div class="card protection-score-card" style="margin-bottom: 12px;">
+        <div class="protection-score-inner">
+          <div class="score-ring" id="scoreRing">
+            <svg viewBox="0 0 52 52" class="score-svg">
+              <circle class="score-bg" cx="26" cy="26" r="22"/>
+              <circle class="score-fg" id="scoreFg" cx="26" cy="26" r="22" style="--pct: 0"/>
+            </svg>
+            <div class="score-number" id="scoreNumber">--</div>
+          </div>
+          <div class="score-info">
+            <div class="score-label" id="scoreLabel">Protection Score</div>
+            <div class="score-desc" id="scoreDesc">Loading...</div>
+            <div class="score-items" id="scoreItems"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-3" style="margin-bottom: 16px;">
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(255, 107, 107, 0.15);">🚫</div>
+          <div class="stat-value" id="statInterceptions">0</div>
+          <div class="stat-label">Blocked</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(0, 184, 148, 0.15);">🔍</div>
+          <div class="stat-value" id="statScans">0</div>
+          <div class="stat-label">Scans</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(108, 92, 231, 0.15);">📅</div>
+          <div class="stat-value" id="statToday">0</div>
+          <div class="stat-label">Today</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">📈 Interceptions (7 days)</span>
+        </div>
+        <div class="chart-container" style="height: 150px;">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">🏷️ By Secret Type</span>
+        </div>
+        <div class="chart-container" style="height: 150px;">
+          <canvas id="typeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Recent interceptions with search -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="card-header">
+          <span class="card-title">🕐 Recent</span>
+          <div class="header-actions-inline">
+            <input type="text" class="mini-search" id="historySearch" placeholder="Filter...">
+            <button class="btn btn-ghost btn-sm" id="clearHistory" title="Clear history">🗑️</button>
+            <button class="btn btn-ghost btn-sm" id="exportBtn" title="Export data">📤</button>
+          </div>
+        </div>
+        <div id="recentList" class="recent-list"></div>
+        <div class="empty-state mini" id="recentEmpty" style="display: none;">
+          <div class="empty-state-icon">🛡️</div>
+          <div class="empty-state-text">No interceptions yet!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vault Tab -->
+    <div class="tab-content" id="tab-vault" style="display: none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">🔐 Secret Vault</span>
+        </div>
+        <p class="vault-desc">Add your API keys. CodeArmor alerts you if they appear in any paste or page.</p>
+        <div class="form-group">
+          <label class="input-label">Label</label>
+          <input type="text" class="input" id="vaultLabel" placeholder="My OpenAI Key">
+        </div>
+        <div class="form-group">
+          <label class="input-label">Secret Value</label>
+          <input type="password" class="input" id="vaultValue" placeholder="sk-proj-xxxx...">
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Type</label>
+            <select class="input" id="vaultType">
+              <option value="api_key">API Key</option>
+              <option value="token">Token</option>
+              <option value="password">Password</option>
+              <option value="secret">Secret</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="addVaultBtn" style="margin-top: 18px;">Add to Vault</button>
+        </div>
+      </div>
+
+      <div id="vaultList" class="vault-list"></div>
+      <div class="empty-state mini" id="vaultEmpty" style="display: none;">
+        <div class="empty-state-icon">🔐</div>
+        <div class="empty-state-text">Vault empty. Add secrets for extra protection.</div>
+      </div>
+    </div>
+
+    <!-- Scanner Tab -->
+    <div class="tab-content" id="tab-scanner" style="display: none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">🔍 Manual Scanner</span>
+        </div>
+        <p class="scanner-desc">Paste text or scan clipboard for secrets.</p>
+        <div class="form-group">
+          <textarea class="input" id="scanInput" placeholder="Paste text to scan..." rows="4"></textarea>
+        </div>
+        <div class="form-row">
+          <button class="btn btn-primary flex-1" id="scanBtn">🔍 Scan Text</button>
+          <button class="btn btn-secondary flex-1" id="clipboardBtn">📋 Scan Clipboard</button>
+        </div>
+        <div id="scanResult" class="scan-result" style="display: none;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🧠 AI Analysis</span>
+        </div>
+        <div class="form-group">
+          <textarea class="input" id="aiInput" placeholder="Paste suspicious text for AI analysis..." rows="3"></textarea>
+        </div>
+        <button class="btn btn-secondary" id="aiScanBtn" style="width: 100%;">🧠 AI Analyze</button>
+        <div id="aiResult" class="scan-result" style="display: none;"></div>
+      </div>
+
+      <div class="card" style="margin-top: 12px;">
+        <div class="card-header">
+          <span class="card-title">🔬 Regex Tester</span>
+        </div>
+        <p class="vault-desc">Test a regex pattern against sample text instantly.</p>
+        <div class="form-group">
+          <label class="input-label">Regex Pattern</label>
+          <input type="text" class="input mono" id="regexPattern" placeholder="YOUR_PATTERN_HERE">
+        </div>
+        <div class="form-group">
+          <label class="input-label">Test Text</label>
+          <textarea class="input" id="regexTestText" placeholder="Paste text to test against..." rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary" id="testRegexBtn" style="width: 100%;">🔬 Test Pattern</button>
+        <div id="regexResult" class="scan-result" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- Patterns Tab -->
+    <div class="tab-content" id="tab-patterns" style="display: none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">➕ Add Custom Pattern</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="input-label">Name</label>
+            <input type="text" class="input" id="patternName" placeholder="Custom API Key">
+          </div>
+          <div class="form-group flex-1">
+            <label class="input-label">Severity</label>
+            <select class="input" id="patternSeverity">
+              <option value="critical">🔴 Critical</option>
+              <option value="high" selected>🟡 High</option>
+              <option value="medium">🔵 Medium</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="input-label">Regex Pattern</label>
+          <input type="text" class="input mono" id="patternRegex" placeholder="my_secret_[A-Za-z0-9]{32}">
+        </div>
+        <button class="btn btn-primary" id="addPatternBtn" style="width: 100%;">Add Pattern</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🧬 Active Patterns (<span id="patternTotal">0</span>)</span>
+          <input type="text" class="mini-search" id="patternSearch" placeholder="Filter...">
+        </div>
+        <div id="patternList" class="pattern-list"></div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-content" id="tab-settings" style="display: none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">⚙️ Protection Settings</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Paste Guard</div>
+            <div class="setting-desc">Alert before pasting secrets</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="togglePasteGuard" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Page Scanner</div>
+            <div class="setting-desc">Scan pages for exposed secrets</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="togglePageScan" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Notifications</div>
+            <div class="setting-desc">Desktop notifications on detection</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="toggleNotifications" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Badge Counter</div>
+            <div class="setting-desc">Show today's count on icon</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="toggleBadge" checked><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔓 Domain Whitelist</span>
+        </div>
+        <p class="vault-desc">Paste guard is disabled on these trusted domains.</p>
+        <div class="form-row">
+          <input type="text" class="input flex-1" id="whitelistInput" placeholder="example.com">
+          <button class="btn btn-primary btn-sm" id="addWhitelistBtn">Add</button>
+        </div>
+        <div id="whitelistDomains" class="whitelist-list" style="margin-top: 8px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/ollama-client.js"></script>
+  <script src="../shared/storage-utils.js"></script>
+  <script src="../shared/chart-utils.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

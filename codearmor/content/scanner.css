@@ -1,0 +1,220 @@
+/* CodeArmor — Content Script Styles */
+
+/* Warning Modal */
+.ca-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: caFadeIn 0.2s ease;
+}
+
+.ca-modal {
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 16px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 107, 107, 0.1);
+  overflow: hidden;
+}
+
+.ca-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(225, 112, 85, 0.08));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.ca-modal-icon {
+  font-size: 22px;
+}
+
+.ca-modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #FF6B6B;
+  letter-spacing: -0.3px;
+}
+
+.ca-modal-body {
+  padding: 18px 20px;
+}
+
+.ca-modal-desc {
+  font-size: 13px;
+  color: rgba(240, 240, 245, 0.8);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.ca-modal-desc strong {
+  color: #FF6B6B;
+}
+
+.ca-secrets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.ca-secret-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ca-severity-critical { border-color: rgba(255, 107, 107, 0.3); }
+.ca-severity-high { border-color: rgba(253, 203, 110, 0.3); }
+.ca-severity-medium { border-color: rgba(116, 185, 255, 0.3); }
+
+.ca-secret-type {
+  font-weight: 700;
+  color: #f0f0f5;
+  min-width: 100px;
+}
+
+.ca-secret-preview {
+  flex: 1;
+  color: rgba(240, 240, 245, 0.5);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ca-secret-severity {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+
+.ca-severity-critical .ca-secret-severity {
+  background: rgba(255, 107, 107, 0.15);
+  color: #FF6B6B;
+}
+
+.ca-severity-high .ca-secret-severity {
+  background: rgba(253, 203, 110, 0.15);
+  color: #FDCB6E;
+}
+
+.ca-severity-medium .ca-secret-severity {
+  background: rgba(116, 185, 255, 0.15);
+  color: #74B9FF;
+}
+
+.ca-modal-warning {
+  font-size: 11px;
+  color: rgba(253, 203, 110, 0.8);
+  line-height: 1.5;
+  padding: 10px 12px;
+  background: rgba(253, 203, 110, 0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(253, 203, 110, 0.12);
+}
+
+.ca-modal-actions {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.ca-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-btn-cancel {
+  background: linear-gradient(135deg, #00B894, #00a885);
+  color: white;
+}
+
+.ca-btn-cancel:hover {
+  box-shadow: 0 4px 16px rgba(0, 184, 148, 0.3);
+}
+
+.ca-btn-force {
+  background: rgba(255, 107, 107, 0.12);
+  color: #FF6B6B;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.ca-btn-force:hover {
+  background: rgba(255, 107, 107, 0.2);
+}
+
+/* Scan indicator */
+.ca-scan-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 2147483646;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: caSlideUp 0.3s ease;
+}
+
+.ca-scan-icon {
+  font-size: 16px;
+}
+
+.ca-scan-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #FF6B6B;
+}
+
+.ca-scan-dismiss {
+  background: none;
+  border: none;
+  color: rgba(240, 240, 245, 0.4);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px;
+}
+
+.ca-scan-dismiss:hover {
+  color: #f0f0f5;
+}
+
+@keyframes caFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes caSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
