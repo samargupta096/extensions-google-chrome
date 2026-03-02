@@ -165,3 +165,25 @@ async function handleClearToday(send) {
 
 // ─── Utils ───
 function getToday() { return new Date().toISOString().split('T')[0]; }
+
+// ─── Ollama Relay ─────────────────────────────────────────────────────────────
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action !== 'ollamaFetch') return false;
+  const { url, options = {} } = msg;
+  if (!url || !url.startsWith('http://localhost:11434')) {
+    sendResponse({ ok: false, error: 'Disallowed URL', data: null });
+    return true;
+  }
+  fetch(url, {
+    method: options.method || 'GET',
+    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    body: options.body || undefined,
+  })
+    .then(async (res) => {
+      let data = null;
+      try { data = await res.json(); } catch (_) {}
+      sendResponse({ ok: res.ok, status: res.status, data });
+    })
+    .catch((err) => sendResponse({ ok: false, error: err.message, data: null }));
+  return true;
+});
