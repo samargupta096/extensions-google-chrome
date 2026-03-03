@@ -6,178 +6,317 @@
 
 ## ✨ Extensions
 
-### ⏱️ DeepWork Guardian — Focus & Productivity
+<p align="center">
+  <img src=".github/gifs/extensions_demo.gif" alt="Extensions Demo Animation" width="600" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+</p>
 
-<table>
+
+### 1) DeepWork Guardian
+
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src=".github/images/deepwork-guardian.png" width="80" align="left" style="margin-right: 16px;" alt="DeepWork Guardian Icon" />
-      <br>
-      <strong>AI-powered focus timer, distraction blocking, and browsing analytics.</strong>
-      <br><br>
-      Track time on every website automatically. Use Pomodoro-style focus sessions with smart break management. Block distracting sites during focus time with a beautiful motivational block page. Full analytics dashboard with 6 chart types — daily screen time, focus score trends, category breakdown, top sites, hourly activity heatmap, and AI-generated productivity insights via Ollama.
-      <br><br>
-      <strong>Key Features:</strong> Pomodoro Timer · Site Blocking · Time Tracking · Analytics Dashboard · AI Insights
+    <td width="15%" align="center" valign="top">
+      <img src="./deepwork-guardian/icons/icon128.png" width="80" alt="DeepWork Guardian Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <a href=".github/screenshots/deepwork-guardian_screenshot.png">
-        <img src=".github/screenshots/deepwork-guardian_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="DeepWork Guardian Screenshot" />
-      </a>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Productivity coaching during focused work blocks.</p>
+      <ul>
+        <li>Pomodoro timer & breaks</li>
+        <li>Distraction blocking</li>
+        <li>Browsing analytics</li>
+        <li>Local dashboard views</li>
+        <li>Optional Ollama insights</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/deepwork-guardian_screenshot.png"><img src=".github/screenshots/deepwork-guardian_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="DeepWork Guardian Screenshot" /></a>
     </td>
   </tr>
 </table>
 
 ---
 
-### 🧠 NeuroTab — AI Second Brain
+### 2) NeuroTab
 
-<table>
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src=".github/images/neurotab.png" width="80" align="left" style="margin-right: 16px;" alt="NeuroTab Icon" />
-      <br>
-      <strong>Save, summarize, and search everything you read online.</strong>
-      <br><br>
-      One-click save any page or text selection to your local knowledge base. Ollama auto-generates summaries and intelligent tags. Search across your entire reading history instantly. Ask your brain questions using RAG-style Q&A — the AI answers based on everything you've saved. Right-click context menus for quick save and summarize.
-      <br><br>
-      <strong>Key Features:</strong> Knowledge Base · AI Summarization · Smart Tags · Ask Your Brain (RAG Q&A) · Stats Dashboard
+    <td width="15%" align="center" valign="top">
+      <img src="./neurotab/icons/icon128.png" width="80" alt="NeuroTab Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <a href=".github/screenshots/neurotab_screenshot.png">
-        <img src=".github/screenshots/neurotab_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="NeuroTab Screenshot" />
-      </a>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Save and reason over what you read online.</p>
+      <ul>
+        <li>Capture page/selection</li>
+        <li>Generate summaries/tags</li>
+        <li>Searchable local knowledge base</li>
+        <li>Q&A over saved content</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/neurotab_screenshot.png"><img src=".github/screenshots/neurotab_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="NeuroTab Screenshot" /></a>
     </td>
   </tr>
 </table>
 
 ---
 
-### 💰 PriceHawk — Local Price Tracker
+### 3) PriceHawk
 
-<table>
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src=".github/images/pricehawk.png" width="80" align="left" style="margin-right: 16px;" alt="PriceHawk Icon" />
-      <br>
-      <strong>Track product prices locally, detect fake sales, and get AI deal analysis.</strong>
-      <br><br>
-      Add products with one click (auto-fills from current tab). Record price history over time with visual mini-charts. Automatic fake sale detection flags suspicious deals when the "sale" price is close to the historical average. AI deal analysis via Ollama tells you if it's a good time to buy. Get price drop notifications when products hit your target price.
-      <br><br>
-      <strong>Key Features:</strong> Price History Charts · Fake Sale Detection · AI Deal Analysis · Price Drop Alerts · Auto-fill
+    <td width="15%" align="center" valign="top">
+      <img src="./pricehawk/icons/icon128.png" width="80" alt="PriceHawk Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <a href=".github/screenshots/pricehawk_screenshot.png">
-        <img src=".github/screenshots/pricehawk_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PriceHawk Screenshot" />
-      </a>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Monitor products over time and avoid misleading discounts.</p>
+      <ul>
+        <li>Manual/assisted product capture</li>
+        <li>Historical tracking</li>
+        <li>Suspicious sale checks</li>
+        <li>AI-assisted buy/no-buy guidance</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/pricehawk_screenshot.png"><img src=".github/screenshots/pricehawk_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PriceHawk Screenshot" /></a>
     </td>
   </tr>
 </table>
 
 ---
 
-### 📋 ClipWise — Smart Clipboard Manager
+### 4) ClipWise
 
-<table>
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src=".github/images/clipwise.png" width="80" align="left" style="margin-right: 16px;" alt="ClipWise Icon" />
-      <br>
-      <strong>AI-powered clipboard history, code snippets, and text enhancement.</strong>
-      <br><br>
-      Save clipboard contents with smart type detection (code, URLs, commands, emails, text). Search and filter your clip history. Save reusable code snippets with language tagging. AI text actions via context menu — explain, summarize, improve writing, or translate any selected text. Full stats with clip type breakdown and daily activity charts.
-      <br><br>
-      <strong>Key Features:</strong> Clipboard History · Code Snippets · AI Explain/Summarize/Improve/Translate · Type Detection · Stats
+    <td width="15%" align="center" valign="top">
+      <img src="./clipwise/icons/icon128.png" width="80" alt="ClipWise Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <a href=".github/screenshots/clipwise_screenshot.png">
-        <img src=".github/screenshots/clipwise_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="ClipWise Screenshot" />
-      </a>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Keep clipboard data reusable and organized.</p>
+      <ul>
+        <li>Clipboard archive</li>
+        <li>Snippet saving</li>
+        <li>Clip type categorization</li>
+        <li>AI transform actions</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/clipwise_screenshot.png"><img src=".github/screenshots/clipwise_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="ClipWise Screenshot" /></a>
     </td>
   </tr>
 </table>
 
 ---
 
-### 🔍 PagePilot — AI Page Assistant & Dev Toolkit
+### 5) PagePilot
 
-<table>
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src=".github/images/pagepilot.png" width="80" align="left" style="margin-right: 16px;" alt="PagePilot Icon" />
-      <br>
-      <strong>Chat with any page using AI, plus 8 essential developer quick tools.</strong>
-      <br><br>
-      Ask questions about any webpage's content — Ollama reads the page and answers contextually. Includes a full developer toolkit: JSON formatter/minifier, Base64 encode/decode, URL encode/decode, Unix timestamp converter, Lorem Ipsum generator, word/character counter, color converter (HEX↔RGB↔HSL), and regex tester with match highlighting.
-      <br><br>
-      <strong>Key Features:</strong> AI Page Chat · JSON Formatter · Base64 · Timestamp · Color Converter · Regex Tester · Word Counter
+    <td width="15%" align="center" valign="top">
+      <img src="./pagepilot/icons/icon128.png" width="80" alt="PagePilot Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <a href=".github/screenshots/pagepilot_screenshot.png">
-        <img src=".github/screenshots/pagepilot_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PagePilot Screenshot" />
-      </a>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Fast page understanding + handy dev tools in one popup.</p>
+      <ul>
+        <li>Chat with current page context</li>
+        <li>Formatter/converter mini-tools</li>
+        <li>Regex testing and utility helpers</li>
+        <li>Color converter</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/pagepilot_screenshot.png"><img src=".github/screenshots/pagepilot_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PagePilot Screenshot" /></a>
     </td>
   </tr>
 </table>
 
 ---
 
-### 🔍 GitPulse — GitHub PR Review Inbox
+### 6) GitPulse
 
-<table>
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src="gitpulse/icons/icon128.png" width="80" align="left" style="margin-right: 16px;" alt="GitPulse Icon" />
-      <br>
-      <strong>AI-powered unified PR inbox — never miss a review again.</strong>
-      <br><br>
-      Combat PR review fatigue with a unified dashboard. See all PRs waiting for your review, your authored PRs, and mentions — all in one popup. AI generates TL;DR summaries of PR descriptions. Track your review velocity with stats and charts. Color-coded urgency indicators highlight stale, aging, and fresh PRs.
-      <br><br>
-      <strong>Key Features:</strong> Review Inbox · AI PR Summaries · Urgency Badges · Review Velocity Stats · GitHub Token Auth · Badge Count
+    <td width="15%" align="center" valign="top">
+      <img src="./gitpulse/icons/icon128.png" width="80" alt="GitPulse Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <img src="gitpulse/icons/icon128.png" width="160" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GitPulse" />
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Centralize PR review work.</p>
+      <ul>
+        <li>Inbox for review requests/authored PRs</li>
+        <li>Urgency indicators</li>
+        <li>AI PR summaries</li>
+        <li>Velocity-oriented stats</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/gitpulse_screenshot.png"><img src=".github/screenshots/gitpulse_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GitPulse Screenshot" /></a>
     </td>
   </tr>
 </table>
 
 ---
 
-### 👻 GhostHunter — Fake Job Detector
+### 7) GhostHunter
 
-<table>
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src="ghosthunter/icons/icon128.png" width="80" align="left" style="margin-right: 16px;" alt="GhostHunter Icon" />
-      <br>
-      <strong>Spot ghost jobs and fake listings before you waste time applying.</strong>
-      <br><br>
-      GhostHunter runs on LinkedIn, Indeed, Glassdoor, and Wellfound. It scans job listings in real-time and overlays 🟢/🟡/🔴 risk badges based on ghost signals: reposted jobs, vague descriptions, unrealistic requirements, no salary info, and more. Built-in application tracker with status management and AI-powered job description analysis.
-      <br><br>
-      <strong>Key Features:</strong> Ghost Risk Badges · 8 Signal Detection · Application Tracker · AI Job Analysis · Stats Dashboard · 4 Job Boards
+    <td width="15%" align="center" valign="top">
+      <img src="./ghosthunter/icons/icon128.png" width="80" alt="GhostHunter Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <img src="ghosthunter/icons/icon128.png" width="160" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GhostHunter" />
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Identify suspicious job postings.</p>
+      <ul>
+        <li>Supported on LinkedIn, Indeed, Glassdoor, Wellfound</li>
+        <li>Risk badges & listing signal checks</li>
+        <li>Application tracking</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/ghosthunter_screenshot.png"><img src=".github/screenshots/ghosthunter_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GhostHunter Screenshot" /></a>
     </td>
   </tr>
 </table>
 
 ---
 
-### 🛡️ CodeArmor — API Key Leak Scanner
+### 8) CodeArmor
 
-<table>
+<table width="100%">
   <tr>
-    <td width="60%" valign="top">
-      <img src="codearmor/icons/icon128.png" width="80" align="left" style="margin-right: 16px;" alt="CodeArmor Icon" />
-      <br>
-      <strong>Stop accidental API key exposure — intercepts secrets before they leak.</strong>
-      <br><br>
-      CodeArmor monitors your paste events and alerts you before accidentally exposing secrets on public websites. Scans 24+ secret patterns including AWS, GitHub, OpenAI, Stripe, Slack, Google, Discord, and more. Secret Vault lets you register your own keys for extra protection. Full dashboard with interception history and AI-powered analysis.
-      <br><br>
-      <strong>Key Features:</strong> Paste Guard · Page Scanner · 24 Secret Patterns · Secret Vault · AI Analysis · Interception Stats
+    <td width="15%" align="center" valign="top">
+      <img src="./codearmor/icons/icon128.png" width="80" alt="CodeArmor Icon">
     </td>
-    <td width="40%" valign="top" align="center">
-      <img src="codearmor/icons/icon128.png" width="160" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="CodeArmor" />
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Reduce accidental credential leakage.</p>
+      <ul>
+        <li>Paste interception on risky pages</li>
+        <li>Pattern-based secret detection</li>
+        <li>Vault of known secrets</li>
+        <li>Dashboard metrics</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/codearmor_screenshot.png"><img src=".github/screenshots/codearmor_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="CodeArmor Screenshot" /></a>
+    </td>
+  </tr>
+</table>
+
+---
+
+### 9) ApplyHawk
+
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./applyhawk/icons/icon128.png" width="80" alt="ApplyHawk Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Speed up repetitive job applications.</p>
+      <ul>
+        <li>Autofill on major job form flows</li>
+        <li>Local profile data</li>
+        <li>Activity tracking</li>
+        <li>AI-assisted cover-letter generation</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/applyhawk_screenshot.png"><img src=".github/screenshots/applyhawk_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="ApplyHawk Screenshot" /></a>
+    </td>
+  </tr>
+</table>
+
+---
+
+### 10) FocusLock
+
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./focuslock/icons/icon128.png" width="80" alt="FocusLock Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Maintain flow state while browsing.</p>
+      <ul>
+        <li>Deep work mode</li>
+        <li>Context-aware nudges</li>
+        <li>Score-based focus tracking</li>
+        <li>Local productivity analytics</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/focuslock_screenshot.png"><img src=".github/screenshots/focuslock_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="FocusLock Screenshot" /></a>
+    </td>
+  </tr>
+</table>
+
+---
+
+### 11) PromptChain
+
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./promptchain/icons/icon128.png" width="80" alt="PromptChain Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Run repeatable multi-step AI tasks locally.</p>
+      <ul>
+        <li>Chain builder & execution runner</li>
+        <li>Saved chain library</li>
+        <li>Page-context prompts</li>
+        <li>Model selection</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/promptchain_screenshot.png"><img src=".github/screenshots/promptchain_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PromptChain Screenshot" /></a>
+    </td>
+  </tr>
+</table>
+
+---
+
+### 12) StandupScribe
+
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./standupscribe/icons/icon128.png" width="80" alt="StandupScribe Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Generate standup updates from your actual browsing/work activity.</p>
+      <ul>
+        <li>Auto-generated Yesterday/Today/Blockers</li>
+        <li>Editable drafts</li>
+        <li>History view</li>
+        <li>AI model integration</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/standupscribe_screenshot.png"><img src=".github/screenshots/standupscribe_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="StandupScribe Screenshot" /></a>
+    </td>
+  </tr>
+</table>
+
+---
+
+### 13) TabVault
+
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./tabvault/icons/icon128.png" width="80" alt="TabVault Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Manage tab sprawl and session recovery.</p>
+      <ul>
+        <li>Save/restore tab sets</li>
+        <li>Stale-tab detection</li>
+        <li>Memory estimate panel</li>
+        <li>Optional AI-generated session summaries</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/tabvault_screenshot.png"><img src=".github/screenshots/tabvault_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="TabVault Screenshot" /></a>
     </td>
   </tr>
 </table>
