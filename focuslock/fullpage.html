@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusLock — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="popup/popup.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <div class="popup-container" id="app">
+          <!-- Header -->
+          <div class="header">
+            <div class="header-title">
+              <span class="header-icon">🔒</span>
+              <h1>FocusLock</h1>
+            </div>
+            <div class="header-actions">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+              <div class="streak-badge" id="streakBadge" title="Focus streak">🔥 <span id="streakCount">0</span></div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab active" data-tab="focus">🎯 Focus</button>
+            <button class="tab" data-tab="analytics">📊 Analytics</button>
+            <button class="tab" data-tab="settings">⚙️ Settings</button>
+          </div>
+
+          <!-- Focus Tab -->
+          <div class="tab-content active" id="tab-focus">
+            <!-- Flow Score -->
+            <div class="card flow-card" id="flowCard">
+              <div class="flow-score-ring">
+                <svg viewBox="0 0 80 80" class="flow-svg">
+                  <circle class="flow-bg" cx="40" cy="40" r="32"/>
+                  <circle class="flow-fg" id="flowFg" cx="40" cy="40" r="32" style="--pct:0"/>
+                </svg>
+                <div class="flow-center">
+                  <div class="flow-number" id="flowNumber">--</div>
+                  <div class="flow-label">Flow</div>
+                </div>
+              </div>
+              <div class="flow-info">
+                <div class="flow-status" id="flowStatus">No active session</div>
+                <div class="flow-timer" id="flowTimer" style="display:none;">
+                  <span id="timerRemaining">00:00</span> remaining
+                </div>
+                <div class="flow-distractions" id="flowDistractions" style="display:none;">
+                  <span id="distractCount">0</span> distractions
+                </div>
+              </div>
+            </div>
+
+            <!-- Session Controls -->
+            <div class="card" style="margin-bottom: 10px;" id="sessionCard">
+              <div class="duration-picker">
+                <button class="dur-btn active" data-mins="25">25m</button>
+                <button class="dur-btn" data-mins="50">50m</button>
+                <button class="dur-btn" data-mins="90">90m</button>
+                <button class="dur-btn" data-mins="custom">Custom</button>
+              </div>
+              <div id="customDurRow" class="custom-dur-row" style="display:none;">
+                <input type="number" class="input" id="customDur" placeholder="Minutes" min="1" max="480">
+              </div>
+              <button class="btn btn-primary" id="startFocusBtn" style="width:100%; margin-top:10px;">🔒 Start Focus Session</button>
+            </div>
+
+            <!-- Active Session Controls -->
+            <div class="card" id="activeSessionCard" style="display:none;">
+              <button class="btn btn-ghost" id="endFocusBtn" style="width:100%; color: var(--accent-red);">⏹ End Session</button>
+            </div>
+
+            <!-- Today Mini Stats -->
+            <div class="grid grid-3">
+              <div class="card stat-card">
+                <div class="stat-icon" style="background:rgba(0,184,148,0.15);">⏱️</div>
+                <div class="stat-value" id="todayFocusMin">0</div>
+                <div class="stat-label">Focus Min</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-icon" style="background:rgba(108,92,231,0.15);">🧘</div>
+                <div class="stat-value" id="todaySessions">0</div>
+                <div class="stat-label">Sessions</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-icon" style="background:rgba(253,203,110,0.15);">🔥</div>
+                <div class="stat-value" id="todayStreak">0</div>
+                <div class="stat-label">Day Streak</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics Tab -->
+          <div class="tab-content" id="tab-analytics" style="display:none;">
+            <div class="card" style="margin-bottom: 12px;">
+              <div class="card-header">
+                <span class="card-title">📈 Weekly Deep Work</span>
+              </div>
+              <div class="chart-container" style="height:140px;">
+                <canvas id="focusChart"></canvas>
+              </div>
+            </div>
+
+            <div class="grid grid-2" style="margin-bottom: 12px;">
+              <div class="card stat-card">
+                <div class="stat-icon" style="background:rgba(0,184,148,0.15);">⏱️</div>
+                <div class="stat-value" id="totalFocusHours">0h</div>
+                <div class="stat-label">Total Focus</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-icon" style="background:rgba(108,92,231,0.15);">🧘</div>
+                <div class="stat-value" id="totalSessions">0</div>
+                <div class="stat-label">Sessions</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">📅 Session History</span>
+              </div>
+              <div id="sessionHistoryList" class="session-history-list"></div>
+            </div>
+          </div>
+
+          <!-- Settings Tab -->
+          <div class="tab-content" id="tab-settings" style="display:none;">
+            <div class="card" style="margin-bottom: 12px;">
+              <div class="card-header"><span class="card-title">🛡️ Block Mode</span></div>
+              <div class="setting-row">
+                <span class="setting-label">Gentle Nudge (vs Hard Block)</span>
+                <label class="toggle">
+                  <input type="checkbox" id="nudgeModeToggle" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <p class="setting-hint">Nudge shows your flow score instead of blocking. Hard block prevents access.</p>
+            </div>
+
+            <div class="card" style="margin-bottom: 12px;">
+              <div class="card-header"><span class="card-title">📋 Block List</span></div>
+              <div id="blockListItems" class="block-list"></div>
+              <div class="block-add-row">
+                <input type="text" class="input" id="blockInput" placeholder="Add domain...">
+                <button class="btn btn-primary btn-sm" id="addBlockBtn">+</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><span class="card-title">⏰ Auto-Schedule</span></div>
+              <div class="setting-row">
+                <span class="setting-label">Enable Schedule</span>
+                <label class="toggle">
+                  <input type="checkbox" id="scheduleToggle">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="setting-row" id="scheduleHours" style="display:none;">
+                <input type="time" class="input" id="scheduleStart" value="09:00" style="flex:1;">
+                <span style="color:var(--text-tertiary);margin:0 6px;">to</span>
+                <input type="time" class="input" id="scheduleEnd" value="17:00" style="flex:1;">
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/chart-utils.js"></script>
+  <script src="shared/storage-utils.js"></script>
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

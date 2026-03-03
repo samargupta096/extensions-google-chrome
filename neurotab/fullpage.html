@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroTab — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <div class="popup-container">
+          <div class="header">
+            <div class="header-title">
+              <span style="font-size:22px;">🧠</span>
+              <h1>NeuroTab</h1>
+            </div>
+            <div class="header-actions">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+              <div class="model-selector-wrapper">
+                <select class="model-select loading" id="model-select" title="Select AI Model">
+                  <option value="">Loading...</option>
+                </select>
+              </div>
+              <div class="ollama-status disconnected" id="ollama-status">
+                <span class="status-dot offline"></span><span>AI</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active" data-tab="brain">📚 Brain</button>
+            <button class="tab" data-tab="ask">💬 Ask</button>
+            <button class="tab" data-tab="stats">📊 Stats</button>
+          </div>
+
+          <div class="tab-content active" id="tab-brain">
+            <div class="input-group" style="margin-bottom:12px;">
+              <input type="text" class="input" id="search-input" placeholder="Search your brain...">
+              <button class="btn btn-primary btn-sm" id="btn-save-page">💾 Save</button>
+            </div>
+            <div id="pages-list" class="pages-list"></div>
+          </div>
+
+          <div class="tab-content" id="tab-ask" style="display:none;">
+            <div class="ask-container">
+              <div class="ask-messages" id="ask-messages">
+                <div class="ask-welcome">
+                  <span style="font-size:32px;">🧠</span>
+                  <h3>Ask Your Brain</h3>
+                  <p>Query across everything you've saved</p>
+                </div>
+              </div>
+              <div class="input-group" style="margin-top:8px;">
+                <input type="text" class="input" id="ask-input" placeholder="What did I read about...">
+                <button class="btn btn-primary btn-sm" id="btn-ask">Ask</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-stats" style="display:none;">
+            <div class="grid grid-2 stagger" style="margin-bottom:12px;">
+              <div class="card stat-card slide-up">
+                <div class="stat-icon" style="background:rgba(108,92,231,0.12);">📄</div>
+                <div class="stat-value" id="stat-pages">0</div>
+                <div class="stat-label">Saved</div>
+              </div>
+              <div class="card stat-card slide-up">
+                <div class="stat-icon" style="background:rgba(0,206,201,0.12);">🏷️</div>
+                <div class="stat-value" id="stat-tags">0</div>
+                <div class="stat-label">Tags</div>
+              </div>
+            </div>
+            <div class="card slide-up" style="margin-bottom:12px;">
+              <div class="card-header"><div class="card-title">Top Domains</div></div>
+              <div class="chart-container" style="height:180px;"><canvas id="chart-domains"></canvas></div>
+            </div>
+            <div class="card slide-up" style="margin-bottom:12px;">
+              <div class="card-header"><div class="card-title">Activity</div></div>
+              <div class="chart-container" style="height:160px;"><canvas id="chart-activity"></canvas></div>
+            </div>
+            <div class="card slide-up">
+              <div class="card-header"><div class="card-title">Popular Tags</div></div>
+              <div id="tags-cloud" class="tags-cloud"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/chart-utils.js"></script>
+  <script src="shared/ollama-client.js"></script>
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

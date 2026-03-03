@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PriceHawk — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+        <div class="popup-container">
+          <div class="header">
+            <div class="header-title"><span style="font-size: 22px;">🦅</span><h1>PriceHawk</h1></div>
+            <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <div class="model-selector-wrapper">
+                <select class="model-select loading" id="model-select" title="Select AI Model">
+                  <option value="">Loading...</option>
+                </select>
+              </div>
+              <div class="ollama-status disconnected" id="ollama-status">
+                <span class="status-dot offline"></span>
+                <span>Ollama</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active" data-tab="track">🏷️ Track</button>
+            <button class="tab" data-tab="products">📦 Products</button>
+            <button class="tab" data-tab="stats">📊 Stats</button>
+          </div>
+
+          <div class="tab-content active" id="tab-track">
+            <div class="product-form">
+              <input type="text" class="input" id="input-name" placeholder="Product name">
+              <input type="text" class="input" id="input-url" placeholder="Product URL">
+              <div class="form-row">
+                <input type="number" class="input" id="input-price" placeholder="Current price" step="0.01">
+                <input type="number" class="input" id="input-target" placeholder="Target price" step="0.01">
+              </div>
+              <button class="btn btn-primary" id="btn-add" style="width:100%;">🎯 Start Tracking</button>
+            </div>
+            <button class="btn btn-secondary" id="btn-autofill" style="width:100%;">📎 Auto-fill from Current Tab</button>
+          </div>
+
+          <div class="tab-content" id="tab-products" style="display:none;">
+            <div id="product-list" class="product-list"></div>
+          </div>
+
+          <div class="tab-content" id="tab-stats" style="display:none;">
+            <div class="grid grid-2 stagger" style="margin-bottom:12px;">
+              <div class="card stat-card slide-up">
+                <div class="stat-icon" style="background:rgba(108,92,231,0.12);">📦</div>
+                <div class="stat-value" id="stat-products">0</div>
+                <div class="stat-label">Tracked</div>
+              </div>
+              <div class="card stat-card slide-up">
+                <div class="stat-icon" style="background:rgba(0,184,148,0.12);">💰</div>
+                <div class="stat-value" id="stat-savings">₹0</div>
+                <div class="stat-label">Savings</div>
+              </div>
+            </div>
+            <div class="card slide-up">
+              <div class="card-header"><div class="card-title">Stores Tracked</div></div>
+              <div class="chart-container" style="height:160px;"><canvas id="chart-stores"></canvas></div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/chart-utils.js"></script>
+  <script src="shared/ollama-client.js"></script>
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

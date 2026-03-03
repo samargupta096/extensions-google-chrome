@@ -16,6 +16,8 @@
         <h1>CodeArmor</h1>
       </div>
       <div class="header-actions">
+        <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+        <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
         <div class="ollama-status" id="ollamaStatus">
           <span class="status-dot offline" id="statusDot"></span>
           <span id="statusText">AI Offline</span>
@@ -278,5 +280,6 @@
   <script src="../shared/storage-utils.js"></script>
   <script src="../shared/chart-utils.js"></script>
   <script src="popup.js"></script>
+  <script src="../shared/split-screen.js"></script>
 </body>
 </html>

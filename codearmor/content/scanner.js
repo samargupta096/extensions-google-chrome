@@ -190,9 +190,12 @@
     indicator.innerHTML = `
       <span class="ca-scan-icon">🛡️</span>
       <span class="ca-scan-text">${count} exposed secret${count > 1 ? 's' : ''} on this page</span>
-      <button class="ca-scan-dismiss" onclick="this.parentElement.remove()">✕</button>
+      <button class="ca-scan-dismiss" id="ca-scan-dismiss-btn">✕</button>
     `;
     document.body.appendChild(indicator);
+    document.getElementById('ca-scan-dismiss-btn')?.addEventListener('click', function() {
+      this.parentElement.remove();
+    });
     setTimeout(() => indicator.remove(), 8000);
   }
 

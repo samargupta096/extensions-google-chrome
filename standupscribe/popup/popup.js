@@ -12,6 +12,7 @@ let blockers = [];
 document.addEventListener('DOMContentLoaded', async () => {
   await checkOllamaStatus();
   initTabs();
+  setupEventListeners();
   await loadToday();
   await loadDraft();
   updateDate();
@@ -99,22 +100,6 @@ function renderBullets() {
   }));
 }
 
-// Bullet input
-$('bulletInput').addEventListener('keydown', (e) => {
-  if (e.key !== 'Enter') return;
-  const text = $('bulletInput').value.trim(); if (!text) return;
-  chrome.runtime.sendMessage({ action: 'addBullet', bullet: text, type: 'work' });
-  bullets.push(text); renderBullets();
-  $('bulletInput').value = '';
-});
-
-$('blockerBtn').addEventListener('click', () => {
-  const text = $('bulletInput').value.trim(); if (!text) return;
-  chrome.runtime.sendMessage({ action: 'addBullet', bullet: text, type: 'blocker' });
-  blockers.push(text); renderBullets();
-  $('bulletInput').value = '';
-});
-
 // ─── Draft ───
 async function loadDraft() {
   return new Promise(resolve => {
@@ -125,8 +110,50 @@ async function loadDraft() {
   });
 }
 
-$('generateDraft').addEventListener('click', generateDraft);
-$('refreshDraft').addEventListener('click', generateDraft);
+function setupEventListeners() {
+  $('generateDraft').addEventListener('click', generateDraft);
+  $('refreshDraft').addEventListener('click', generateDraft);
+  
+  // Bullet input
+  $('bulletInput').addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const text = $('bulletInput').value.trim(); if (!text) return;
+    chrome.runtime.sendMessage({ action: 'addBullet', bullet: text, type: 'work' });
+    bullets.push(text); renderBullets();
+    $('bulletInput').value = '';
+  });
+
+  $('blockerBtn').addEventListener('click', () => {
+    const text = $('bulletInput').value.trim(); if (!text) return;
+    chrome.runtime.sendMessage({ action: 'addBullet', bullet: text, type: 'blocker' });
+    blockers.push(text); renderBullets();
+    $('bulletInput').value = '';
+  });
+
+  // Copy handlers
+  $('copySlack').addEventListener('click', () => {
+    const text = `*Yesterday:*\n${$('draftYesterday').textContent}\n\n*Today:*\n${$('draftToday').textContent}\n\n*Blockers:*\n${$('draftBlockers').textContent}`;
+    navigator.clipboard.writeText(text);
+    showToast('Copied for Slack! 📋', 'success');
+  });
+
+  $('copyMarkdown').addEventListener('click', () => {
+    const d = new Date().toISOString().split('T')[0];
+    const text = `# Standup — ${d}\n\n## Yesterday\n${$('draftYesterday').textContent}\n\n## Today\n${$('draftToday').textContent}\n\n## Blockers\n${$('draftBlockers').textContent}`;
+    navigator.clipboard.writeText(text);
+    showToast('Copied as Markdown! 📝', 'success');
+  });
+
+  $('saveDraft').addEventListener('click', () => {
+    const draft = {
+      yesterday: $('draftYesterday').textContent,
+      today: $('draftToday').textContent,
+      blockers: $('draftBlockers').textContent
+    };
+    chrome.runtime.sendMessage({ action: 'saveDraft', draft });
+    showToast('Saved!', 'success');
+  });
+}
 
 async function generateDraft() {
   $('draftEmpty').style.display = 'none';
@@ -199,29 +226,7 @@ function renderDraft(draft) {
   $('draftBlockers').textContent = draft.blockers || 'None';
 }
 
-// Copy handlers
-$('copySlack').addEventListener('click', () => {
-  const text = `*Yesterday:*\n${$('draftYesterday').textContent}\n\n*Today:*\n${$('draftToday').textContent}\n\n*Blockers:*\n${$('draftBlockers').textContent}`;
-  navigator.clipboard.writeText(text);
-  showToast('Copied for Slack! 📋', 'success');
-});
 
-$('copyMarkdown').addEventListener('click', () => {
-  const d = new Date().toISOString().split('T')[0];
-  const text = `# Standup — ${d}\n\n## Yesterday\n${$('draftYesterday').textContent}\n\n## Today\n${$('draftToday').textContent}\n\n## Blockers\n${$('draftBlockers').textContent}`;
-  navigator.clipboard.writeText(text);
-  showToast('Copied as Markdown! 📝', 'success');
-});
-
-$('saveDraft').addEventListener('click', () => {
-  const draft = {
-    yesterday: $('draftYesterday').textContent,
-    today: $('draftToday').textContent,
-    blockers: $('draftBlockers').textContent
-  };
-  chrome.runtime.sendMessage({ action: 'saveDraft', draft });
-  showToast('Saved!', 'success');
-});
 
 // ─── History ───
 async function loadHistory() {
@@ -237,19 +242,23 @@ async function loadHistory() {
         <div class="history-date">📅 ${date}</div>
         <div class="history-preview">${escapeHtml((draft.yesterday || '').slice(0, 120))}...</div>
         <div class="history-actions">
-          <button class="btn btn-ghost btn-sm" onclick="copyHistoryDraft(${JSON.stringify(JSON.stringify(draft))})">📋 Copy</button>
+          <button class="btn btn-ghost btn-sm history-copy-btn" data-draft='${escapeHtml(JSON.stringify(draft))}'>📋 Copy</button>
         </div>
       </div>
     `).join('');
+
+    list.querySelectorAll('.history-copy-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const draftStr = btn.dataset.draft || btn.getAttribute('data-draft');
+        if (!draftStr) return;
+        const draft = JSON.parse(draftStr.replace(/&quot;/g, '"'));
+        const text = `Yesterday:\n${draft.yesterday}\n\nToday:\n${draft.today}\n\nBlockers:\n${draft.blockers}`;
+        navigator.clipboard.writeText(text);
+        showToast('Copied!', 'success');
+      });
+    });
   });
 }
-
-window.copyHistoryDraft = (draftStr) => {
-  const draft = JSON.parse(draftStr);
-  const text = `Yesterday:\n${draft.yesterday}\n\nToday:\n${draft.today}\n\nBlockers:\n${draft.blockers}`;
-  navigator.clipboard.writeText(text);
-  showToast('Copied!', 'success');
-};
 
 // ─── Utilities ───
 function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
@@ -258,3 +267,40 @@ function showToast(msg, type = 'success') {
   const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = msg;
   document.body.appendChild(t); setTimeout(() => t.remove(), 2200);
 }
+
+
+// --- Global Model Selector ---
+async function initGlobalModelSelector() {
+  const select = document.getElementById('globalModelSelect');
+  if (!select) return;
+
+  try {
+    const models = await ollama.listModels();
+    if (!models || models.length === 0) {
+      select.style.display = 'none';
+      return;
+    }
+    
+    select.style.display = ''; // show it
+    const local = await chrome.storage.local.get('settings');
+    const settings = local.settings || {};
+    const savedModel = settings.defaultModel || ollama.defaultModel || 'llama3.2';
+
+    select.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+    
+    if (models.some(m => m.name === savedModel)) {
+      select.value = savedModel;
+    } else {
+      select.value = models[0].name;
+      await chrome.storage.local.set({ settings: { ...settings, defaultModel: select.value } });
+    }
+
+    select.addEventListener('change', async (e) => {
+      const current = await chrome.storage.local.get('settings');
+      await chrome.storage.local.set({ settings: { ...(current.settings || {}), defaultModel: e.target.value } });
+    });
+  } catch(e) { console.error('Failed to init model selector', e); }
+}
+
+// Auto-run after DOM load and status check
+setTimeout(initGlobalModelSelector, 500);

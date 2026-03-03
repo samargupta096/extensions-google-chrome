@@ -51,10 +51,17 @@ function showSummaryPopup(text) {
   popup.innerHTML = `
     <div class="nt-popup-header">
       <span>🧠 NeuroTab Summary</span>
-      <button class="nt-popup-close" onclick="this.closest('#neurotab-popup').remove()">✕</button>
+      <button class="nt-popup-close" id="nt-close-btn">✕</button>
     </div>
     <div class="nt-popup-body">${text}</div>
   `;
+
+  // Wait for it to be appended to add listener
+  setTimeout(() => {
+    document.getElementById('nt-close-btn')?.addEventListener('click', function() {
+      this.closest('#neurotab-popup').remove();
+    });
+  }, 0);
 
   const style = document.createElement('style');
   style.textContent = `

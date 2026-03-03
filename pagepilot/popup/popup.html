@@ -11,6 +11,8 @@
     <div class="header">
       <div class="header-title"><span style="font-size:22px;">🔍</span><h1>PagePilot</h1></div>
       <div class="header-actions">
+        <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+        <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
         <div class="model-selector-wrapper">
           <select class="model-select loading" id="model-select" title="Select AI Model">
             <option value="">Loading...</option>
@@ -54,5 +56,6 @@
   </div>
   <script src="../shared/ollama-client.js"></script>
   <script src="pagepilot.js"></script>
+  <script src="../shared/split-screen.js"></script>
 </body>
 </html>

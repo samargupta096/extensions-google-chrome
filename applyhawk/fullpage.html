@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApplyHawk — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="popup/popup.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+        <div class="container">
+          <div class="header">
+            <div class="logo-container">
+              <img src="../icons/icon48.png" alt="ApplyHawk Logo" class="logo">
+            </div>
+            <h1 class="title">ApplyHawk</h1>
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+            <p class="subtitle">Job Applications on Autopilot</p>
+          </div>
+
+          <div class="status-card">
+            <div class="status-info">
+              <span class="status-label">Profile Status</span>
+              <span class="status-value" id="profile-status">Checking...</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="autofill-btn" class="btn primary-btn">
+              <span class="icon">⚡</span> Autofill Current Page
+            </button>
+            <button id="cover-letter-btn" class="btn primary-btn" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);">
+              <span class="icon">🤖</span> Generate AI Cover Letter
+            </button>
+            <button id="options-btn" class="btn secondary-btn">
+              <span class="icon">⚙️</span> Manage Profile
+            </button>
+          </div>
+
+          <!-- Hidden by default until generated -->
+          <div id="cover-letter-result" class="cover-letter-card hidden">
+            <div class="status-info">
+              <span class="status-label" style="color: #ec4899;">AI Generated Cover Letter</span>
+            </div>
+            <textarea id="cover-letter-text" readonly></textarea>
+            <button id="copy-btn" class="btn secondary-btn" style="margin-top: 8px; padding: 8px; font-size: 13px;">
+              Copy to Clipboard
+            </button>
+          </div>
+
+          <div class="footer">
+            <span id="version-text">v1.0.0</span>
+          </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

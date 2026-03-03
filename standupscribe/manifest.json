@@ -3,8 +3,18 @@
   "name": "StandupScribe",
   "version": "1.0.0",
   "description": "Auto-draft your daily standup from browsing activity. AI-powered Yesterday / Today / Blockers.",
-  "permissions": ["tabs", "storage", "alarms", "notifications", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "tabs",
+    "storage",
+    "alarms",
+    "notifications",
+    "scripting",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:11434/*"
+  ],
   "background": {
     "service_worker": "background/service-worker.js"
   },

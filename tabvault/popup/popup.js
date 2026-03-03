@@ -110,10 +110,11 @@ async function loadSessions() {
 }
 
 function renderSessionList(sessions) {
-  $('sessionList').innerHTML = sessions.map(s => `
-    <div class="session-card" id="sc-${s.id}">
+  const list = $('sessionList');
+  list.innerHTML = sessions.map(s => `
+    <div class="session-card" id="sc-${s.id}" data-id="${s.id}">
       <div class="session-card-top">
-        <div class="session-name" title="Double-click to rename" ondblclick="renameSession('${s.id}', this)">${escapeHtml(s.name)}</div>
+        <div class="session-name js-rename" title="Double-click to rename">${escapeHtml(s.name)}</div>
       </div>
       <div class="session-meta">
         <span class="session-tab-count">📑 ${s.tabCount} tabs</span>
@@ -125,30 +126,50 @@ function renderSessionList(sessions) {
       </div>
       ${s.aiSummary ? `<div class="session-ai-summary">🤖 ${escapeHtml(s.aiSummary)}</div>` : ''}
       <div class="session-actions">
-        <button class="btn btn-primary btn-sm" onclick="restoreSession('${s.id}')">↩️ Restore</button>
-        <button class="btn btn-secondary btn-sm" onclick="generateSummary('${s.id}')">🤖 Summary</button>
-        <button class="btn btn-ghost btn-sm" onclick="exportSession('${s.id}')">📤 Export</button>
-        <button class="btn btn-ghost btn-sm" style="color:var(--accent-red)" onclick="deleteSession('${s.id}')">🗑️</button>
+        <button class="btn btn-primary btn-sm js-restore">↩️ Restore</button>
+        <button class="btn btn-secondary btn-sm js-summary">🤖 Summary</button>
+        <button class="btn btn-ghost btn-sm js-export">📤 Export</button>
+        <button class="btn btn-ghost btn-sm js-delete" style="color:var(--accent-red)">🗑️</button>
       </div>
     </div>
   `).join('');
 }
 
-window.restoreSession = (id) => {
+// Global delegated listeners for sessionList
+$('sessionList').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const card = e.target.closest('.session-card');
+  if (!card) return;
+  const id = card.dataset.id;
+  if (btn.classList.contains('js-restore')) restoreSession(id);
+  else if (btn.classList.contains('js-summary')) generateSummary(id);
+  else if (btn.classList.contains('js-export')) exportSession(id);
+  else if (btn.classList.contains('js-delete')) deleteSession(id);
+});
+
+$('sessionList').addEventListener('dblclick', (e) => {
+  if (e.target.classList.contains('js-rename')) {
+    const card = e.target.closest('.session-card');
+    if (card) renameSession(card.dataset.id, e.target);
+  }
+});
+
+const restoreSession = (id) => {
   chrome.runtime.sendMessage({ action: 'restoreSession', sessionId: id }, (r) => {
     if (r?.success) showToast('Session restored in new window! 🚀', 'success');
     else showToast('Restore failed', 'error');
   });
 };
 
-window.deleteSession = (id) => {
+const deleteSession = (id) => {
   chrome.runtime.sendMessage({ action: 'deleteSession', sessionId: id }, () => {
     showToast('Session deleted', 'success');
     loadSessions();
   });
 };
 
-window.exportSession = (id) => {
+const exportSession = (id) => {
   chrome.runtime.sendMessage({ action: 'exportSession', sessionId: id }, (r) => {
     if (r?.success) {
       navigator.clipboard.writeText(r.markdown);
@@ -157,7 +178,7 @@ window.exportSession = (id) => {
   });
 };
 
-window.renameSession = (id, el) => {
+const renameSession = (id, el) => {
   const current = el.textContent;
   const input = document.createElement('input');
   input.value = current;
@@ -176,7 +197,7 @@ window.renameSession = (id, el) => {
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
 };
 
-window.generateSummary = async (id) => {
+const generateSummary = async (id) => {
   const session = savedSessions.find(s => s.id === id);
   if (!session) return;
 
@@ -278,3 +299,40 @@ function showToast(msg, type = 'success') {
   const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = msg;
   document.body.appendChild(t); setTimeout(() => t.remove(), 2200);
 }
+
+
+// --- Global Model Selector ---
+async function initGlobalModelSelector() {
+  const select = document.getElementById('globalModelSelect');
+  if (!select) return;
+
+  try {
+    const models = await ollama.listModels();
+    if (!models || models.length === 0) {
+      select.style.display = 'none';
+      return;
+    }
+    
+    select.style.display = ''; // show it
+    const local = await chrome.storage.local.get('settings');
+    const settings = local.settings || {};
+    const savedModel = settings.defaultModel || ollama.defaultModel || 'llama3.2';
+
+    select.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+    
+    if (models.some(m => m.name === savedModel)) {
+      select.value = savedModel;
+    } else {
+      select.value = models[0].name;
+      await chrome.storage.local.set({ settings: { ...settings, defaultModel: select.value } });
+    }
+
+    select.addEventListener('change', async (e) => {
+      const current = await chrome.storage.local.get('settings');
+      await chrome.storage.local.set({ settings: { ...(current.settings || {}), defaultModel: e.target.value } });
+    });
+  } catch(e) { console.error('Failed to init model selector', e); }
+}
+
+// Auto-run after DOM load and status check
+setTimeout(initGlobalModelSelector, 500);

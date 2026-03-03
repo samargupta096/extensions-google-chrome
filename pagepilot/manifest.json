@@ -1,19 +1,42 @@
 {
   "manifest_version": 3,
-  "name": "PagePilot — AI Page Assistant",
+  "name": "PagePilot \u2014 AI Page Assistant",
   "version": "1.0.0",
-  "description": "Chat with any page, developer quick tools, and page insights — powered by local Ollama",
-  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
-  "permissions": ["activeTab", "storage", "contextMenus"],
-  "host_permissions": ["http://localhost:11434/*"],
-  "background": { "service_worker": "background/service-worker.js" },
+  "description": "Chat with any page, developer quick tools, and page insights \u2014 powered by local Ollama",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "declarativeNetRequest",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://localhost:11434/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
   "action": {
     "default_popup": "popup/popup.html",
-    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png" }
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["content/extractor.js"],
-    "run_at": "document_idle"
-  }]
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content/extractor.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
 }

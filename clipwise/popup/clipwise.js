@@ -54,9 +54,9 @@ async function loadClips() {
         <span class="clip-type ${c.type}">${c.type}</span>
         <span class="clip-time">${timeAgo(c.timestamp)}</span>
         <div class="clip-actions">
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();copyClipById('${c.id}')" title="Copy">📋</button>
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();aiAction('${c.id}','explain')" title="AI Explain">🧠</button>
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();deleteClip('${c.id}')" title="Delete" style="color:var(--accent-red);">🗑️</button>
+          <button class="btn btn-ghost btn-sm js-clip-copy" title="Copy">📋</button>
+          <button class="btn btn-ghost btn-sm js-clip-ai" title="AI Explain">🧠</button>
+          <button class="btn btn-ghost btn-sm js-clip-del" title="Delete" style="color:var(--accent-red);">🗑️</button>
         </div>
       </div>
       <div id="ai-${c.id}"></div>
@@ -64,16 +64,28 @@ async function loadClips() {
   `).join('');
 }
 
-window.copyClipById = async function(id) {
+document.getElementById('clip-list').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const item = e.target.closest('.clip-item');
+  if (!item) return;
+  const id = item.dataset.id;
+  
+  if (btn.classList.contains('js-clip-copy')) { e.stopPropagation(); copyClipById(id); }
+  else if (btn.classList.contains('js-clip-ai')) { e.stopPropagation(); aiAction(id, 'explain'); }
+  else if (btn.classList.contains('js-clip-del')) { e.stopPropagation(); deleteClip(id); }
+});
+
+const copyClipById = async (id) => {
   const { clips } = await chrome.runtime.sendMessage({ type: 'GET_CLIPS', limit: 500 });
   const clip = clips.find(c => c.id === id);
   if (clip) { await navigator.clipboard.writeText(clip.text); showToast('Copied!'); }
 };
-window.deleteClip = async function(id) {
+const deleteClip = async (id) => {
   await chrome.runtime.sendMessage({ type: 'DELETE_CLIP', id });
   loadClips();
 };
-window.aiAction = async function(id, action) {
+const aiAction = async (id, action) => {
   const el = document.getElementById('ai-'+id);
   el.innerHTML = '<div class="ai-result">🧠 Thinking...</div>';
   const { clips } = await chrome.runtime.sendMessage({ type: 'GET_CLIPS', limit: 500 });
@@ -109,14 +121,26 @@ async function loadSnippets() {
       <div class="snippet-meta">
         <span class="badge badge-cyan">${s.language}</span>
         <span class="clip-time">${timeAgo(s.timestamp)}</span>
-        <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText(${JSON.stringify(s.code)});showToast('Copied!')">📋</button>
-        <button class="btn btn-ghost btn-sm" onclick="deleteSnippet('${s.id}')" style="color:var(--accent-red);">🗑️</button>
+        <button class="btn btn-ghost btn-sm js-snip-copy" data-code="${esc(s.code)}">📋</button>
+        <button class="btn btn-ghost btn-sm js-snip-del" data-id="${s.id}" style="color:var(--accent-red);">🗑️</button>
       </div>
     </div>
   `).join('');
 }
 
-window.deleteSnippet = async function(id) {
+document.getElementById('snippet-list').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  if (btn.classList.contains('js-snip-copy')) {
+    const code = btn.dataset.code || '';
+    navigator.clipboard.writeText(code.replace(/&quot;/g, '"'));
+    showToast('Copied!');
+  } else if (btn.classList.contains('js-snip-del')) {
+    deleteSnippet(btn.dataset.id);
+  }
+});
+
+const deleteSnippet = async (id) => {
   await chrome.runtime.sendMessage({ type: 'DELETE_SNIPPET', id });
   loadSnippets();
 };

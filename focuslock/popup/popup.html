@@ -16,6 +16,8 @@
         <h1>FocusLock</h1>
       </div>
       <div class="header-actions">
+        <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+        <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
         <div class="streak-badge" id="streakBadge" title="Focus streak">🔥 <span id="streakCount">0</span></div>
       </div>
     </div>
@@ -167,5 +169,6 @@
   <script src="../shared/chart-utils.js"></script>
   <script src="../shared/storage-utils.js"></script>
   <script src="popup.js"></script>
+  <script src="../shared/split-screen.js"></script>
 </body>
 </html>

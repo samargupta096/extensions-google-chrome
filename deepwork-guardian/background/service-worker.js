@@ -1,3 +1,19 @@
+
+// Bypass Ollama CORS
+if (chrome.declarativeNetRequest) {
+  chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [11434],
+    addRules: [{
+      id: 11434,
+      condition: { urlFilter: 'http://localhost:11434/*' },
+      action: {
+        type: 'modifyHeaders',
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+      }
+    }]
+  }).catch(e => console.error(e));
+}
+
 /**
  * DeepWork Guardian — Background Service Worker
  * Tracks active tab time, manages focus sessions, and handles distraction blocking
@@ -248,9 +264,14 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
 // ============ Message Handler ============
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const msgKey = message.type || message.action;
+
+  // Ignore messages we don't handle so other listeners can pick them up
+  if (!msgKey) return false;
+
   (async () => {
     try {
-      switch (message.type) {
+      switch (msgKey) {
         case 'GET_STATE': {
           const data = await chrome.storage.local.get(['settings', 'blockedSites']);
           const timeKey = `time_${todayKey()}`;
@@ -380,8 +401,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           break;
         }
 
+        // ── Ollama Fetch Relay (handles ollamaFetch from popup) ──
+        case 'ollamaFetch': {
+          const { url, options = {} } = message;
+          if (!url || !url.startsWith('http://localhost:11434')) {
+            sendResponse({ ok: false, error: 'Disallowed URL', data: null });
+            break;
+          }
+          try {
+            const res = await fetch(url, {
+              method: options.method || 'GET',
+              headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+              body: options.body || undefined,
+            });
+            let data = null;
+            try { data = await res.json(); } catch (_) {}
+            sendResponse({ ok: res.ok, status: res.status, data });
+          } catch (err) {
+            sendResponse({ ok: false, error: err.message, data: null });
+          }
+          break;
+        }
+
         default:
-          sendResponse({ error: 'Unknown message type' });
+          // Unknown message — don't respond, let other listeners handle it
+          return;
       }
     } catch (err) {
       sendResponse({ error: err.message });
@@ -389,3 +433,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   })();
   return true; // async response
 });
+

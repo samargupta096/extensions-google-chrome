@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TabVault — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="popup/popup.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <div class="popup-container" id="app">
+          <!-- Header -->
+          <div class="header">
+            <div class="header-title">
+              <span class="header-icon">📚</span>
+              <h1>TabVault</h1>
+            </div>
+            <div class="header-actions">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+              <div class="ram-badge" id="ramBadge" title="Estimated RAM usage">
+                <span id="ramMB">--</span> MB
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab active" data-tab="current">🗂️ Now</button>
+            <button class="tab" data-tab="sessions">📁 Saved</button>
+            <button class="tab" data-tab="stale">⚠️ Stale</button>
+          </div>
+
+          <!-- Current Tabs Tab -->
+          <div class="tab-content active" id="tab-current">
+            <div class="save-session-bar">
+              <input type="text" class="input" id="sessionNameInput" placeholder="Name this session...">
+              <button class="btn btn-primary btn-sm" id="saveAllBtn">💾 Save All</button>
+            </div>
+
+            <div class="tab-summary-row">
+              <span id="currentTabCount">0 tabs</span>
+              <span id="currentRamEst">~0 MB RAM</span>
+            </div>
+
+            <!-- Domain Groups -->
+            <div id="domainGroups" class="domain-groups"></div>
+
+            <!-- Tab list -->
+            <div id="currentTabList" class="current-tab-list"></div>
+
+            <div class="empty-state mini" id="currentEmpty" style="display:none;">
+              <div class="empty-state-icon">📭</div>
+              <div class="empty-state-text">No open tabs</div>
+            </div>
+          </div>
+
+          <!-- Saved Sessions Tab -->
+          <div class="tab-content" id="tab-sessions" style="display:none;">
+            <div class="sessions-header">
+              <input type="text" class="input search-mini" id="sessionSearch" placeholder="Search sessions...">
+              <span class="sessions-count" id="sessionsCount">0 sessions</span>
+            </div>
+
+            <div id="sessionList" class="session-list"></div>
+
+            <div class="empty-state" id="sessionsEmpty" style="display:none;">
+              <div class="empty-state-icon">📁</div>
+              <div class="empty-state-title">No Saved Sessions</div>
+              <div class="empty-state-text">Save your current tabs as a named session to restore them later.</div>
+            </div>
+          </div>
+
+          <!-- Stale Tabs Tab -->
+          <div class="tab-content" id="tab-stale" style="display:none;">
+            <div class="stale-header">
+              <span class="stale-desc">Tabs open for 7+ days that you haven't used.</span>
+              <button class="btn btn-ghost btn-sm" id="saveStaleBtn" style="white-space:nowrap;">💾 Save + Close</button>
+            </div>
+
+            <div id="staleTabList" class="stale-tab-list"></div>
+
+            <div class="empty-state" id="staleEmpty" style="display:none;">
+              <div class="empty-state-icon">✨</div>
+              <div class="empty-state-title">All fresh!</div>
+              <div class="empty-state-text">No stale tabs found. Great tab hygiene!</div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/ollama-client.js"></script>
+  <script src="shared/storage-utils.js"></script>
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

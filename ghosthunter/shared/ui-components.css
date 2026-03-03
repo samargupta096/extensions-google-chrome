@@ -638,3 +638,127 @@ select.input {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
 }
+
+/* AI Model Selector */
+.model-select {
+  appearance: none;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 6px 32px 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 12px;
+  outline: none;
+  cursor: pointer;
+  max-width: 150px;
+  font-family: inherit;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  backdrop-filter: blur(8px);
+  transition: all var(--transition-fast);
+  
+  /* Custom white chevron */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+}
+
+.model-select:hover {
+  background-color: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.model-select:focus {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+}
+
+.model-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.model-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-weight: 500;
+  padding: 8px;
+}
+
+/* ============ Expand / Full-Tab Button ============ */
+.expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(240, 240, 245, 0.6);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.expand-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  background: conic-gradient(
+    from var(--expand-angle, 0deg),
+    #6C5CE7, #00CEC9, #FD79A8, #FDCB6E, #6C5CE7
+  );
+  z-index: -2;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  animation: expandSpin 3s linear infinite;
+}
+
+.expand-btn::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 9px;
+  background: var(--bg-card, rgba(20, 20, 35, 0.95));
+  z-index: -1;
+  transition: background 0.3s ease;
+}
+
+@property --expand-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes expandSpin {
+  to { --expand-angle: 360deg; }
+}
+
+.expand-btn:hover {
+  color: #fff;
+  transform: scale(1.15);
+}
+
+.expand-btn:hover::before {
+  opacity: 1;
+  filter: blur(3px);
+  animation: expandSpin 1.5s linear infinite;
+}
+
+.expand-btn:hover::after {
+  background: linear-gradient(135deg, rgba(108, 92, 231, 0.25), rgba(0, 206, 201, 0.15));
+}
+
+.expand-btn:active {
+  transform: scale(0.95);
+}

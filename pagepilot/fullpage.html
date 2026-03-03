@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PagePilot — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="popup/pagepilot.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <div class="popup-container" style="min-height:520px;">
+          <div class="header">
+            <div class="header-title"><span style="font-size:22px;">🔍</span><h1>PagePilot</h1></div>
+            <div class="header-actions">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+              <div class="model-selector-wrapper">
+                <select class="model-select loading" id="model-select" title="Select AI Model">
+                  <option value="">Loading...</option>
+                </select>
+              </div>
+              <div class="ollama-status disconnected" id="ollama-status"><span class="status-dot offline"></span><span>AI</span></div>
+            </div>
+          </div>
+          <div class="tabs">
+            <button class="tab active" data-tab="chat">💬 Chat</button>
+            <button class="tab" data-tab="tools">🛠️ Tools</button>
+          </div>
+          <div class="tab-content active" id="tab-chat">
+            <div class="chat-container">
+              <div class="chat-messages" id="chat-messages">
+                <div class="chat-welcome">
+                  <span style="font-size:32px;">🔍</span>
+                  <h3>Chat with this Page</h3>
+                  <p>Ask anything about the current page content</p>
+                </div>
+              </div>
+              <div class="input-group" style="margin-top:8px;">
+                <input type="text" class="input" id="chat-input" placeholder="Ask about this page...">
+                <button class="btn btn-primary btn-sm" id="btn-send">Send</button>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-tools" style="display:none;">
+            <div class="tool-grid" id="tool-grid">
+              <div class="tool-quick" data-tool="json"><div class="tq-icon">📋</div><div class="tq-label">JSON Format</div></div>
+              <div class="tool-quick" data-tool="base64"><div class="tq-icon">🔐</div><div class="tq-label">Base64</div></div>
+              <div class="tool-quick" data-tool="url"><div class="tq-icon">🔗</div><div class="tq-label">URL Encode</div></div>
+              <div class="tool-quick" data-tool="timestamp"><div class="tq-icon">⏰</div><div class="tq-label">Timestamp</div></div>
+              <div class="tool-quick" data-tool="lorem"><div class="tq-icon">📝</div><div class="tq-label">Lorem Ipsum</div></div>
+              <div class="tool-quick" data-tool="counter"><div class="tq-icon">🔢</div><div class="tq-label">Word Count</div></div>
+              <div class="tool-quick" data-tool="color"><div class="tq-icon">🎨</div><div class="tq-label">Color Convert</div></div>
+              <div class="tool-quick" data-tool="regex"><div class="tq-icon">🔎</div><div class="tq-label">Regex Test</div></div>
+            </div>
+            <div id="tool-area" style="margin-top:12px;"></div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/ollama-client.js"></script>
+  <script src="popup/pagepilot.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

@@ -7,12 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
   <div class="container">
     <div class="header">
       <div class="logo-container">
         <img src="../icons/icon48.png" alt="ApplyHawk Logo" class="logo">
       </div>
       <h1 class="title">ApplyHawk</h1>
+        <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
       <p class="subtitle">Job Applications on Autopilot</p>
     </div>
     
@@ -54,5 +56,6 @@
     </div>
   </div>
   <script src="popup.js"></script>
+  <script src="../shared/split-screen.js"></script>
 </body>
 </html>

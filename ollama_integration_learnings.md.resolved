@@ -1,0 +1,96 @@
+# Ollama Integration Learnings: Bypassing CORS for Chrome Extensions
+
+This document compiles the key architectural and networking learnings derived from analyzing the [ollama-ui](file:///home/samarpit/Documents/Projects/2026/samargupta096/extensions-google-chrome/ollama-ui) extension's integration with the local Ollama API. 
+
+The primary challenge it solves is seamless out-of-the-box communication between a browser extension context (`chrome-extension://`) and a local AI server (`http://localhost:11434`) without requiring complex user configurations.
+
+## The Problem: Ollama's Strict CORS Policy
+
+By default, the Ollama API enforces strict Cross-Origin Resource Sharing (CORS) rules. It typically only accepts requests originating from `http://localhost`, `http://127.0.0.1`, or `http://0.0.0.0`. 
+
+When a Chrome extension attempts to make a [fetch()](file:///home/samarpit/Documents/Projects/2026/samargupta096/extensions-google-chrome/shared/ollama-client.js#23-56) call to the local Ollama instance, the browser automatically attaches an `Origin` header identifying the request's source:
+
+```http
+Origin: chrome-extension://[extension-id-string]
+```
+
+Because this origin is not implicitly whitelisted by Ollama, the server immediately rejects the request, returning an HTTP `403 Forbidden` error.
+
+### The Problematic Solution: `OLLAMA_ORIGINS`
+
+The standard, documented way to resolve this is by configuring the Ollama server environment variables before launching it:
+
+```bash
+OLLAMA_ORIGINS="chrome-extension://*" ollama serve
+```
+
+**Why this is a terrible UX strategy for extensions:**
+*   It requires the end-user to shut down their Ollama service, modify system environment variables, and restart it from the terminal.
+*   Most average users will just see the extension "fail to connect" and uninstall it rather than jumping through terminal networking hoops. 
+*   It breaks the "plug and play" promise of local AI.
+
+---
+
+## The Elegant Solution: `chrome.declarativeNetRequest`
+
+The [ollama-ui](file:///home/samarpit/Documents/Projects/2026/samargupta096/extensions-google-chrome/ollama-ui) extension implements a brilliant workaround to bypass Ollama's origin checks natively. Rather than forcing the backend (Ollama) to accept the extension's origin, it forces the extension to **lie to the backend** about where the request is coming from.
+
+It achieves this using Chrome's robust `declarativeNetRequest` API to intercept outgoing requests to Ollama and spoof the `Origin` header.
+
+### Step 1: Manifest Permissions
+
+The extension must declare the requisite permissions in [manifest.json](file:///home/samarpit/Documents/Projects/2026/samargupta096/extensions-google-chrome/ollama-ui/manifest.json):
+
+```json
+{
+  "permissions": [
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "http://localhost:11434/*"
+  ]
+}
+```
+
+### Step 2: Dynamic Header Spoofing
+
+In the background service worker, a dynamic network rule is established using `chrome.declarativeNetRequest.updateDynamicRules`. 
+
+This rule tells Chrome: *"Whenever this extension tries to hit `http://localhost:11434/*`, intercept the request, strip the `chrome-extension://` origin header, and replace it with `http://localhost`."*
+
+```javascript
+// Example implementation in a background service worker
+
+if (chrome.declarativeNetRequest) {
+  chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [11434], // Ensure idempotency by removing old rules
+    addRules: [{
+      id: 11434,
+      condition: { 
+        urlFilter: "http://localhost:11434/*"
+      },
+      action: {
+        type: "modifyHeaders",
+        requestHeaders: [{ 
+          header: "origin", 
+          operation: "set", 
+          value: "http://localhost" // The magic spoof
+        }]
+      }
+    }]
+  }).catch(e => console.error("Failed to set DNP rules:", e));
+}
+```
+
+### The Resulting Workflow
+
+1.  A content script, popup, or the service worker itself initiates a standard [fetch('http://localhost:11434/api/generate')](file:///home/samarpit/Documents/Projects/2026/samargupta096/extensions-google-chrome/shared/ollama-client.js#23-56).
+2.  The Chrome networking stack prepares the request, calculating the default `Origin: chrome-extension://...` header.
+3.  Right before the request leaves the browser, the `declarativeNetRequest` engine intercepts it based on the `urlFilter`.
+4.  The engine aggressively rewrites the header to `Origin: http://localhost`.
+5.  Ollama receives the request. Because `http://localhost` is implicitly trusted as a local context, it allows the request and returns the AI generation stream.
+
+## Key Takeaways for Local AI Development
+*   **Never trust the default browser Origins** when dealing with local dev servers from an extension context.
+*   **Zero-config UX is paramount;** you should always attempt to handle CORS restrictions transparently at the client layer (via `declarativeNetRequest`) rather than burdening the user with server configuration.
+*   Always implement this routing/spoofing exclusively inside the **Background Service Worker** to ensure consistent network policies across popups, options pages, and injected content scripts.

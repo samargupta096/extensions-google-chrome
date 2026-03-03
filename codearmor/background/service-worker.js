@@ -1,3 +1,19 @@
+
+// Bypass Ollama CORS
+if (chrome.declarativeNetRequest) {
+  chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [11434],
+    addRules: [{
+      id: 11434,
+      condition: { urlFilter: 'http://localhost:11434/*' },
+      action: {
+        type: 'modifyHeaders',
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+      }
+    }]
+  }).catch(e => console.error(e));
+}
+
 /**
  * CodeArmor — Enhanced Background Service Worker
  * Secret patterns, domain whitelist, custom patterns, vault, clipboard scan,
@@ -87,6 +103,27 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const handler = handlers[msg.action];
   if (handler) {
     handler().then(r => sendResponse(r));
+    return true;
+  }
+
+  // Ollama relay for AI features
+  if (msg.action === 'ollamaFetch') {
+    const { url, options = {} } = msg;
+    if (!url || !url.startsWith('http://localhost:11434')) {
+      sendResponse({ ok: false, error: 'Disallowed URL', data: null });
+    } else {
+      fetch(url, {
+        method: options.method || 'GET',
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        body: options.body || undefined,
+      })
+        .then(async (res) => {
+          let data = null;
+          try { data = await res.json(); } catch (_) {}
+          sendResponse({ ok: res.ok, status: res.status, data });
+        })
+        .catch((err) => sendResponse({ ok: false, error: err.message, data: null }));
+    }
     return true;
   }
 });
@@ -302,24 +339,3 @@ async function getStats() {
   };
 }
 
-// ─── Ollama Relay ─────────────────────────────────────────────────────────────
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.action !== 'ollamaFetch') return false;
-  const { url, options = {} } = msg;
-  if (!url || !url.startsWith('http://localhost:11434')) {
-    sendResponse({ ok: false, error: 'Disallowed URL', data: null });
-    return true;
-  }
-  fetch(url, {
-    method: options.method || 'GET',
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    body: options.body || undefined,
-  })
-    .then(async (res) => {
-      let data = null;
-      try { data = await res.json(); } catch (_) {}
-      sendResponse({ ok: res.ok, status: res.status, data });
-    })
-    .catch((err) => sendResponse({ ok: false, error: err.message, data: null }));
-  return true;
-});

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StandupScribe — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="popup/popup.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <div class="popup-container" id="app">
+          <!-- Header -->
+          <div class="header">
+            <div class="header-title">
+              <span class="header-icon">📝</span>
+              <h1>StandupScribe</h1>
+            </div>
+            <div class="header-actions">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+              <div class="ollama-status" id="ollamaStatus">
+                <span class="status-dot offline" id="statusDot"></span>
+                <span id="statusText">AI Offline</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab active" data-tab="today">📊 Today</button>
+            <button class="tab" data-tab="draft">✍️ Draft</button>
+            <button class="tab" data-tab="history">🗂️ History</button>
+          </div>
+
+          <!-- Today Tab -->
+          <div class="tab-content active" id="tab-today">
+            <div class="today-header">
+              <div class="today-date" id="todayDate"></div>
+              <div class="today-stats">
+                <span class="today-stat"><span id="trackTime">0</span> min tracked</span>
+                <span class="today-stat"><span id="trackVisits">0</span> visits</span>
+              </div>
+            </div>
+
+            <!-- Top Domains -->
+            <div class="card" style="margin-bottom: 10px;">
+              <div class="card-header">
+                <span class="card-title">⏱️ Time by Site</span>
+              </div>
+              <div id="domainList" class="domain-list"></div>
+              <div class="empty-state mini" id="domainEmpty" style="display:none;">
+                <div class="empty-state-icon">⏰</div>
+                <div class="empty-state-text">Tracking starts next minute...</div>
+              </div>
+            </div>
+
+            <!-- Manual Notes -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">📌 Quick Notes</span>
+              </div>
+              <div class="bullet-add-row">
+                <input type="text" class="input" id="bulletInput" placeholder="What did you work on? (Enter to add)">
+                <button class="btn btn-sm btn-ghost" id="blockerBtn" title="Add as blocker">🚫</button>
+              </div>
+              <div id="bulletList" class="bullet-list"></div>
+            </div>
+          </div>
+
+          <!-- Draft Tab -->
+          <div class="tab-content" id="tab-draft" style="display:none;">
+            <div class="draft-actions">
+              <button class="btn btn-primary flex-1" id="generateDraft">🤖 Generate with AI</button>
+              <button class="btn btn-secondary btn-sm" id="refreshDraft">↺</button>
+            </div>
+
+            <div id="draftLoading" class="loading-state" style="display:none;">
+              <span class="spinner"></span><span>Generating your standup...</span>
+            </div>
+
+            <div id="draftContainer" style="display:none;">
+              <div class="draft-section">
+                <div class="draft-section-label">↩️ Yesterday</div>
+                <div class="draft-text" id="draftYesterday" contenteditable="true"></div>
+              </div>
+              <div class="draft-section">
+                <div class="draft-section-label">✅ Today</div>
+                <div class="draft-text" id="draftToday" contenteditable="true"></div>
+              </div>
+              <div class="draft-section">
+                <div class="draft-section-label">🚫 Blockers</div>
+                <div class="draft-text" id="draftBlockers" contenteditable="true"></div>
+              </div>
+
+              <div class="draft-copy-bar">
+                <button class="btn btn-primary flex-1" id="copySlack">📋 Copy for Slack</button>
+                <button class="btn btn-secondary flex-1" id="copyMarkdown">📝 Copy Markdown</button>
+                <button class="btn btn-ghost btn-sm" id="saveDraft">💾</button>
+              </div>
+            </div>
+
+            <div class="empty-state" id="draftEmpty">
+              <div class="empty-state-icon">✍️</div>
+              <div class="empty-state-title">No Draft Yet</div>
+              <div class="empty-state-text">Click "Generate with AI" to draft your standup from today's activity, or add notes manually in the Today tab.</div>
+            </div>
+          </div>
+
+          <!-- History Tab -->
+          <div class="tab-content" id="tab-history" style="display:none;">
+            <div id="historyList" class="history-list"></div>
+            <div class="empty-state" id="historyEmpty" style="display:none;">
+              <div class="empty-state-icon">🗂️</div>
+              <div class="empty-state-title">No History Yet</div>
+              <div class="empty-state-text">Your saved standup drafts will appear here.</div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/ollama-client.js"></script>
+  <script src="shared/storage-utils.js"></script>
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

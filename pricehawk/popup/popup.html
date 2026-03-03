@@ -24,10 +24,12 @@
   </style>
 </head>
 <body>
+    <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
   <div class="popup-container">
     <div class="header">
       <div class="header-title"><span style="font-size: 22px;">🦅</span><h1>PriceHawk</h1></div>
       <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+        <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
         <div class="model-selector-wrapper">
           <select class="model-select loading" id="model-select" title="Select AI Model">
             <option value="">Loading...</option>
@@ -86,5 +88,6 @@
   <script src="../shared/chart-utils.js"></script>
   <script src="../shared/ollama-client.js"></script>
   <script src="popup.js"></script>
+  <script src="../shared/split-screen.js"></script>
 </body>
 </html>

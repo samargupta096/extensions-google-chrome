@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepWork — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <div class="popup-container">
+          <!-- Header -->
+          <div class="header">
+            <div class="header-title">
+              <span style="font-size: 22px;">⏱️</span>
+              <h1>DeepWork</h1>
+            </div>
+            <div class="header-actions">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+              <div class="model-selector-wrapper">
+                <select class="model-select loading" id="model-select" title="Select AI Model">
+                  <option value="">Loading...</option>
+                </select>
+              </div>
+              <div class="ollama-status disconnected" id="ollama-status">
+                <span class="status-dot offline"></span>
+                <span>Ollama</span>
+              </div>
+              <button class="btn btn-ghost btn-icon" id="open-dashboard" title="Open Dashboard">📊</button>
+            </div>
+          </div>
+
+          <!-- Focus Timer -->
+          <div class="card focus-card" id="focus-card">
+            <div class="timer-display">
+              <div class="timer-ring">
+                <svg viewBox="0 0 200 200">
+                  <circle class="timer-bg" cx="100" cy="100" r="88"/>
+                  <circle class="timer-progress" cx="100" cy="100" r="88" id="timer-circle"/>
+                </svg>
+                <div class="timer-inner">
+                  <div class="timer-time" id="timer-time">25:00</div>
+                  <div class="timer-label" id="timer-label">Ready to focus</div>
+                </div>
+              </div>
+            </div>
+            <div class="timer-controls">
+              <button class="btn btn-secondary btn-sm" id="btn-decrease">−5m</button>
+              <button class="btn btn-primary btn-lg" id="btn-start">▶ Start Focus</button>
+              <button class="btn btn-secondary btn-sm" id="btn-increase">+5m</button>
+            </div>
+            <div class="session-dots" id="session-dots"></div>
+          </div>
+
+          <!-- Today's Stats -->
+          <div class="section-title">Today's Overview</div>
+          <div class="grid grid-3 stagger">
+            <div class="card stat-card slide-up">
+              <div class="stat-icon" style="background: rgba(108, 92, 231, 0.12);">🕐</div>
+              <div class="stat-value" id="total-time">0m</div>
+              <div class="stat-label">Time</div>
+            </div>
+            <div class="card stat-card slide-up">
+              <div class="stat-icon" style="background: rgba(0, 184, 148, 0.12);">🎯</div>
+              <div class="stat-value" id="focus-score">0%</div>
+              <div class="stat-label">Focus</div>
+            </div>
+            <div class="card stat-card slide-up">
+              <div class="stat-icon" style="background: rgba(253, 121, 168, 0.12);">🔥</div>
+              <div class="stat-value" id="sessions-count">0</div>
+              <div class="stat-label">Sessions</div>
+            </div>
+          </div>
+
+          <!-- Top Sites -->
+          <div class="section-title">Top Sites Today</div>
+          <div class="card" id="top-sites-card">
+            <div id="top-sites-list"></div>
+          </div>
+
+          <!-- Category Chart -->
+          <div class="section-title">Categories</div>
+          <div class="card">
+            <div class="chart-container" style="height: 170px;">
+              <canvas id="category-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Blocking Toggle -->
+          <div class="section-title">Blocking</div>
+          <div class="card">
+            <div class="setting-row">
+              <span>Block distracting sites</span>
+              <label class="toggle">
+                <input type="checkbox" id="toggle-blocking">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="blocking-status" id="blocking-status">
+              <span class="badge badge-green">Active during focus sessions</span>
+            </div>
+          </div>
+
+          <button class="btn btn-secondary" id="btn-open-dashboard" style="width:100%;margin-top:14px;">
+            📊 Open Full Dashboard
+          </button>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/chart-utils.js"></script>
+  <script src="shared/ollama-client.js"></script>
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

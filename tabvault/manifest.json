@@ -3,8 +3,18 @@
   "name": "TabVault",
   "version": "1.0.0",
   "description": "Save and restore named tab sessions. AI summaries, stale tab alerts, and RAM usage tracking.",
-  "permissions": ["tabs", "storage", "alarms", "notifications", "sessions"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "tabs",
+    "storage",
+    "alarms",
+    "notifications",
+    "sessions",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:11434/*"
+  ],
   "background": {
     "service_worker": "background/service-worker.js"
   },

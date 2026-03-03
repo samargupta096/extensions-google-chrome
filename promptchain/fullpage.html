@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="split-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptChain — Full View</title>
+  <link rel="stylesheet" href="shared/ui-components.css">
+  <link rel="stylesheet" href="popup/popup.css">
+  <link rel="stylesheet" href="shared/split-screen.css">
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel: Extension UI -->
+    <div class="split-left">
+      <!-- Header -->
+          <header class="header">
+            <div class="header-left">
+              <span class="logo">⛓️</span>
+              <h1>PromptChain</h1>
+            </div>
+            <div class="header-right">
+              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
+              <span id="aiStatus" class="ai-badge offline" title="Ollama status"
+                >● Offline</span
+              >
+              <button id="settingsBtn" class="icon-btn" title="Settings">⚙️</button>
+            </div>
+          </header>
+
+          <!-- Tabs -->
+          <nav class="tabs">
+            <button class="tab active" data-tab="run">⚡ Run</button>
+            <button class="tab" data-tab="build">🔧 Build</button>
+            <button class="tab" data-tab="library">📚 Library</button>
+            <button class="tab" data-tab="chat">💬 Chat</button>
+          </nav>
+
+          <!-- ⚡ RUN Tab -->
+          <section id="tab-run" class="tab-content active">
+            <div class="context-bar">
+              <div class="context-info">
+                <span class="context-label">📍 Page Context</span>
+                <span id="contextUrl" class="context-url">Loading...</span>
+              </div>
+              <label class="toggle-label">
+                <input type="checkbox" id="usePageContext" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="chain-select-wrapper">
+              <select id="chainSelect" class="chain-select">
+                <option value="">Select a chain...</option>
+              </select>
+              <button id="runChainBtn" class="btn btn-primary btn-run" disabled>
+                ▶ Run Chain
+              </button>
+            </div>
+
+            <div id="chainDescription" class="chain-desc hidden"></div>
+            <div id="chainSteps" class="chain-steps-preview hidden"></div>
+
+            <!-- Execution Results -->
+            <div id="executionArea" class="execution-area hidden">
+              <div class="execution-header">
+                <h3>Execution Results</h3>
+                <span id="execTimer" class="exec-timer"></span>
+              </div>
+              <div id="executionResults" class="execution-results"></div>
+            </div>
+          </section>
+
+          <!-- 🔧 BUILD Tab -->
+          <section id="tab-build" class="tab-content">
+            <div class="build-header">
+              <input
+                id="chainName"
+                type="text"
+                class="input chain-name-input"
+                placeholder="Chain name..."
+                value=""
+              />
+              <input
+                id="chainIcon"
+                type="text"
+                class="input chain-icon-input"
+                placeholder="🔗"
+                value="🔗"
+                maxlength="2"
+              />
+            </div>
+            <textarea
+              id="chainDesc"
+              class="input chain-desc-input"
+              placeholder="What does this chain do?"
+              rows="2"
+            ></textarea>
+
+            <div class="steps-builder">
+              <h3>
+                Steps
+                <button id="addStepBtn" class="btn btn-small btn-accent">
+                  + Add Step
+                </button>
+              </h3>
+              <div id="stepsContainer" class="steps-container"></div>
+            </div>
+
+            <div class="build-actions">
+              <button id="testChainBtn" class="btn btn-secondary">
+                🧪 Test Chain
+              </button>
+              <button id="saveChainBtn" class="btn btn-primary">💾 Save Chain</button>
+            </div>
+
+            <!-- Test Results -->
+            <div id="testResults" class="test-results hidden"></div>
+          </section>
+
+          <!-- 📚 LIBRARY Tab -->
+          <section id="tab-library" class="tab-content">
+            <div class="library-header">
+              <h3>Chain Library</h3>
+              <div class="library-filter">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="builtin">Built-in</button>
+                <button class="filter-btn" data-filter="custom">Custom</button>
+              </div>
+            </div>
+            <div id="chainLibrary" class="chain-library"></div>
+            <div id="executionHistorySection" class="history-section">
+              <h3>Recent Runs</h3>
+              <div id="executionHistory" class="execution-history"></div>
+            </div>
+          </section>
+
+          <!-- 💬 CHAT Tab -->
+          <section id="tab-chat" class="tab-content">
+            <div class="chat-header">
+              <label class="toggle-label">
+                <input type="checkbox" id="chatUseContext" checked />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">Page context</span>
+              </label>
+              <button id="clearChatBtn" class="btn btn-small btn-ghost">
+                🗑️ Clear
+              </button>
+            </div>
+            <div id="chatMessages" class="chat-messages">
+              <div class="chat-welcome">
+                <span class="chat-welcome-icon">⛓️</span>
+                <p>
+                  Chat with your local AI. Toggle page context to ask about the
+                  current page.
+                </p>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <textarea
+                id="chatInput"
+                class="chat-input"
+                placeholder="Ask anything..."
+                rows="1"
+              ></textarea>
+              <button id="chatSendBtn" class="btn btn-primary btn-send">→</button>
+            </div>
+          </section>
+
+          <!-- Settings Modal -->
+          <div id="settingsModal" class="modal hidden">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3>⚙️ Settings</h3>
+                <button id="closeSettingsBtn" class="icon-btn">✕</button>
+              </div>
+              <div class="setting-group">
+                <label>Default Model</label>
+                <select id="settingModel" class="input">
+                  <option value="llama3.2">llama3.2</option>
+                  <option value="llama3.1">llama3.1</option>
+                  <option value="mistral">mistral</option>
+                  <option value="codellama">codellama</option>
+                  <option value="deepseek-coder">deepseek-coder</option>
+                  <option value="gemma2">gemma2</option>
+                  <option value="phi3">phi3</option>
+                </select>
+              </div>
+              <div class="setting-group">
+                <label>Temperature: <span id="tempValue">0.7</span></label>
+                <input
+                  id="settingTemp"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value="0.7"
+                  class="slider"
+                />
+              </div>
+              <div class="setting-group">
+                <label>Max Tokens</label>
+                <input
+                  id="settingMaxTokens"
+                  type="number"
+                  class="input"
+                  value="1024"
+                  min="128"
+                  max="4096"
+                  step="128"
+                />
+              </div>
+              <button
+                id="saveSettingsBtn"
+                class="btn btn-primary"
+                style="width: 100%"
+              >
+                Save Settings
+              </button>
+            </div>
+          </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="split-divider"></div>
+
+    <!-- Right Panel -->
+    <div class="split-right">
+      <div class="split-toolbar">
+        <div class="split-tab-group">
+          <button class="split-btn active" data-split-tab="browse">🌐 Browse</button>
+          <button class="split-btn" data-split-tab="notes">📝 Notes</button>
+        </div>
+        <input type="text" class="url-bar" placeholder="Enter URL to preview..." value="">
+        <button class="split-btn" id="splitGoBtn">Go →</button>
+      </div>
+      <div class="split-iframe-wrap">
+        <div class="split-empty">
+          <div class="split-empty-icon">🌐</div>
+          <div class="split-empty-title">Web Preview</div>
+          <div class="split-empty-text">Enter a URL above to load a page side-by-side.</div>
+        </div>
+        <iframe id="splitIframe" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      </div>
+      <div class="split-notes">
+        <div class="split-notes-header">
+          <span class="split-notes-title">Scratch Notes</span>
+        </div>
+        <textarea id="splitNotes" placeholder="Quick notes while you work..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/ollama-client.js"></script>
+  <script src="shared/storage-utils.js"></script>
+  <script src="popup/popup.js"></script>
+  <script src="shared/split-screen.js"></script>
+</body>
+</html>

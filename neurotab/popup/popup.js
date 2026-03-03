@@ -49,17 +49,28 @@ async function loadPages() {
   }
 
   container.innerHTML = pages.map(p => `
-    <div class="page-item" onclick="window.open('${p.url}', '_blank')">
+    <div class="page-item js-page-open" data-url="${p.url}">
       <div class="page-title">${escapeHtml(p.title || 'Untitled')}</div>
       <div class="page-domain">${p.domain} · ${p.type}</div>
       ${p.summary ? `<div class="page-summary">${escapeHtml(p.summary)}</div>` : ''}
       <div class="page-meta">
         <div class="page-tags">${(p.tags || []).slice(0, 3).map(t => `<span class="page-tag">${t}</span>`).join('')}</div>
         <span class="page-time">${timeAgo(p.savedAt)}</span>
-        <button class="page-delete" onclick="event.stopPropagation();deletePage('${p.id}')">🗑️</button>
+        <button class="page-delete js-page-delete" data-id="${p.id}">🗑️</button>
       </div>
     </div>
   `).join('');
+
+  container.querySelectorAll('.js-page-open').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const delBtn = e.target.closest('.js-page-delete');
+      if (delBtn) {
+        deletePage(delBtn.dataset.id);
+      } else {
+        window.open(el.dataset.url, '_blank');
+      }
+    });
+  });
 }
 
 async function savePage() {
@@ -83,7 +94,7 @@ async function savePage() {
   showToast('Page saved to your brain! 🧠');
 }
 
-window.deletePage = async function(id) {
+const deletePage = async (id) => {
   await chrome.runtime.sendMessage({ type: 'DELETE_PAGE', id });
   loadPages();
 };
@@ -242,3 +253,40 @@ function showToast(msg) {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2500);
 }
+
+
+// --- Global Model Selector ---
+async function initGlobalModelSelector() {
+  const select = document.getElementById('globalModelSelect');
+  if (!select) return;
+
+  try {
+    const models = await ollama.listModels();
+    if (!models || models.length === 0) {
+      select.style.display = 'none';
+      return;
+    }
+    
+    select.style.display = ''; // show it
+    const local = await chrome.storage.local.get('settings');
+    const settings = local.settings || {};
+    const savedModel = settings.defaultModel || ollama.defaultModel || 'llama3.2';
+
+    select.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+    
+    if (models.some(m => m.name === savedModel)) {
+      select.value = savedModel;
+    } else {
+      select.value = models[0].name;
+      await chrome.storage.local.set({ settings: { ...settings, defaultModel: select.value } });
+    }
+
+    select.addEventListener('change', async (e) => {
+      const current = await chrome.storage.local.get('settings');
+      await chrome.storage.local.set({ settings: { ...(current.settings || {}), defaultModel: e.target.value } });
+    });
+  } catch(e) { console.error('Failed to init model selector', e); }
+}
+
+// Auto-run after DOM load and status check
+setTimeout(initGlobalModelSelector, 500);

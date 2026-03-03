@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "NeuroTab — AI Second Brain",
+  "name": "NeuroTab \u2014 AI Second Brain",
   "version": "1.0.0",
-  "description": "Auto-capture, summarize, and search everything you read — powered by local Ollama AI, 100% private",
+  "description": "Auto-capture, summarize, and search everything you read \u2014 powered by local Ollama AI, 100% private",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -12,7 +12,8 @@
     "activeTab",
     "storage",
     "tabs",
-    "contextMenus"
+    "contextMenus",
+    "declarativeNetRequest"
   ],
   "host_permissions": [
     "http://localhost:11434/*"
@@ -29,8 +30,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content/extractor.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content/extractor.js"
+      ],
       "run_at": "document_idle"
     }
   ]

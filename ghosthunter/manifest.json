@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "GhostHunter",
   "version": "1.0.0",
-  "description": "AI-powered fake job detector — spot ghost jobs, track applications, and analyze red flags. 100% local, zero cloud.",
+  "description": "AI-powered fake job detector \u2014 spot ghost jobs, track applications, and analyze red flags. 100% local, zero cloud.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -11,7 +11,9 @@
   "permissions": [
     "storage",
     "activeTab",
-    "alarms"
+    "alarms",
+    "declarativeNetRequest",
+    "tabs"
   ],
   "host_permissions": [
     "http://localhost:11434/*"
@@ -38,8 +40,12 @@
         "https://wellfound.com/*",
         "https://www.wellfound.com/*"
       ],
-      "js": ["content/detector.js"],
-      "css": ["content/detector.css"],
+      "js": [
+        "content/detector.js"
+      ],
+      "css": [
+        "content/detector.css"
+      ],
       "run_at": "document_idle"
     }
   ]

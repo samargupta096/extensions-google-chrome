@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "DeepWork Guardian",
   "version": "1.0.0",
-  "description": "AI-powered focus timer, distraction blocking, and browsing analytics — 100% local, zero cloud",
+  "description": "AI-powered focus timer, distraction blocking, and browsing analytics \u2014 100% local, zero cloud",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -14,9 +14,12 @@
     "storage",
     "alarms",
     "notifications",
-    "webNavigation"
+    "webNavigation",
+    "declarativeNetRequest"
   ],
-  "host_permissions": ["http://localhost:11434/*"],
+  "host_permissions": [
+    "http://localhost:11434/*"
+  ],
   "background": {
     "service_worker": "background/service-worker.js"
   },
@@ -29,9 +32,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content/blocker.js"],
-      "css": ["content/blocker.css"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content/blocker.js"
+      ],
+      "css": [
+        "content/blocker.css"
+      ],
       "run_at": "document_start"
     }
   ]
