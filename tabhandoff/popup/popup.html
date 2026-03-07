@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tab Handoff</title>
+    <link rel="stylesheet" href="../shared/ui-components.css" />
+    <link rel="stylesheet" href="tabhandoff.css" />
+  
+<style id="detach-mode-styles">
+.detach-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+  background: var(--bg-card, rgba(255,255,255,0.05));
+  color: var(--text-tertiary, rgba(255,255,255,0.4));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+.detach-btn:hover {
+  background: var(--bg-card-hover, rgba(255,255,255,0.1));
+  color: var(--text-primary, #fff);
+  transform: translateY(-1px);
+}
+.detach-btn.active {
+  background: rgba(108, 92, 231, 0.15);
+  color: #A29BFE;
+  border-color: rgba(108, 92, 231, 0.3);
+}
+</style>
+</head>
+  <body>
+    <div class="popup-container">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-title">
+          <span style="font-size: 22px">📡</span>
+          <h1>Tab Handoff</h1>
+        </div>
+        <div class="header-actions">
+        <button id="detachBtn" class="detach-btn" title="Detach Mode">⏏</button>
+          <div class="connection-status disconnected" id="conn-status">
+            <span class="status-dot offline" id="conn-dot"></span>
+            <span id="conn-label">Offline</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="connect" id="tab-btn-connect">
+          🔗 Connect
+        </button>
+        <button class="tab" data-tab="remote" id="tab-btn-remote">
+          🖥️ Remote
+        </button>
+        <button class="tab" data-tab="history" id="tab-btn-history">
+          📜 History
+        </button>
+      </div>
+
+      <!-- ── Connect Tab ── -->
+      <div class="tab-content active" id="tab-connect">
+        <div class="card pairing-card slide-up" id="pairing-card">
+          <div class="pairing-icon">🔗</div>
+          <div class="pairing-title" id="pairing-title">Pair a Device</div>
+          <div class="pairing-subtitle" id="pairing-subtitle">
+            Generate a room code or enter one from another device.
+          </div>
+
+          <!-- Unpaired state -->
+          <div id="unpaired-ui">
+            <button
+              class="btn btn-primary btn-lg"
+              id="btn-generate"
+              style="width: 100%; margin: 16px 0 12px"
+            >
+              ✨ Generate Room Code
+            </button>
+            <div class="divider"><span>or join an existing room</span></div>
+            <div class="input-group" style="margin-top: 12px">
+              <input
+                type="text"
+                class="input room-input"
+                id="input-room"
+                placeholder="Enter room code"
+                maxlength="6"
+                spellcheck="false"
+                autocomplete="off"
+              />
+              <button class="btn btn-secondary" id="btn-join">Join</button>
+            </div>
+          </div>
+
+          <!-- Paired state (hidden by default) -->
+          <div id="paired-ui" style="display: none">
+            <div class="room-code-display" id="room-code-display">
+              <span class="room-code-label">Room</span>
+              <span class="room-code-value" id="room-code-value">------</span>
+            </div>
+            <div class="peer-status connected" id="peer-status">
+              <span class="status-dot online"></span>
+              <span>Peer connected</span>
+            </div>
+
+            <!-- Send current tab -->
+            <button
+              class="btn btn-primary btn-lg"
+              id="btn-send-tab"
+              style="width: 100%; margin: 16px 0 10px"
+            >
+              📤 Send Current Tab
+            </button>
+            <button
+              class="btn btn-danger btn-sm"
+              id="btn-disconnect"
+              style="width: 100%"
+            >
+              Disconnect
+            </button>
+          </div>
+        </div>
+
+        <!-- Relay settings -->
+        <div class="card slide-up" style="margin-top: 12px">
+          <div class="card-header">
+            <div class="card-title">⚙️ Relay Server</div>
+          </div>
+          <div class="input-group">
+            <input
+              type="text"
+              class="input"
+              id="input-relay"
+              placeholder="ws://localhost:9090"
+              value="ws://localhost:9090"
+            />
+            <button
+              class="btn btn-ghost btn-sm"
+              id="btn-save-relay"
+              title="Save"
+            >
+              💾
+            </button>
+          </div>
+          <div class="relay-hint">
+            Run <code>node relay-server/server.js</code> to start.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Remote Tabs Tab ── -->
+      <div class="tab-content" id="tab-remote" style="display: none">
+        <div id="remote-tabs-list">
+          <div class="empty-state" id="remote-empty">
+            <div class="empty-state-icon">🖥️</div>
+            <div class="empty-state-title">No Remote Tabs</div>
+            <div class="empty-state-text">
+              Connect to a paired device to see their open tabs here.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── History Tab ── -->
+      <div class="tab-content" id="tab-history" style="display: none">
+        <div id="history-list">
+          <div class="empty-state" id="history-empty">
+            <div class="empty-state-icon">📜</div>
+            <div class="empty-state-title">No Handoffs Yet</div>
+            <div class="empty-state-text">
+              Sent and received tabs will appear here.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="tabhandoff.js"></script>
+  </body>
+</html>

@@ -1,0 +1,379 @@
+/* ============================================================
+   Tab Handoff — Extension-Specific Styles
+   ============================================================ */
+
+/* ── Pairing Card ── */
+.pairing-card {
+  text-align: center;
+  padding: 24px 20px;
+}
+
+.pairing-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.pairing-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+
+.pairing-subtitle {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+/* ── Divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 2px;
+  color: var(--text-tertiary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+/* ── Room Code Input ── */
+.room-input {
+  font-family: "Courier New", monospace !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* ── Room Code Display (paired state) ── */
+.room-code-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(108, 92, 231, 0.08);
+  border: 1px solid rgba(108, 92, 231, 0.2);
+  border-radius: var(--radius-md);
+  margin: 12px 0;
+}
+
+.room-code-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent-purple-light);
+  opacity: 0.7;
+}
+
+.room-code-value {
+  font-family: "Courier New", monospace;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--accent-purple-light);
+  text-shadow: 0 0 20px rgba(108, 92, 231, 0.4);
+}
+
+/* ── Peer Status ── */
+.peer-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 8px auto;
+  width: fit-content;
+}
+
+.peer-status.connected {
+  background: rgba(0, 184, 148, 0.08);
+  border: 1px solid rgba(0, 184, 148, 0.2);
+  color: var(--accent-green);
+}
+
+.peer-status.waiting {
+  background: rgba(253, 203, 110, 0.08);
+  border: 1px solid rgba(253, 203, 110, 0.2);
+  color: var(--accent-yellow);
+}
+
+.peer-status.disconnected {
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.15);
+  color: var(--accent-red);
+}
+
+/* ── Connection status (header) ── */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.connection-status.connected {
+  border-color: rgba(0, 184, 148, 0.2);
+  background: rgba(0, 184, 148, 0.06);
+  color: var(--accent-green);
+}
+
+.connection-status.connecting {
+  border-color: rgba(253, 203, 110, 0.2);
+  background: rgba(253, 203, 110, 0.06);
+  color: var(--accent-yellow);
+}
+
+.connection-status.disconnected {
+  border-color: rgba(255, 107, 107, 0.15);
+  color: var(--text-tertiary);
+}
+
+/* ── Relay hint ── */
+.relay-hint {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.relay-hint code {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: "Courier New", monospace;
+  color: var(--accent-cyan);
+}
+
+/* ── Remote Tab Item ── */
+.remote-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.remote-tab:hover {
+  border-color: rgba(108, 92, 231, 0.3);
+  background: var(--bg-card-hover);
+  transform: translateX(2px);
+}
+
+.remote-tab:active {
+  transform: scale(0.99);
+}
+
+.remote-tab-favicon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.remote-tab-favicon img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.remote-tab-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.remote-tab-title {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.remote-tab-url {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.remote-tab-pull {
+  flex-shrink: 0;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.remote-tab:hover .remote-tab-pull {
+  opacity: 1;
+}
+
+/* ── Remote tabs header ── */
+.remote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.remote-header .card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.remote-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: rgba(108, 92, 231, 0.15);
+  color: var(--accent-purple-light);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* ── History Item ── */
+.history-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  animation: fadeIn 0.3s ease both;
+}
+
+.history-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.history-icon.sent {
+  background: rgba(108, 92, 231, 0.12);
+}
+
+.history-icon.received {
+  background: rgba(0, 206, 201, 0.12);
+}
+
+.history-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-title {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.history-url {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.history-time {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── Connecting animation ── */
+@keyframes connecting-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.connecting-anim .pairing-icon {
+  animation: connecting-pulse 1.2s ease-in-out infinite;
+}
+
+/* ── Toast override for popup sizing ── */
+.toast {
+  bottom: 12px;
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+/* ── Stagger for remote tabs ── */
+.remote-tab:nth-child(1) {
+  animation-delay: 0.03s;
+}
+.remote-tab:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.remote-tab:nth-child(3) {
+  animation-delay: 0.09s;
+}
+.remote-tab:nth-child(4) {
+  animation-delay: 0.12s;
+}
+.remote-tab:nth-child(5) {
+  animation-delay: 0.15s;
+}

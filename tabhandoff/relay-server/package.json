@@ -1,0 +1,12 @@
+{
+  "name": "tabhandoff-relay",
+  "version": "1.0.0",
+  "description": "Lightweight WebSocket relay for Tab Handoff Chrome extension",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
