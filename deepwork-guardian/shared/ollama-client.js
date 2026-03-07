@@ -6,7 +6,7 @@
 class OllamaClient {
   constructor(baseUrl = 'http://localhost:11434') {
     this.baseUrl = baseUrl;
-    this.defaultModel = 'llama3.2';
+    this.defaultModel = null; // auto-detect from available Ollama models
 
     // Detect execution context
     this._isServiceWorker =
@@ -91,6 +91,12 @@ class OllamaClient {
       } catch (e) { model = this.defaultModel; }
     } else if (!model) {
       model = this.defaultModel;
+    }
+
+    // Auto-fallback: if model isn't available, try first available model
+    const models = await this.listModels();
+    if (models.length > 0 && !models.some(m => m.name === model || m.model === model)) {
+      model = models[0].name || models[0].model;
     }
 
     try {
