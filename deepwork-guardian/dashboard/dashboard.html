@@ -19,9 +19,9 @@
         </div>
       </div>
       <div class="header-actions">
-        <div class="ollama-status disconnected" id="ollama-status">
+        <div class="ollama-status disconnected" id="ai-status">
           <span class="status-dot offline"></span>
-          <span>Ollama</span>
+          <span>AI</span>
         </div>
         <div class="btn-group" id="period-selector">
           <button class="btn active" data-period="today">Today</button>
@@ -124,7 +124,7 @@
           <div class="empty-state" style="padding: 24px;">
             <div class="empty-state-icon">🧠</div>
             <div class="empty-state-title">AI-Powered Insights</div>
-            <div class="empty-state-text">Click Generate to analyze your browsing patterns using your local Ollama instance</div>
+            <div class="empty-state-text">Click Generate to analyze your browsing patterns using AI</div>
           </div>
         </div>
       </div>
@@ -190,6 +190,7 @@
 
   <script src="../shared/chart-utils.js"></script>
   <script src="../shared/ollama-client.js"></script>
+  <script src="../shared/ai-client.js"></script>
   <script src="dashboard.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@ let timerInterval = null;
 document.addEventListener('DOMContentLoaded', async () => {
   await refreshState();
   startUITimer();
-  checkOllama();
+  await initAI();
 
   // Event listeners
   document.getElementById('btn-start').addEventListener('click', toggleFocus);
@@ -20,10 +20,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btn-increase').addEventListener('click', () => adjustDuration(5));
   document.getElementById('btn-open-dashboard').addEventListener('click', openDashboard);
   document.getElementById('open-dashboard').addEventListener('click', openDashboard);
-  
-  if (document.getElementById('model-select')) {
-    document.getElementById('model-select').addEventListener('change', saveSelectedModel);
-  }
+
+  document.getElementById('provider-select').addEventListener('change', onProviderChange);
+  document.getElementById('model-select').addEventListener('change', onModelChange);
+  document.getElementById('btn-api-key').addEventListener('click', toggleApiKeyInput);
+  document.getElementById('btn-save-key').addEventListener('click', saveApiKey);
 });
 
 async function refreshState() {
@@ -232,47 +233,112 @@ function getFavicon(domain) {
   return domain.charAt(0).toUpperCase();
 }
 
-async function checkOllama() {
-  const ollama = new OllamaClient();
-  const available = await ollama.isAvailable();
-  const el = document.getElementById('ollama-status');
-  if (available) {
-    el.className = 'ollama-status connected';
-    el.innerHTML = '<span class="status-dot online"></span><span>Ollama</span>';
-    loadModels(ollama);
+// ============ Multi-Provider AI ============
+const aiClient = new AIClient();
+
+async function initAI() {
+  const providerId = await aiClient.getProvider();
+  const providerSelect = document.getElementById('provider-select');
+  if (providerSelect) providerSelect.value = providerId;
+
+  updateApiKeyButton(providerId);
+  await checkAI();
+  await loadModels();
+}
+
+async function onProviderChange() {
+  const providerId = document.getElementById('provider-select').value;
+  await aiClient.setProvider(providerId);
+  updateApiKeyButton(providerId);
+  hideApiKeyInput();
+  await checkAI();
+  await loadModels();
+}
+
+async function onModelChange() {
+  const modelId = document.getElementById('model-select').value;
+  if (modelId) await aiClient.setModel(modelId);
+}
+
+function updateApiKeyButton(providerId) {
+  const btn = document.getElementById('btn-api-key');
+  const provider = AI_PROVIDERS[providerId];
+  if (provider && provider.requiresKey) {
+    btn.style.display = '';
   } else {
-    el.className = 'ollama-status disconnected';
-    el.innerHTML = '<span class="status-dot offline"></span><span>Ollama</span>';
-    const select = document.getElementById('model-select');
-    if (select) { select.innerHTML = '<option value="">Ollama offline</option>'; select.classList.add('loading'); }
+    btn.style.display = 'none';
+    hideApiKeyInput();
   }
 }
 
-async function loadModels(ollama) {
+function toggleApiKeyInput() {
+  const wrap = document.getElementById('api-key-wrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'flex' : 'none';
+  if (wrap.style.display === 'flex') {
+    document.getElementById('api-key-input').focus();
+  }
+}
+
+function hideApiKeyInput() {
+  document.getElementById('api-key-wrap').style.display = 'none';
+  document.getElementById('api-key-input').value = '';
+}
+
+async function saveApiKey() {
+  const providerId = document.getElementById('provider-select').value;
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key) return;
+  await aiClient.setApiKey(providerId, key);
+  hideApiKeyInput();
+  await checkAI();
+}
+
+async function checkAI() {
+  const el = document.getElementById('ai-status');
+  const providerId = await aiClient.getProvider();
+  const provider = AI_PROVIDERS[providerId];
+  const providerName = provider?.name || providerId;
+
+  const available = await aiClient.isAvailable();
+  if (available) {
+    el.className = 'ollama-status connected';
+    el.innerHTML = `<span class="status-dot online"></span><span>${providerName}</span>`;
+  } else {
+    el.className = 'ollama-status disconnected';
+    const hint = provider?.requiresKey ? 'No Key' : 'Offline';
+    el.innerHTML = `<span class="status-dot offline"></span><span>${hint}</span>`;
+  }
+}
+
+async function loadModels() {
   const select = document.getElementById('model-select');
   if (!select) return;
+
+  select.innerHTML = '<option value="">Loading...</option>';
+  select.classList.add('loading');
+
   try {
-    const models = await ollama.listModels();
+    const models = await aiClient.listModels();
+    const savedModel = await aiClient.getModel();
+
     if (models.length === 0) {
-      select.innerHTML = '<option value="">No models</option>';
+      const providerId = await aiClient.getProvider();
+      const provider = AI_PROVIDERS[providerId];
+      select.innerHTML = `<option value="">${providerId === 'ollama' ? 'Ollama offline' : 'No models'}</option>`;
       select.classList.add('loading');
       return;
     }
 
-    const savedModel = (await chrome.storage.local.get('dwg_settings')).dwg_settings?.ollamaModel || 'qwen3:latest';
-
     select.innerHTML = models.map(m => {
-      const name = m.name || m.model;
-      const size = m.details?.parameter_size || '';
-      const label = size ? `${name} (${size})` : name;
-      return `<option value="${name}" ${name === savedModel ? 'selected' : ''}>${label}</option>`;
+      const label = m.size ? `${m.name} (${m.size})` : m.name;
+      return `<option value="${m.id}" ${m.id === savedModel ? 'selected' : ''}>${label}</option>`;
     }).join('');
 
     select.classList.remove('loading');
 
-    if (!models.some(m => (m.name || m.model) === savedModel)) {
+    if (!models.some(m => m.id === savedModel) && models.length > 0) {
       select.selectedIndex = 0;
-      saveSelectedModel();
+      await aiClient.setModel(models[0].id);
     }
   } catch {
     select.innerHTML = '<option value="">Error</option>';
@@ -280,56 +346,8 @@ async function loadModels(ollama) {
   }
 }
 
-async function saveSelectedModel() {
-  const select = document.getElementById('model-select');
-  const model = select.value;
-  if (!model) return;
-  
-  const data = await chrome.storage.local.get('dwg_settings');
-  const settings = data.dwg_settings || {};
-  await chrome.storage.local.set({ dwg_settings: { ...settings, ollamaModel: model } });
-}
-
 function openDashboard() {
   chrome.tabs.create({
     url: chrome.runtime.getURL('dashboard/dashboard.html')
   });
 }
-
-
-// --- Global Model Selector ---
-async function initGlobalModelSelector() {
-  const select = document.getElementById('globalModelSelect');
-  if (!select) return;
-
-  try {
-    const ollamaClient = new OllamaClient();
-    const models = await ollamaClient.listModels();
-    if (!models || models.length === 0) {
-      select.style.display = 'none';
-      return;
-    }
-    
-    select.style.display = ''; // show it
-    const local = await chrome.storage.local.get('settings');
-    const settings = local.settings || {};
-    const savedModel = settings.defaultModel || ollama.defaultModel || 'llama3.2';
-
-    select.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
-    
-    if (models.some(m => m.name === savedModel)) {
-      select.value = savedModel;
-    } else {
-      select.value = models[0].name;
-      await chrome.storage.local.set({ settings: { ...settings, defaultModel: select.value } });
-    }
-
-    select.addEventListener('change', async (e) => {
-      const current = await chrome.storage.local.get('settings');
-      await chrome.storage.local.set({ settings: { ...(current.settings || {}), defaultModel: e.target.value } });
-    });
-  } catch(e) { console.error('Failed to init model selector', e); }
-}
-
-// Auto-run after DOM load and status check
-setTimeout(initGlobalModelSelector, 500);

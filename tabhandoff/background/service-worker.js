@@ -1,4 +1,5 @@
 importScripts('../shared/ollama-client.js');
+importScripts('../shared/ai-client.js');
 importScripts('../shared/detach-utils.js');
 /**
  * Tab Handoff — Background Service Worker
@@ -289,4 +290,9 @@ if (typeof DetachUtils !== 'undefined') {
 // Initialize Shared Ollama Client Logic
 if (typeof registerOllamaHandler !== 'undefined') {
   registerOllamaHandler();
+}
+
+// Register Multi-Provider AI Fetch Handler
+if (typeof registerAIFetchHandler !== 'undefined') {
+  registerAIFetchHandler();
 }

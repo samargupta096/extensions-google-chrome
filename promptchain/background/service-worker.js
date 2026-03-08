@@ -1,3 +1,4 @@
+importScripts('../shared/ai-client.js');
 
 // Bypass Ollama CORS
 if (chrome.declarativeNetRequest) {
@@ -396,4 +397,9 @@ async function handleUpdateSettings(newSettings, send) {
   const { settings = {} } = await chrome.storage.local.get('settings');
   await chrome.storage.local.set({ settings: { ...settings, ...newSettings } });
   send({ success: true });
+}
+
+// Register Multi-Provider AI Fetch Handler
+if (typeof registerAIFetchHandler !== 'undefined') {
+  registerAIFetchHandler();
 }

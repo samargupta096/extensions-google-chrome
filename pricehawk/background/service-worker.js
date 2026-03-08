@@ -1,3 +1,4 @@
+importScripts('../shared/ai-client.js');
 
 // Bypass Ollama CORS
 if (chrome.declarativeNetRequest) {
@@ -176,3 +177,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     });
   return true;
 });
+
+// Register Multi-Provider AI Fetch Handler
+if (typeof registerAIFetchHandler !== 'undefined') {
+  registerAIFetchHandler();
+}

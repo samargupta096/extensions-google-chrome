@@ -22,13 +22,13 @@ const SITE_CATEGORIES = {
 
 let currentPeriod = 'today';
 let historyData = {};
-let ollamaClient = new OllamaClient();
+let aiClient = new AIClient();
 
 // ============ Init ============
 document.addEventListener('DOMContentLoaded', async () => {
   await loadData();
   setupEventListeners();
-  checkOllama();
+  checkAI();
 });
 
 async function loadData() {
@@ -313,13 +313,18 @@ async function generateInsights() {
       <div style="font-size:13px; color:var(--text-tertiary);">Analyzing your browsing patterns...</div>
     </div>`;
 
-  const available = await ollamaClient.isAvailable();
+  const available = await aiClient.isAvailable();
   if (!available) {
+    const providerId = await aiClient.getProvider();
+    const provider = AI_PROVIDERS[providerId];
+    const hint = provider?.requiresKey
+      ? 'Set your API key in the popup for ' + (provider?.name || providerId) + '.'
+      : 'Start Ollama locally to generate AI insights.<br><code style="background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;font-size:12px;">ollama serve</code>';
     container.innerHTML = `
       <div class="empty-state" style="padding:20px;">
         <div class="empty-state-icon">⚠️</div>
-        <div class="empty-state-title">Ollama Not Connected</div>
-        <div class="empty-state-text">Start Ollama locally to generate AI insights.<br><code style="background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;font-size:12px;">ollama serve</code></div>
+        <div class="empty-state-title">AI Not Connected</div>
+        <div class="empty-state-text">${hint}</div>
       </div>`;
     return;
   }
@@ -346,7 +351,7 @@ Data:
 Format: 🎯 Title | Insight text here
 One insight per line, exactly 5 lines, nothing else.`;
 
-  const result = await ollamaClient.generate(prompt, { temperature: 0.6, maxTokens: 600 });
+  const result = await aiClient.generate(prompt, { temperature: 0.6, maxTokens: 600 });
 
   if (!result.success) {
     container.innerHTML = `
@@ -474,15 +479,19 @@ function getFavicon(domain) {
   return domain.charAt(0).toUpperCase();
 }
 
-async function checkOllama() {
-  const available = await ollamaClient.isAvailable();
-  const el = document.getElementById('ollama-status');
+async function checkAI() {
+  const available = await aiClient.isAvailable();
+  const el = document.getElementById('ai-status');
+  const providerId = await aiClient.getProvider();
+  const provider = AI_PROVIDERS[providerId];
+  const providerName = provider?.name || providerId;
   if (available) {
     el.className = 'ollama-status connected';
-    el.innerHTML = '<span class="status-dot online"></span><span>Ollama Connected</span>';
+    el.innerHTML = `<span class="status-dot online"></span><span>${providerName}</span>`;
   } else {
     el.className = 'ollama-status disconnected';
-    el.innerHTML = '<span class="status-dot offline"></span><span>Ollama Offline</span>';
+    const hint = provider?.requiresKey ? 'No Key' : 'Offline';
+    el.innerHTML = `<span class="status-dot offline"></span><span>${hint}</span>`;
   }
 }
 

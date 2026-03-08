@@ -22,5 +22,10 @@
       "16": "icons/icon16.png",
       "48": "icons/icon48.png"
     }
-  }
+  },
+  "host_permissions": [
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*",
+    "https://api.cursor.com/*"
+  ]
 }

@@ -1,3 +1,4 @@
+importScripts('../shared/ai-client.js');
 
 // Bypass Ollama CORS
 if (chrome.declarativeNetRequest) {
@@ -302,3 +303,7 @@ async function markPRReviewed(prId) {
 // Initial fetch
 fetchAllData();
 
+// Register Multi-Provider AI Fetch Handler
+if (typeof registerAIFetchHandler !== 'undefined') {
+  registerAIFetchHandler();
+}

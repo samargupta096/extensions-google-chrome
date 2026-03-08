@@ -1,3 +1,4 @@
+importScripts('../shared/ai-client.js');
 
 // Bypass Ollama CORS
 if (chrome.declarativeNetRequest) {
@@ -262,4 +263,7 @@ function getDomainGroups(tabs) {
   return Object.values(groups).sort((a, b) => b.count - a.count).slice(0, 10);
 }
 
-
+// Register Multi-Provider AI Fetch Handler
+if (typeof registerAIFetchHandler !== 'undefined') {
+  registerAIFetchHandler();
+}

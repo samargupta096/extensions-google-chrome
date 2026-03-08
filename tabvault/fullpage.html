@@ -13,20 +13,37 @@
     <!-- Left Panel: Extension UI -->
     <div class="split-left">
       <div class="popup-container" id="app">
-          <!-- Header -->
-          <div class="header">
-            <div class="header-title">
-              <span class="header-icon">📚</span>
-              <h1>TabVault</h1>
-            </div>
-            <div class="header-actions">
-              <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
-              <select id="globalModelSelect" class="model-select" style="display:none;" title="Select AI Model"></select>
-              <div class="ram-badge" id="ramBadge" title="Estimated RAM usage">
-                <span id="ramMB">--</span> MB
-              </div>
-            </div>
-          </div>
+          <!-- Header -->           <div class="header">
+             <div class="header-top">
+               <div class="header-title">
+                 <span style="font-size: 22px;">🔒</span>
+                 <h1>TabVault</h1>
+               </div>
+               <div class="header-utils">
+                 <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+               </div>
+             </div>
+             <div class="header-ai-row">
+               <select class="model-select" id="provider-select" title="Select AI Provider">
+                 <option value="ollama">🦙 Ollama</option>
+                 <option value="openai">🤖 OpenAI</option>
+                 <option value="anthropic">🧠 Anthropic</option>
+                 <option value="cursor">📐 Cursor</option>
+               </select>
+               <select class="model-select" id="model-select" title="Select AI Model">
+                 <option value="">Loading...</option>
+               </select>
+               <button class="btn btn-ghost btn-icon" id="btn-api-key" title="Set API Key" style="font-size:14px;display:none;">🔑</button>
+               <div class="ollama-status disconnected" id="ai-status">
+                 <span class="status-dot offline"></span>
+                 <span>AI</span>
+               </div>
+             </div>
+             <div class="api-key-input-wrap" id="api-key-wrap" style="display:none;">
+               <input type="password" class="input" id="api-key-input" placeholder="Paste API key…" style="padding:6px 10px;font-size:11px;">
+               <button class="btn btn-primary btn-sm" id="btn-save-key" style="padding:6px 12px;font-size:11px;">Save</button>
+             </div>
+           </div>
 
           <!-- Tabs -->
           <div class="tabs">
@@ -124,6 +141,7 @@
   </div>
 
   <script src="shared/ollama-client.js"></script>
+  <script src="shared/ai-client.js"></script>
   <script src="shared/storage-utils.js"></script>
   <script src="popup/popup.js"></script>
   <script src="shared/split-screen.js"></script>

@@ -423,6 +423,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           break;
         }
 
+        // ── Multi-Provider AI Fetch Relay (handles aiFetch from AIClient) ──
+        case 'aiFetch': {
+          const AI_ALLOWED_ORIGINS = [
+            'http://localhost:11434',
+            'https://api.openai.com',
+            'https://api.anthropic.com',
+            'https://api.cursor.com',
+          ];
+          const { url: aiUrl, options: aiOpts = {} } = message;
+          const isAllowed = aiUrl && AI_ALLOWED_ORIGINS.some(origin => aiUrl.startsWith(origin));
+          if (!isAllowed) {
+            sendResponse({ ok: false, error: 'Disallowed URL', data: null });
+            break;
+          }
+          try {
+            const res = await fetch(aiUrl, {
+              method: aiOpts.method || 'GET',
+              headers: { 'Content-Type': 'application/json', ...(aiOpts.headers || {}) },
+              body: aiOpts.body || undefined,
+            });
+            let data = null;
+            try { data = await res.json(); } catch (_) {}
+            sendResponse({ ok: res.ok, status: res.status, data });
+          } catch (err) {
+            sendResponse({ ok: false, error: err.message, data: null });
+          }
+          break;
+        }
+
         default:
           // Unknown message — don't respond, let other listeners handle it
           return;

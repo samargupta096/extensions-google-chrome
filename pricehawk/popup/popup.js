@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTabs();
   loadProducts();
   loadStats();
-  checkOllama();
+  checkAI();
   setupDelegation();
 
   document.getElementById('btn-add').addEventListener('click', addProduct);
@@ -150,10 +150,10 @@ async function loadStats() {
   }
 }
 
-async function checkOllama() {
-  const ollama = new OllamaClient();
+async function checkAI() {
+  const ollama = new AIClient();
   const available = await ollama.isAvailable();
-  const el = document.getElementById('ollama-status');
+  const el = document.getElementById('ai-status');
   el.className = available ? 'ollama-status connected' : 'ollama-status disconnected';
   el.innerHTML = `<span class="status-dot ${available ? 'online':'offline'}"></span><span>Ollama</span>`;
 
@@ -244,3 +244,111 @@ async function initGlobalModelSelector() {
 
 // Auto-run after DOM load and status check
 setTimeout(initGlobalModelSelector, 500);
+
+
+// ============ Multi-Provider AI Setup ============
+(function initMultiProviderAI() {
+  const aiClient = typeof window._aiClient !== 'undefined' ? window._aiClient : (typeof AIClient !== 'undefined' ? new AIClient() : null);
+  if (!aiClient) return;
+
+  const providerSelect = document.getElementById('provider-select');
+  const modelSelect = document.getElementById('model-select');
+  const btnApiKey = document.getElementById('btn-api-key');
+  const apiKeyWrap = document.getElementById('api-key-wrap');
+  const apiKeyInput = document.getElementById('api-key-input');
+  const btnSaveKey = document.getElementById('btn-save-key');
+  const aiStatus = document.getElementById('ai-status');
+
+  if (!providerSelect || !modelSelect) return;
+
+  async function initAI() {
+    const providerId = await aiClient.getProvider();
+    providerSelect.value = providerId;
+    updateApiKeyButton(providerId);
+    await checkAIStatus();
+    await loadAIModels();
+  }
+
+  async function checkAIStatus() {
+    if (!aiStatus) return;
+    const providerId = await aiClient.getProvider();
+    const provider = typeof AI_PROVIDERS !== 'undefined' ? AI_PROVIDERS[providerId] : null;
+    const providerName = provider?.name || providerId;
+    const available = await aiClient.isAvailable();
+    if (available) {
+      aiStatus.className = 'ollama-status connected';
+      aiStatus.innerHTML = '<span class="status-dot online"></span><span>' + providerName + '</span>';
+    } else {
+      aiStatus.className = 'ollama-status disconnected';
+      const hint = provider?.requiresKey ? 'No Key' : 'Offline';
+      aiStatus.innerHTML = '<span class="status-dot offline"></span><span>' + hint + '</span>';
+    }
+  }
+
+  async function loadAIModels() {
+    modelSelect.innerHTML = '<option value="">Loading...</option>';
+    try {
+      const models = await aiClient.listModels();
+      const savedModel = await aiClient.getModel();
+      if (models.length === 0) {
+        const pid = await aiClient.getProvider();
+        modelSelect.innerHTML = '<option value="">' + (pid === 'ollama' ? 'Ollama offline' : 'No models') + '</option>';
+        return;
+      }
+      modelSelect.innerHTML = models.map(function(m) {
+        const label = m.size ? m.name + ' (' + m.size + ')' : m.name;
+        return '<option value="' + m.id + '"' + (m.id === savedModel ? ' selected' : '') + '>' + label + '</option>';
+      }).join('');
+      if (!models.some(function(m) { return m.id === savedModel; })) {
+        modelSelect.selectedIndex = 0;
+        await aiClient.setModel(models[0].id);
+      }
+    } catch(e) {
+      modelSelect.innerHTML = '<option value="">Error</option>';
+    }
+  }
+
+  function updateApiKeyButton(providerId) {
+    if (!btnApiKey) return;
+    const provider = typeof AI_PROVIDERS !== 'undefined' ? AI_PROVIDERS[providerId] : null;
+    btnApiKey.style.display = (provider && provider.requiresKey) ? '' : 'none';
+    if (apiKeyWrap) apiKeyWrap.style.display = 'none';
+  }
+
+  providerSelect.addEventListener('change', async function() {
+    const pid = providerSelect.value;
+    await aiClient.setProvider(pid);
+    updateApiKeyButton(pid);
+    if (apiKeyWrap) apiKeyWrap.style.display = 'none';
+    await checkAIStatus();
+    await loadAIModels();
+  });
+
+  modelSelect.addEventListener('change', async function() {
+    if (modelSelect.value) await aiClient.setModel(modelSelect.value);
+  });
+
+  if (btnApiKey) {
+    btnApiKey.addEventListener('click', function() {
+      if (apiKeyWrap) {
+        apiKeyWrap.style.display = apiKeyWrap.style.display === 'none' ? 'flex' : 'none';
+        if (apiKeyInput && apiKeyWrap.style.display === 'flex') apiKeyInput.focus();
+      }
+    });
+  }
+
+  if (btnSaveKey) {
+    btnSaveKey.addEventListener('click', async function() {
+      const pid = providerSelect.value;
+      const key = apiKeyInput ? apiKeyInput.value.trim() : '';
+      if (!key) return;
+      await aiClient.setApiKey(pid, key);
+      if (apiKeyWrap) apiKeyWrap.style.display = 'none';
+      if (apiKeyInput) apiKeyInput.value = '';
+      await checkAIStatus();
+    });
+  }
+
+  // Initialize after a short delay to ensure DOM is ready
+  setTimeout(initAI, 100);
+})();

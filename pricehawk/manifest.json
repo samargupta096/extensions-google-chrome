@@ -17,7 +17,10 @@
     "tabs"
   ],
   "host_permissions": [
-    "http://localhost:11434/*"
+    "http://localhost:11434/*",
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*",
+    "https://api.cursor.com/*"
   ],
   "background": {
     "service_worker": "background/service-worker.js"

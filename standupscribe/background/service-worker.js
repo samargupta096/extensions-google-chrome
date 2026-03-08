@@ -1,3 +1,4 @@
+importScripts('../shared/ai-client.js');
 
 // Bypass Ollama CORS
 if (chrome.declarativeNetRequest) {
@@ -201,3 +202,8 @@ async function handleClearToday(send) {
 
 // ─── Utils ───
 function getToday() { return new Date().toISOString().split('T')[0]; }
+
+// Register Multi-Provider AI Fetch Handler
+if (typeof registerAIFetchHandler !== 'undefined') {
+  registerAIFetchHandler();
+}
