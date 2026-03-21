@@ -11,18 +11,11 @@ let currentSearch = '';
 
 // ─── Init ───
 document.addEventListener('DOMContentLoaded', async () => {
-  await checkAIStatus();
   await loadApplications();
   await loadStats();
   initEventListeners();
   setDefaultDate();
 });
-
-async function checkAIStatus() {
-  const available = await ollama.isAvailable();
-  $('statusDot').className = `status-dot ${available ? 'online' : 'offline'}`;
-  $('statusText').textContent = available ? 'AI Ready' : 'Offline';
-}
 
 function setDefaultDate() {
   const di = $('addDate');

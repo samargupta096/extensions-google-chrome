@@ -322,6 +322,48 @@
 
 ---
 
+## ⚙️ How It Works Internally
+
+The extensions utilize a **Service Worker Relay Architecture** to securely and reliably execute tasks. 
+
+1. **Isolated Contexts**: Extension popups, sidepanels, and content scripts run in isolated environments.
+2. **Background Service Worker**: All API calls (whether to local Ollama or cloud providers) are routed through the `service-worker.js` background script via `chrome.runtime.sendMessage`. 
+3. **CORS Bypass**: Routing through the service worker natively avoids Cross-Origin Resource Sharing (CORS) blocks, allowing seamless communication with `http://127.0.0.1:11434` (Ollama) without manual browser configuration.
+4. **State Management**: `chrome.storage.local` is used as the single source of truth across all extension components.
+
+---
+
+## 🤖 LLM Data Sharing & Formatting
+
+The extensions utilize a unified `AIClient` and `OllamaClient` to communicate with the models. Data is strictly sent based on explicit user triggers, and **no background telemetry or passive browsing data is ever transmitted**.
+
+### 1. What Data is Sent
+Depending on the extension and action triggered, the system sends contextually relevant text to the AI:
+- **Summarization/Tagging** (e.g., NeuroTab, ClipWise): The raw text of the clipped article or snippet is sent.
+- **Chat/Q&A** (e.g., PagePilot, NeuroTab): The user's query and the active page's text context/DOM representation.
+- **Structural Analysis** (e.g., PriceHawk, GhostHunter): JSON blobs of formatted page metrics (like prices, dates, or job listing keywords).
+
+### 2. Communication Format
+All network requests are standard `fetch` calls carrying `application/json` payloads.
+
+**Local Ollama Example (`POST /api/generate`):**
+```json
+{
+  "model": "llama3.2",
+  "prompt": "System instructions here\n\nUser target text here",
+  "stream": false,
+  "options": {
+    "temperature": 0.7,
+    "num_predict": 1024
+  }
+}
+```
+
+**Cloud Provider Example:**
+If an external provider (like OpenAI or Anthropic) is configured by the user via API keys, requests mirror standard chat interfaces (e.g., `/chat/completions`) utilizing AES-GCM encrypted API keys stored locally.
+
+---
+
 ## 🔒 Privacy Principles
 
 | Principle | Details |
