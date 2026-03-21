@@ -4,12 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTabs();
   loadProducts();
   loadStats();
-  checkAI();
   setupDelegation();
 
   document.getElementById('btn-add').addEventListener('click', addProduct);
   document.getElementById('btn-autofill').addEventListener('click', autofill);
-  document.getElementById('model-select').addEventListener('change', saveSelectedModel);
 });
 
 function setupTabs() {
@@ -150,100 +148,13 @@ async function loadStats() {
   }
 }
 
-async function checkAI() {
-  const ollama = new AIClient();
-  const available = await ollama.isAvailable();
-  const el = document.getElementById('ai-status');
-  el.className = available ? 'ollama-status connected' : 'ollama-status disconnected';
-  el.innerHTML = `<span class="status-dot ${available ? 'online':'offline'}"></span><span>Ollama</span>`;
-
-  if (available) loadModels(ollama);
-  else {
-    const select = document.getElementById('model-select');
-    if (select) { select.innerHTML = '<option value="">Ollama offline</option>'; select.classList.add('loading'); }
-  }
-}
-
-async function loadModels(ollama) {
-  const select = document.getElementById('model-select');
-  if (!select) return;
-  try {
-    const models = await ollama.listModels();
-    if (models.length === 0) {
-      select.innerHTML = '<option value="">No models</option>';
-      select.classList.add('loading');
-      return;
-    }
-
-    const savedModel = (await chrome.storage.local.get('ph_settings')).ph_settings?.ollamaModel || 'qwen3:latest';
-
-    select.innerHTML = models.map(m => {
-      const name = m.name || m.model;
-      const size = m.details?.parameter_size || '';
-      const label = size ? `${name} (${size})` : name;
-      return `<option value="${name}" ${name === savedModel ? 'selected' : ''}>${label}</option>`;
-    }).join('');
-
-    select.classList.remove('loading');
-
-    if (!models.some(m => (m.name || m.model) === savedModel)) {
-      select.selectedIndex = 0;
-      saveSelectedModel();
-    }
-  } catch {
-    select.innerHTML = '<option value="">Error</option>';
-    select.classList.add('loading');
-  }
-}
-
-async function saveSelectedModel() {
-  const select = document.getElementById('model-select');
-  const model = select.value;
-  if (!model) return;
-  const data = await chrome.storage.local.get('ph_settings');
-  const settings = data.ph_settings || {};
-  await chrome.storage.local.set({ ph_settings: { ...settings, ollamaModel: model } });
-}
+// Old single-provider functions removed to avoid conflict with initMultiProviderAI
 
 function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 function showToast(m) { const t=document.createElement('div'); t.className='toast success'; t.textContent=m; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
 
 
-// --- Global Model Selector ---
-async function initGlobalModelSelector() {
-  const select = document.getElementById('globalModelSelect');
-  if (!select) return;
-
-  try {
-    const models = await ollama.listModels();
-    if (!models || models.length === 0) {
-      select.style.display = 'none';
-      return;
-    }
-    
-    select.style.display = ''; // show it
-    const local = await chrome.storage.local.get('settings');
-    const settings = local.settings || {};
-    const savedModel = settings.defaultModel || ollama.defaultModel || 'llama3.2';
-
-    select.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
-    
-    if (models.some(m => m.name === savedModel)) {
-      select.value = savedModel;
-    } else {
-      select.value = models[0].name;
-      await chrome.storage.local.set({ settings: { ...settings, defaultModel: select.value } });
-    }
-
-    select.addEventListener('change', async (e) => {
-      const current = await chrome.storage.local.get('settings');
-      await chrome.storage.local.set({ settings: { ...(current.settings || {}), defaultModel: e.target.value } });
-    });
-  } catch(e) { console.error('Failed to init model selector', e); }
-}
-
-// Auto-run after DOM load and status check
-setTimeout(initGlobalModelSelector, 500);
+ 
 
 
 // ============ Multi-Provider AI Setup ============

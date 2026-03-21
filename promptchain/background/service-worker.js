@@ -6,10 +6,10 @@ if (chrome.declarativeNetRequest) {
     removeRuleIds: [11434],
     addRules: [{
       id: 11434,
-      condition: { urlFilter: 'http://localhost:11434/*' },
+      condition: { urlFilter: 'http://127.0.0.1:11434/*' },
       action: {
         type: 'modifyHeaders',
-        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://127.0.0.1' }]
       }
     }]
   }).catch(e => console.error(e));
@@ -116,7 +116,7 @@ chrome.runtime.onMessage.addListener((msg, sender, send) => {
   else if (msg.action === 'updateSettings') handleUpdateSettings(msg.settings, send);
   else if (msg.action === 'ollamaFetch') {
     const { url, options = {} } = msg;
-    if (!url || !url.startsWith('http://localhost:11434')) {
+    if (!url || !url.startsWith('http://127.0.0.1:11434')) {
       send({ ok: false, error: 'Disallowed URL', data: null });
     } else {
       fetch(url, {
@@ -272,7 +272,7 @@ function substituteVariables(template, context) {
 async function ollamaGenerate(prompt, options = {}) {
   const { model = 'llama3.2', temperature = 0.7, maxTokens = 1024 } = options;
   try {
-    const res = await fetch('http://localhost:11434/api/generate', {
+    const res = await fetch('http://127.0.0.1:11434/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -307,7 +307,7 @@ async function handleChatMessage(message, context, history, send) {
   ];
 
   try {
-    const res = await fetch('http://localhost:11434/api/chat', {
+    const res = await fetch('http://127.0.0.1:11434/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

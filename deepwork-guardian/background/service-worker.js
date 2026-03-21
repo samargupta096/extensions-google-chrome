@@ -5,10 +5,10 @@ if (chrome.declarativeNetRequest) {
     removeRuleIds: [11434],
     addRules: [{
       id: 11434,
-      condition: { urlFilter: 'http://localhost:11434/*' },
+      condition: { urlFilter: 'http://127.0.0.1:11434/*' },
       action: {
         type: 'modifyHeaders',
-        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://127.0.0.1' }]
       }
     }]
   }).catch(e => console.error(e));
@@ -404,7 +404,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // ── Ollama Fetch Relay (handles ollamaFetch from popup) ──
         case 'ollamaFetch': {
           const { url, options = {} } = message;
-          if (!url || !url.startsWith('http://localhost:11434')) {
+          if (!url || !url.startsWith('http://127.0.0.1:11434')) {
             sendResponse({ ok: false, error: 'Disallowed URL', data: null });
             break;
           }
@@ -426,7 +426,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // ── Multi-Provider AI Fetch Relay (handles aiFetch from AIClient) ──
         case 'aiFetch': {
           const AI_ALLOWED_ORIGINS = [
-            'http://localhost:11434',
+            'http://127.0.0.1:11434',
             'https://api.openai.com',
             'https://api.anthropic.com',
             'https://api.cursor.com',

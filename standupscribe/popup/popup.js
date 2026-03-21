@@ -10,7 +10,10 @@ let bullets = [];
 let blockers = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await checkAIStatus();
+  if (document.documentElement.classList.contains('split-mode')) {
+    const expandBtn = document.getElementById('expandBtn');
+    if (expandBtn) expandBtn.style.display = 'none';
+  }
   initTabs();
   setupEventListeners();
   await loadToday();
@@ -18,11 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateDate();
 });
 
-async function checkAIStatus() {
-  const available = await ollama.isAvailable();
-  $('statusDot').className = `status-dot ${available ? 'online' : 'offline'}`;
-  $('statusText').textContent = available ? 'AI Ready' : 'Offline';
-}
+
 
 function updateDate() {
   const d = new Date();

@@ -4,7 +4,7 @@
  * CORS issues in extension popup/content script contexts.
  */
 class OllamaClient {
-  constructor(baseUrl = 'http://localhost:11434') {
+  constructor(baseUrl = 'http://127.0.0.1:11434') {
     this.baseUrl = baseUrl;
     this.defaultModel = 'llama3.2';
 
@@ -196,10 +196,10 @@ function registerOllamaHandler() {
       removeRuleIds: [11434],
       addRules: [{
         id: 11434,
-        condition: { urlFilter: "http://localhost:11434/*" },
+        condition: { urlFilter: "http://127.0.0.1:11434/*" },
         action: {
           type: "modifyHeaders",
-          requestHeaders: [{ header: "origin", operation: "set", value: "http://localhost" }]
+          requestHeaders: [{ header: "origin", operation: "set", value: "http://127.0.0.1" }]
         }
       }]
     }).catch(e => console.error("Failed to set declarativeNetRequest rules:", e));
@@ -211,7 +211,7 @@ function registerOllamaHandler() {
     const { url, options = {} } = msg;
 
     // Only allow requests to localhost Ollama
-    if (!url.startsWith('http://localhost:11434')) {
+    if (!url.startsWith('http://127.0.0.1:11434')) {
       sendResponse({ ok: false, error: 'Disallowed URL', data: null });
       return true;
     }

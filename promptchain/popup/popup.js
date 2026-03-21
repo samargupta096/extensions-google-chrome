@@ -10,7 +10,10 @@ let currentEditChain = null;
 
 // ─── Init ───
 document.addEventListener('DOMContentLoaded', async () => {
-  await checkAIStatus();
+  if (document.documentElement.classList.contains('split-mode')) {
+    const expandBtn = document.getElementById('expandBtn');
+    if (expandBtn) expandBtn.style.display = 'none';
+  }
   await loadPageContext();
   await loadChains();
   setupTabs();
@@ -21,23 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupSettings();
 });
 
-// ─── Ollama Status ───
-async function checkAIStatus() {
-  const badge = document.getElementById('aiStatus');
-  try {
-    const available = await ollama.isAvailable();
-    if (available) {
-      badge.textContent = '● AI Ready';
-      badge.className = 'ai-badge online';
-    } else {
-      badge.textContent = '● Offline';
-      badge.className = 'ai-badge offline';
-    }
-  } catch {
-    badge.textContent = '● Offline';
-    badge.className = 'ai-badge offline';
-  }
-}
+
 
 // ─── Page Context ───
 async function loadPageContext() {
@@ -695,41 +682,6 @@ function loadSettings() {
 }
 
 
-// --- Global Model Selector ---
-async function initGlobalModelSelector() {
-  const select = document.getElementById('globalModelSelect');
-  if (!select) return;
-
-  try {
-    const models = await ollama.listModels();
-    if (!models || models.length === 0) {
-      select.style.display = 'none';
-      return;
-    }
-    
-    select.style.display = ''; // show it
-    const local = await chrome.storage.local.get('settings');
-    const settings = local.settings || {};
-    const savedModel = settings.defaultModel || ollama.defaultModel || 'llama3.2';
-
-    select.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
-    
-    if (models.some(m => m.name === savedModel)) {
-      select.value = savedModel;
-    } else {
-      select.value = models[0].name;
-      await chrome.storage.local.set({ settings: { ...settings, defaultModel: select.value } });
-    }
-
-    select.addEventListener('change', async (e) => {
-      const current = await chrome.storage.local.get('settings');
-      await chrome.storage.local.set({ settings: { ...(current.settings || {}), defaultModel: e.target.value } });
-    });
-  } catch(e) { console.error('Failed to init model selector', e); }
-}
-
-// Auto-run after DOM load and status check
-setTimeout(initGlobalModelSelector, 500);
 
 
 // ============ Multi-Provider AI Setup ============

@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupTabs();
   loadPages();
   loadStats();
-  checkAI();
 
   document.getElementById('search-input').addEventListener('input', debounce(() => loadPages(), 300));
   document.getElementById('btn-save-page').addEventListener('click', savePage);
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('ask-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') askBrain();
   });
-  document.getElementById('model-select').addEventListener('change', saveSelectedModel);
 });
 
 function setupTabs() {
@@ -164,70 +162,7 @@ async function loadStats() {
   }).join('');
 }
 
-async function checkAI() {
-  const ollama = new AIClient();
-  const available = await ollama.isAvailable();
-  const el = document.getElementById('ai-status');
-  el.className = available ? 'ollama-status connected' : 'ollama-status disconnected';
-  el.innerHTML = `<span class="status-dot ${available ? 'online' : 'offline'}"></span><span>AI</span>`;
-
-  // Load models if Ollama is available
-  if (available) {
-    loadModels(ollama);
-  } else {
-    const select = document.getElementById('model-select');
-    select.innerHTML = '<option value="">Ollama offline</option>';
-    select.classList.add('loading');
-  }
-}
-
-async function loadModels(ollama) {
-  const select = document.getElementById('model-select');
-  try {
-    const models = await ollama.listModels();
-    if (models.length === 0) {
-      select.innerHTML = '<option value="">No models</option>';
-      select.classList.add('loading');
-      return;
-    }
-
-    // Get saved model preference
-    const settings = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' });
-    const savedModel = settings.ollamaModel || 'qwen3:latest';
-
-    // Populate dropdown
-    select.innerHTML = models.map(m => {
-      const name = m.name || m.model;
-      const size = m.details?.parameter_size || '';
-      const label = size ? `${name} (${size})` : name;
-      const selected = name === savedModel ? 'selected' : '';
-      return `<option value="${name}" ${selected}>${label}</option>`;
-    }).join('');
-
-    select.classList.remove('loading');
-
-    // If saved model isn't in the list, select the first one and save it
-    if (!models.some(m => (m.name || m.model) === savedModel)) {
-      select.selectedIndex = 0;
-      saveSelectedModel();
-    }
-  } catch {
-    select.innerHTML = '<option value="">Error loading</option>';
-    select.classList.add('loading');
-  }
-}
-
-async function saveSelectedModel() {
-  const select = document.getElementById('model-select');
-  const model = select.value;
-  if (!model) return;
-
-  const settings = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' });
-  await chrome.runtime.sendMessage({
-    type: 'UPDATE_SETTINGS',
-    settings: { ...settings, ollamaModel: model }
-  });
-}
+// Old single-provider functions removed to avoid conflict with initMultiProviderAI
 
 // Helpers
 function escapeHtml(str) {
@@ -255,41 +190,7 @@ function showToast(msg) {
 }
 
 
-// --- Global Model Selector ---
-async function initGlobalModelSelector() {
-  const select = document.getElementById('globalModelSelect');
-  if (!select) return;
-
-  try {
-    const models = await ollama.listModels();
-    if (!models || models.length === 0) {
-      select.style.display = 'none';
-      return;
-    }
-    
-    select.style.display = ''; // show it
-    const local = await chrome.storage.local.get('settings');
-    const settings = local.settings || {};
-    const savedModel = settings.defaultModel || ollama.defaultModel || 'llama3.2';
-
-    select.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
-    
-    if (models.some(m => m.name === savedModel)) {
-      select.value = savedModel;
-    } else {
-      select.value = models[0].name;
-      await chrome.storage.local.set({ settings: { ...settings, defaultModel: select.value } });
-    }
-
-    select.addEventListener('change', async (e) => {
-      const current = await chrome.storage.local.get('settings');
-      await chrome.storage.local.set({ settings: { ...(current.settings || {}), defaultModel: e.target.value } });
-    });
-  } catch(e) { console.error('Failed to init model selector', e); }
-}
-
-// Auto-run after DOM load and status check
-setTimeout(initGlobalModelSelector, 500);
+ 
 
 
 // ============ Multi-Provider AI Setup ============

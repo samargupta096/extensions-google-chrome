@@ -6,28 +6,23 @@
 (function () {
   'use strict';
 
-  const QUICK_PATTERNS = [
-    { name: 'AWS Access Key', regex: /AKIA[0-9A-Z]{16}/g, severity: 'critical' },
-    { name: 'GitHub Token', regex: /gh[pousr]_[A-Za-z0-9_]{36,}/g, severity: 'critical' },
-    { name: 'OpenAI Key', regex: /sk-proj-[A-Za-z0-9_-]{40,}/g, severity: 'critical' },
-    { name: 'OpenAI Key (old)', regex: /sk-[A-Za-z0-9]{20}T3BlbkFJ[A-Za-z0-9]{20}/g, severity: 'critical' },
-    { name: 'Stripe Secret', regex: /sk_live_[0-9a-zA-Z]{24,}/g, severity: 'critical' },
-    { name: 'Slack Token', regex: /xox[baprs]-[0-9]{10,13}-[0-9a-zA-Z-]{20,}/g, severity: 'critical' },
-    { name: 'Google API Key', regex: /AIza[0-9A-Za-z_-]{35}/g, severity: 'high' },
-    { name: 'SendGrid Key', regex: /SG\.[A-Za-z0-9_-]{22}\.[A-Za-z0-9_-]{43}/g, severity: 'critical' },
-    { name: 'Discord Bot Token', regex: /[MN][A-Za-z0-9]{23,}\.[A-Za-z0-9-_]{6}\.[A-Za-z0-9-_]{27}/g, severity: 'critical' },
-    { name: 'Private Key', regex: /-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----/g, severity: 'critical' },
-    { name: 'SSH Key', regex: /-----BEGIN OPENSSH PRIVATE KEY-----/g, severity: 'critical' },
-    { name: 'NPM Token', regex: /npm_[A-Za-z0-9]{36}/g, severity: 'high' },
-    { name: 'Anthropic Key', regex: /sk-ant-[A-Za-z0-9_-]{40,}/g, severity: 'critical' },
-    { name: 'JWT Token', regex: /eyJ[A-Za-z0-9_-]*\.eyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*/g, severity: 'high' },
-    { name: 'Vercel Token', regex: /vercel_[A-Za-z0-9]{24,}/g, severity: 'high' },
-    { name: 'Cloudflare Key', regex: /cf_[A-Za-z0-9]{37}/g, severity: 'high' },
-    { name: 'DigitalOcean', regex: /dop_v1_[a-f0-9]{64}/g, severity: 'critical' }
-  ];
-
   let settings = { enablePasteGuard: true, enablePageScan: true };
   let whitelist = ['localhost', '127.0.0.1'];
+  let activePatterns = [];
+  let vaultEntries = [];
+
+  function updatePatternsAndVault() {
+    chrome.runtime.sendMessage({ action: 'getPatterns' }, (data) => {
+      if (data) {
+        const builtIn = data.secretPatterns || [];
+        const custom = data.customPatterns || [];
+        activePatterns = [...builtIn.filter(p => p.enabled !== false), ...custom.filter(p => p.enabled !== false)];
+      }
+    });
+    chrome.runtime.sendMessage({ action: 'getVault' }, (data) => {
+      if (data) vaultEntries = data;
+    });
+  }
 
   // Load settings and whitelist
   chrome.runtime.sendMessage({ action: 'getSettings' }, (s) => {
@@ -35,6 +30,16 @@
   });
   chrome.runtime.sendMessage({ action: 'getWhitelist' }, (wl) => {
     if (wl) whitelist = wl;
+  });
+  updatePatternsAndVault();
+
+  // Keep in sync with storage updates
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local') {
+      if (changes.secretPatterns || changes.customPatterns || changes.vaultEntries) updatePatternsAndVault();
+      if (changes.settings) settings = { ...settings, ...changes.settings.newValue };
+      if (changes.domainWhitelist) whitelist = changes.domainWhitelist.newValue || [];
+    }
   });
 
   function isWhitelisted() {
@@ -44,13 +49,20 @@
 
   function checkForSecrets(text) {
     const found = [];
-    for (const pattern of QUICK_PATTERNS) {
-      pattern.regex.lastIndex = 0;
-      const matches = text.match(pattern.regex);
-      if (matches) {
-        for (const match of matches) {
-          found.push({ type: pattern.name, severity: pattern.severity, preview: maskSecret(match) });
+    for (const pattern of activePatterns) {
+      try {
+        const regex = new RegExp(pattern.regex, 'g');
+        const matches = text.match(regex);
+        if (matches) {
+          for (const match of matches) {
+            found.push({ type: pattern.name, severity: pattern.severity, preview: maskSecret(match) });
+          }
         }
+      } catch (e) { /* skip invalid */ }
+    }
+    for (const entry of vaultEntries) {
+      if (text.includes(entry.value)) {
+        found.push({ type: `Vault: ${entry.label}`, severity: 'critical', preview: maskSecret(entry.value) });
       }
     }
     return found;

@@ -6,10 +6,10 @@ if (chrome.declarativeNetRequest) {
     removeRuleIds: [11434],
     addRules: [{
       id: 11434,
-      condition: { urlFilter: 'http://localhost:11434/*' },
+      condition: { urlFilter: 'http://127.0.0.1:11434/*' },
       action: {
         type: 'modifyHeaders',
-        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://127.0.0.1' }]
       }
     }]
   }).catch(e => console.error(e));
@@ -110,7 +110,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   // Ollama relay for AI features
   if (msg.action === 'ollamaFetch') {
     const { url, options = {} } = msg;
-    if (!url || !url.startsWith('http://localhost:11434')) {
+    if (!url || !url.startsWith('http://127.0.0.1:11434')) {
       sendResponse({ ok: false, error: 'Disallowed URL', data: null });
     } else {
       fetch(url, {

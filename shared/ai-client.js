@@ -8,7 +8,7 @@ const AI_PROVIDERS = {
   ollama: {
     name: 'Ollama (Local)',
     icon: '🦙',
-    baseUrl: 'http://localhost:11434',
+    baseUrl: 'http://127.0.0.1:11434',
     requiresKey: false,
     models: [], // populated dynamically
     defaultModel: 'qwen3:latest',
@@ -517,7 +517,7 @@ class AIClient {
 // ─── Background Service Worker Handler ───
 function registerAIFetchHandler() {
   const ALLOWED_ORIGINS = [
-    'http://localhost:11434',
+    'http://127.0.0.1:11434',
     'https://api.openai.com',
     'https://api.anthropic.com',
     'https://api.cursor.com',

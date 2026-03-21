@@ -9,7 +9,10 @@ const $ = (id) => document.getElementById(id);
 
 // ─── Init ───
 document.addEventListener('DOMContentLoaded', async () => {
-  await checkAIStatus();
+  if (document.documentElement.classList.contains('split-mode')) {
+    const expandBtn = document.getElementById('expandBtn');
+    if (expandBtn) expandBtn.style.display = 'none';
+  }
   await loadDashboard();
   await loadProtectionScore();
   await loadVault();
@@ -20,12 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// ─── Ollama ───
-async function checkAIStatus() {
-  const available = await ollama.isAvailable();
-  $('statusDot').className = `status-dot ${available ? 'online' : 'offline'}`;
-  $('statusText').textContent = available ? 'AI Ready' : 'Offline';
-}
+
 
 // ─── Dashboard ───
 async function loadDashboard() {
@@ -321,17 +319,17 @@ function testRegex() {
 
     result.className = 'scan-result found';
     // Highlight matches in text
-    let highlighted = escapeHtml(text);
-    const safePattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, (m) => `\\${m}`);
-    try {
-      const hlRegex = new RegExp(`(${pattern})`, 'g');
-      highlighted = escapeHtml(text).replace(
-        new RegExp(`(${escapeHtml(pattern)})`, 'g'),
-        (m) => `<mark style="background:rgba(255,107,107,0.3);color:white;border-radius:2px;">${m}</mark>`
-      );
-      // Re-apply without escaping the source text
-      highlighted = text.replace(hlRegex, (m) => `<mark style="background:rgba(255,107,107,0.3);color:white;border-radius:2px;padding:0 2px;">${escapeHtml(m)}</mark>`);
-    } catch(_) {}
+    let highlighted = '';
+    let lastIndex = 0;
+    while(true) {
+      const match = regex.exec(text);
+      if (!match) break;
+      highlighted += escapeHtml(text.substring(lastIndex, match.index));
+      highlighted += `<mark style="background:rgba(255,107,107,0.3);color:white;border-radius:2px;padding:0 2px;">${escapeHtml(match[0])}</mark>`;
+      lastIndex = regex.lastIndex;
+      if (match.index === regex.lastIndex) regex.lastIndex++; // Handle zero-length matches safely
+    }
+    highlighted += escapeHtml(text.substring(lastIndex));
 
     result.innerHTML = `
       <div style="font-weight:700;margin-bottom:8px;color:var(--accent-red);">🎯 ${matches.length} match${matches.length > 1 ? 'es' : ''}</div>

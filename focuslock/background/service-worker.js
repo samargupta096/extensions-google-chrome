@@ -5,10 +5,10 @@ if (chrome.declarativeNetRequest) {
     removeRuleIds: [11434],
     addRules: [{
       id: 11434,
-      condition: { urlFilter: 'http://localhost:11434/*' },
+      condition: { urlFilter: 'http://127.0.0.1:11434/*' },
       action: {
         type: 'modifyHeaders',
-        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://127.0.0.1' }]
       }
     }]
   }).catch(e => console.error(e));
@@ -66,7 +66,31 @@ chrome.runtime.onMessage.addListener((msg, sender, send) => {
   else if (msg.action === 'getAllowedBreak') handleAllowedBreak(msg.domain, send);
   else if (msg.action === 'ollamaFetch') {
     const { url, options = {} } = msg;
-    if (!url || !url.startsWith('http://localhost:11434')) {
+    if (!url || !url.startsWith('http://127.0.0.1:11434')) {
+      send({ ok: false, error: 'Disallowed URL', data: null });
+    } else {
+      fetch(url, {
+        method: options.method || 'GET',
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        body: options.body || undefined,
+      })
+        .then(async (res) => {
+          let data = null;
+          try { data = await res.json(); } catch (_) {}
+          send({ ok: res.ok, status: res.status, data });
+        })
+        .catch((err) => send({ ok: false, error: err.message, data: null }));
+    }
+  } else if (msg.action === 'aiFetch') {
+    const { url, options = {} } = msg;
+    const ALLOWED_ORIGINS = [
+      'http://127.0.0.1:11434',
+      'https://api.openai.com',
+      'https://api.anthropic.com',
+      'https://api.cursor.com',
+    ];
+    const allowed = ALLOWED_ORIGINS.some(origin => url.startsWith(origin));
+    if (!allowed) {
       send({ ok: false, error: 'Disallowed URL', data: null });
     } else {
       fetch(url, {

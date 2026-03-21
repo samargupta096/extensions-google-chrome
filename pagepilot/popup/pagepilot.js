@@ -1,14 +1,16 @@
 let pageContent = { title: '', url: '', text: '' };
 
 document.addEventListener('DOMContentLoaded', async () => {
+  if (document.documentElement.classList.contains('split-mode')) {
+    const expandBtn = document.getElementById('expandBtn');
+    if (expandBtn) expandBtn.style.display = 'none';
+  }
   setupTabs();
-  checkAI();
   extractPage();
   setupToolsDelegation();
 
   document.getElementById('btn-send').addEventListener('click', sendChat);
   document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
-  document.getElementById('model-select').addEventListener('change', saveSelectedModel);
 });
 
 function setupTabs() {
@@ -149,60 +151,7 @@ window.testRegex = function() {
   } catch(e) { show('t-regex-out','Error: '+e.message); }
 };
 
-async function checkAI() {
-  const ollama = new AIClient();
-  const available = await ollama.isAvailable();
-  const el = document.getElementById('ai-status');
-  el.className = available ? 'ollama-status connected' : 'ollama-status disconnected';
-  el.innerHTML = `<span class="status-dot ${available ? 'online' : 'offline'}"></span><span>AI</span>`;
-
-  if (available) loadModels(ollama);
-  else {
-    const select = document.getElementById('model-select');
-    if (select) { select.innerHTML = '<option value="">Ollama offline</option>'; select.classList.add('loading'); }
-  }
-}
-
-async function loadModels(ollama) {
-  const select = document.getElementById('model-select');
-  if (!select) return;
-  try {
-    const models = await ollama.listModels();
-    if (models.length === 0) {
-      select.innerHTML = '<option value="">No models</option>';
-      select.classList.add('loading');
-      return;
-    }
-
-    const savedModel = (await chrome.storage.local.get('pp_settings')).pp_settings?.ollamaModel || 'qwen3:latest';
-
-    select.innerHTML = models.map(m => {
-      const name = m.name || m.model;
-      const size = m.details?.parameter_size || '';
-      const label = size ? `${name} (${size})` : name;
-      return `<option value="${name}" ${name === savedModel ? 'selected' : ''}>${label}</option>`;
-    }).join('');
-
-    select.classList.remove('loading');
-
-    if (!models.some(m => (m.name || m.model) === savedModel)) {
-      select.selectedIndex = 0;
-      saveSelectedModel();
-    }
-  } catch {
-    select.innerHTML = '<option value="">Error</option>';
-    select.classList.add('loading');
-  }
-}
-
-async function saveSelectedModel() {
-  const select = document.getElementById('model-select');
-  const model = select.value;
-  if (!model) return;
-  const data = await chrome.storage.local.get('pp_settings');
-  const settings = data.pp_settings || {};
-  await chrome.storage.local.set({ pp_settings: { ...settings, ollamaModel: model } });
-}
+// Old single-provider functions removed to avoid conflict with initMultiProviderAI
 
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 

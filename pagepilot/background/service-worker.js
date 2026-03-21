@@ -6,10 +6,10 @@ if (chrome.declarativeNetRequest) {
     removeRuleIds: [11434],
     addRules: [{
       id: 11434,
-      condition: { urlFilter: 'http://localhost:11434/*' },
+      condition: { urlFilter: 'http://127.0.0.1:11434/*' },
       action: {
         type: 'modifyHeaders',
-        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://127.0.0.1' }]
       }
     }]
   }).catch(e => console.error(e));
@@ -33,7 +33,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const data = await chrome.storage.local.get('pp_settings');
     const model = data.pp_settings?.ollamaModel || 'qwen3:latest';
 
-    const r = await fetch('http://localhost:11434/api/generate', {
+    const r = await fetch('http://127.0.0.1:11434/api/generate', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ model, prompt: prompts[info.menuItemId], stream: false, options: { temperature: 0.4, num_predict: 400 } })
     });
@@ -50,7 +50,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           const data = await chrome.storage.local.get('pp_settings');
           const model = data.pp_settings?.ollamaModel || 'qwen3:latest';
 
-          const r = await fetch('http://localhost:11434/api/generate', {
+          const r = await fetch('http://127.0.0.1:11434/api/generate', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               model,
@@ -76,7 +76,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action !== 'ollamaFetch') return false;
   const { url, options = {} } = msg;
-  if (!url.startsWith('http://localhost:11434')) {
+  if (!url.startsWith('http://127.0.0.1:11434')) {
     sendResponse({ ok: false, error: 'Disallowed URL', data: null });
     return true;
   }

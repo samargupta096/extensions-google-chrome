@@ -6,10 +6,10 @@ if (chrome.declarativeNetRequest) {
     removeRuleIds: [11434],
     addRules: [{
       id: 11434,
-      condition: { urlFilter: 'http://localhost:11434/*' },
+      condition: { urlFilter: 'http://127.0.0.1:11434/*' },
       action: {
         type: 'modifyHeaders',
-        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://localhost' }]
+        requestHeaders: [{ header: 'origin', operation: 'set', value: 'http://127.0.0.1' }]
       }
     }]
   }).catch(e => console.error(e));
@@ -98,7 +98,7 @@ async function ollamaGenerate(prompt, options = {}) {
   const model = settings.ollamaModel || 'qwen3:latest';
 
   try {
-    const response = await fetch('http://localhost:11434/api/generate', {
+    const response = await fetch('http://127.0.0.1:11434/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -305,7 +305,7 @@ function todayKey() {
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action !== 'ollamaFetch') return false;
   const { url, options = {} } = msg;
-  if (!url.startsWith('http://localhost:11434')) {
+  if (!url.startsWith('http://127.0.0.1:11434')) {
     sendResponse({ ok: false, error: 'Disallowed URL', data: null });
     return true;
   }
