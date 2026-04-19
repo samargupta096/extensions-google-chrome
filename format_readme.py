@@ -11,91 +11,98 @@ extensions = [
         "name": "DeepWork Guardian",
         "purpose": "Productivity coaching during focused work blocks.",
         "icon": "./deepwork-guardian/icons/icon128.png",
-        "features": ["Pomodoro timer & breaks", "Distraction blocking", "Browsing analytics", "Local dashboard views", "Optional Ollama insights"]
+        "features": ["⏲️ Smart Pomodoro timer & breaks", "🛡️ Advanced distraction blocking", "📊 Deep-dive browsing analytics", "🏠 Local dashboard & insights", "🤖 Optional Ollama integration"]
     },
     {
         "id": "neurotab",
         "name": "NeuroTab",
         "purpose": "Save and reason over what you read online.",
         "icon": "./neurotab/icons/icon128.png",
-        "features": ["Capture page/selection", "Generate summaries/tags", "Searchable local knowledge base", "Q&A over saved content"]
+        "features": ["📸 1-click capture page/selection", "🏷️ AI-generated summaries & tags", "🧠 Searchable local knowledge base", "💬 Interactive Q&A over saved content"]
     },
     {
         "id": "pricehawk",
         "name": "PriceHawk",
         "purpose": "Monitor products over time and avoid misleading discounts.",
         "icon": "./pricehawk/icons/icon128.png",
-        "features": ["Manual/assisted product capture", "Historical tracking", "Suspicious sale checks", "AI-assisted buy/no-buy guidance"]
+        "features": ["🛒 Manual & automated product capture", "📈 Detailed historical price tracking", "🚨 Suspicious sale & fake discount checks", "💡 AI-assisted buy/no-buy guidance"]
     },
     {
         "id": "clipwise",
         "name": "ClipWise",
         "purpose": "Keep clipboard data reusable and organized.",
         "icon": "./clipwise/icons/icon128.png",
-        "features": ["Clipboard archive", "Snippet saving", "Clip type categorization", "AI transform actions"]
+        "features": ["📂 Comprehensive clipboard archive", "💾 Persistent snippet saving", "s️ Smart clip type categorization", "✨ AI-powered text transform actions"]
     },
     {
         "id": "pagepilot",
         "name": "PagePilot",
         "purpose": "Fast page understanding + handy dev tools in one popup.",
         "icon": "./pagepilot/icons/icon128.png",
-        "features": ["Chat with current page context", "Formatter/converter mini-tools", "Regex testing and utility helpers", "Color converter"]
+        "features": ["💬 Contextual chat with the active page", "🛠️ Quick formatter/converter mini-tools", "🔍 Regex testing & utility helpers", "🎨 Instant color format converter"]
     },
     {
         "id": "gitpulse",
         "name": "GitPulse",
         "purpose": "Centralize PR review work.",
         "icon": "./gitpulse/icons/icon128.png",
-        "features": ["Inbox for review requests/authored PRs", "Urgency indicators", "AI PR summaries", "Velocity-oriented stats"]
+        "features": ["📥 Unified inbox for PR review requests", "🔥 Smart urgency indicators", "📝 AI-generated PR summaries", "📊 Velocity & code review stats"]
     },
     {
         "id": "ghosthunter",
         "name": "GhostHunter",
         "purpose": "Identify suspicious job postings.",
         "icon": "./ghosthunter/icons/icon128.png",
-        "features": ["Supported on LinkedIn, Indeed, Glassdoor, Wellfound", "Risk badges & listing signal checks", "Application tracking"]
+        "features": ["🌐 Works on LinkedIn, Indeed, Glassdoor", "⚠️ Risk badges & fake listing signals", "📋 Automated application tracking", "🔎 Deep-dive employer background checks"]
     },
     {
         "id": "codearmor",
         "name": "CodeArmor",
         "purpose": "Reduce accidental credential leakage.",
         "icon": "./codearmor/icons/icon128.png",
-        "features": ["Paste interception on risky pages", "Pattern-based secret detection", "Vault of known secrets", "Dashboard metrics"]
+        "features": ["🛑 Paste interception on risky domains", "🔑 Pattern-based secret detection", "🗄️ Secure local vault of known secrets", "📈 Dashboard metrics & risk reports"]
     },
     {
         "id": "applyhawk",
         "name": "ApplyHawk",
         "purpose": "Speed up repetitive job applications.",
         "icon": "./applyhawk/icons/icon128.png",
-        "features": ["Autofill on major job form flows", "Local profile data", "Activity tracking", "AI-assisted cover-letter generation"]
+        "features": ["⚡ Autofill across major job portals", "📁 Local profile & resume data storage", "📅 Comprehensive activity tracking", "✍️ AI-assisted cover-letter generator"]
     },
     {
         "id": "focuslock",
         "name": "FocusLock",
         "purpose": "Maintain flow state while browsing.",
         "icon": "./focuslock/icons/icon128.png",
-        "features": ["Deep work mode", "Context-aware nudges", "Score-based focus tracking", "Local productivity analytics"]
+        "features": ["🧘 Dedicated deep work mode", "🔔 Context-aware nudges & alerts", "🎯 Score-based focus tracking", "📊 Local productivity analytics"]
     },
     {
         "id": "promptchain",
         "name": "PromptChain",
         "purpose": "Run repeatable multi-step AI tasks locally.",
         "icon": "./promptchain/icons/icon128.png",
-        "features": ["Chain builder & execution runner", "Saved chain library", "Page-context prompts", "Model selection"]
+        "features": ["⛓️ Visual chain builder & execution runner", "📚 Saved prompt chain library", "🔗 Page-context aware prompts", "⚙️ Dynamic model selection"]
     },
     {
         "id": "standupscribe",
         "name": "StandupScribe",
         "purpose": "Generate standup updates from your actual browsing/work activity.",
         "icon": "./standupscribe/icons/icon128.png",
-        "features": ["Auto-generated Yesterday/Today/Blockers", "Editable drafts", "History view", "AI model integration"]
+        "features": ["🤖 Auto-generated Yesterday/Today/Blockers", "✏️ Easily editable daily drafts", "📅 Comprehensive history view", "🧠 Deep AI model integration"]
     },
     {
         "id": "tabvault",
         "name": "TabVault",
         "purpose": "Manage tab sprawl and session recovery.",
         "icon": "./tabvault/icons/icon128.png",
-        "features": ["Save/restore tab sets", "Stale-tab detection", "Memory estimate panel", "Optional AI-generated session summaries"]
+        "features": ["💾 Save & restore complex tab sets", "🕸️ Stale-tab & duplicate detection", "💾 Real-time memory estimate panel", "📄 AI-generated session summaries"]
+    },
+    {
+        "id": "tabhandoff",
+        "name": "Tab Handoff",
+        "purpose": "Instant Tab Sharing across paired devices.",
+        "icon": "./tabhandoff/icons/icon128.png",
+        "features": ["🔗 Pair multiple Chrome browsers", "📤 Instantly push active tabs to devices", "📥 Pull tabs from paired devices", "🔄 Seamlessly sync open tabs & windows"]
     }
 ]
 
@@ -140,7 +147,7 @@ for idx, ext in enumerate(extensions):
 replacement = "".join(html_blocks)
 
 start_marker = "## ✨ Extensions\n"
-end_marker = "## 🔒 Privacy Principles\n"
+end_marker = "## ⚙️ How It Works — Technical Deep Dive\n"
 
 if start_marker in content and end_marker in content:
     start_idx = content.find(start_marker) + len(start_marker)

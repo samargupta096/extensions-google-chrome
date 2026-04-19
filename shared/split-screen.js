@@ -14,12 +14,15 @@
   const expandBtn = document.getElementById('expandBtn');
   if (expandBtn) {
     expandBtn.addEventListener('click', () => {
-      if (typeof chrome !== 'undefined' && chrome.tabs) {
+      if (typeof chrome !== 'undefined' && chrome.sidePanel && chrome.sidePanel.open) {
+        chrome.sidePanel.open({ windowId: chrome.windows.WINDOW_ID_CURRENT });
+        window.close();
+      } else if (typeof chrome !== 'undefined' && chrome.tabs) {
         chrome.tabs.create({ url: chrome.runtime.getURL('fullpage.html') });
         window.close();
       } else {
         // Fallback: open in new window
-        window.open(chrome.runtime.getURL('fullpage.html'), '_blank');
+        window.open('popup.html', '_blank');
       }
     });
   }

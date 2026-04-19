@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Tab Handoff \u2014 Instant Tab Sharing",
+  "name": "Tab Handoff — Instant Tab Sharing",
   "version": "1.0.0",
   "description": "Pair two Chrome browsers and instantly push, pull, or sync tabs between them via a lightweight relay.",
   "icons": {
@@ -11,7 +11,8 @@
   "permissions": [
     "tabs",
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "sidePanel"
   ],
   "background": {
     "service_worker": "background/service-worker.js"
@@ -27,5 +28,8 @@
     "https://api.openai.com/*",
     "https://api.anthropic.com/*",
     "https://api.cursor.com/*"
-  ]
+  ],
+  "side_panel": {
+    "default_path": "popup/popup.html"
+  }
 }

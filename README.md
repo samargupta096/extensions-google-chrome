@@ -1,366 +1,623 @@
 # 🚀 Chrome Extensions Suite
 
-> **8 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
+> **14 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
 
 ---
 
 ## ✨ Extensions
 
-
-<p align="center">
-  <img src=".github/gifs/extensions_demo.gif" alt="Extensions Demo Animation" width="300" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</p>
 ### 1) DeepWork Guardian
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./deepwork-guardian/icons/icon128.png" width="80" alt="DeepWork Guardian Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Productivity coaching during focused work blocks.</p>
-    <ul>
-      <li>Pomodoro timer & breaks</li>
-      <li>Distraction blocking</li>
-      <li>Browsing analytics</li>
-      <li>Local dashboard views</li>
-      <li>Optional Ollama insights</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/deepwork-guardian_screenshot.png"><img src=".github/screenshots/deepwork-guardian_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="DeepWork Guardian Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./deepwork-guardian/icons/icon128.png" width="80" alt="DeepWork Guardian Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Productivity coaching during focused work blocks.</p>
+      <ul>
+        <li>⏲️ Smart Pomodoro timer & breaks</li>
+        <li>🛡️ Advanced distraction blocking</li>
+        <li>📊 Deep-dive browsing analytics</li>
+        <li>🏠 Local dashboard & insights</li>
+        <li>🤖 Optional Ollama integration</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/deepwork-guardian_screenshot.png"><img src=".github/screenshots/deepwork-guardian_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="DeepWork Guardian Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 2) NeuroTab
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./neurotab/icons/icon128.png" width="80" alt="NeuroTab Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Save and reason over what you read online.</p>
-    <ul>
-      <li>Capture page/selection</li>
-      <li>Generate summaries/tags</li>
-      <li>Searchable local knowledge base</li>
-      <li>Q&A over saved content</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/neurotab_screenshot.png"><img src=".github/screenshots/neurotab_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="NeuroTab Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./neurotab/icons/icon128.png" width="80" alt="NeuroTab Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Save and reason over what you read online.</p>
+      <ul>
+        <li>📸 1-click capture page/selection</li>
+        <li>🏷️ AI-generated summaries & tags</li>
+        <li>🧠 Searchable local knowledge base</li>
+        <li>💬 Interactive Q&A over saved content</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/neurotab_screenshot.png"><img src=".github/screenshots/neurotab_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="NeuroTab Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 3) PriceHawk
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./pricehawk/icons/icon128.png" width="80" alt="PriceHawk Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Monitor products over time and avoid misleading discounts.</p>
-    <ul>
-      <li>Manual/assisted product capture</li>
-      <li>Historical tracking</li>
-      <li>Suspicious sale checks</li>
-      <li>AI-assisted buy/no-buy guidance</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/pricehawk_screenshot.png"><img src=".github/screenshots/pricehawk_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PriceHawk Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./pricehawk/icons/icon128.png" width="80" alt="PriceHawk Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Monitor products over time and avoid misleading discounts.</p>
+      <ul>
+        <li>🛒 Manual & automated product capture</li>
+        <li>📈 Detailed historical price tracking</li>
+        <li>🚨 Suspicious sale & fake discount checks</li>
+        <li>💡 AI-assisted buy/no-buy guidance</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/pricehawk_screenshot.png"><img src=".github/screenshots/pricehawk_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PriceHawk Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 4) ClipWise
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./clipwise/icons/icon128.png" width="80" alt="ClipWise Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Keep clipboard data reusable and organized.</p>
-    <ul>
-      <li>Clipboard archive</li>
-      <li>Snippet saving</li>
-      <li>Clip type categorization</li>
-      <li>AI transform actions</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/clipwise_screenshot.png"><img src=".github/screenshots/clipwise_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="ClipWise Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./clipwise/icons/icon128.png" width="80" alt="ClipWise Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Keep clipboard data reusable and organized.</p>
+      <ul>
+        <li>📂 Comprehensive clipboard archive</li>
+        <li>💾 Persistent snippet saving</li>
+        <li>s️ Smart clip type categorization</li>
+        <li>✨ AI-powered text transform actions</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/clipwise_screenshot.png"><img src=".github/screenshots/clipwise_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="ClipWise Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 5) PagePilot
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./pagepilot/icons/icon128.png" width="80" alt="PagePilot Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Fast page understanding + handy dev tools in one popup.</p>
-    <ul>
-      <li>Chat with current page context</li>
-      <li>Formatter/converter mini-tools</li>
-      <li>Regex testing and utility helpers</li>
-      <li>Color converter</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/pagepilot_screenshot.png"><img src=".github/screenshots/pagepilot_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PagePilot Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./pagepilot/icons/icon128.png" width="80" alt="PagePilot Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Fast page understanding + handy dev tools in one popup.</p>
+      <ul>
+        <li>💬 Contextual chat with the active page</li>
+        <li>🛠️ Quick formatter/converter mini-tools</li>
+        <li>🔍 Regex testing & utility helpers</li>
+        <li>🎨 Instant color format converter</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/pagepilot_screenshot.png"><img src=".github/screenshots/pagepilot_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PagePilot Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 6) GitPulse
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./gitpulse/icons/icon128.png" width="80" alt="GitPulse Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Centralize PR review work.</p>
-    <ul>
-      <li>Inbox for review requests/authored PRs</li>
-      <li>Urgency indicators</li>
-      <li>AI PR summaries</li>
-      <li>Velocity-oriented stats</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/gitpulse_screenshot.png"><img src=".github/screenshots/gitpulse_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GitPulse Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./gitpulse/icons/icon128.png" width="80" alt="GitPulse Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Centralize PR review work.</p>
+      <ul>
+        <li>📥 Unified inbox for PR review requests</li>
+        <li>🔥 Smart urgency indicators</li>
+        <li>📝 AI-generated PR summaries</li>
+        <li>📊 Velocity & code review stats</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/gitpulse_screenshot.png"><img src=".github/screenshots/gitpulse_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GitPulse Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 7) GhostHunter
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./ghosthunter/icons/icon128.png" width="80" alt="GhostHunter Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Identify suspicious job postings.</p>
-    <ul>
-      <li>Supported on LinkedIn, Indeed, Glassdoor, Wellfound</li>
-      <li>Risk badges & listing signal checks</li>
-      <li>Application tracking</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/ghosthunter_screenshot.png"><img src=".github/screenshots/ghosthunter_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GhostHunter Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./ghosthunter/icons/icon128.png" width="80" alt="GhostHunter Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Identify suspicious job postings.</p>
+      <ul>
+        <li>🌐 Works on LinkedIn, Indeed, Glassdoor</li>
+        <li>⚠️ Risk badges & fake listing signals</li>
+        <li>📋 Automated application tracking</li>
+        <li>🔎 Deep-dive employer background checks</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/ghosthunter_screenshot.png"><img src=".github/screenshots/ghosthunter_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="GhostHunter Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 8) CodeArmor
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./codearmor/icons/icon128.png" width="80" alt="CodeArmor Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Reduce accidental credential leakage.</p>
-    <ul>
-      <li>Paste interception on risky pages</li>
-      <li>Pattern-based secret detection</li>
-      <li>Vault of known secrets</li>
-      <li>Dashboard metrics</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/codearmor_screenshot.png"><img src=".github/screenshots/codearmor_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="CodeArmor Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./codearmor/icons/icon128.png" width="80" alt="CodeArmor Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Reduce accidental credential leakage.</p>
+      <ul>
+        <li>🛑 Paste interception on risky domains</li>
+        <li>🔑 Pattern-based secret detection</li>
+        <li>🗄️ Secure local vault of known secrets</li>
+        <li>📈 Dashboard metrics & risk reports</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/codearmor_screenshot.png"><img src=".github/screenshots/codearmor_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="CodeArmor Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 9) ApplyHawk
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./applyhawk/icons/icon128.png" width="80" alt="ApplyHawk Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Speed up repetitive job applications.</p>
-    <ul>
-      <li>Autofill on major job form flows</li>
-      <li>Local profile data</li>
-      <li>Activity tracking</li>
-      <li>AI-assisted cover-letter generation</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/applyhawk_screenshot.png"><img src=".github/screenshots/applyhawk_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="ApplyHawk Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./applyhawk/icons/icon128.png" width="80" alt="ApplyHawk Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Speed up repetitive job applications.</p>
+      <ul>
+        <li>⚡ Autofill across major job portals</li>
+        <li>📁 Local profile & resume data storage</li>
+        <li>📅 Comprehensive activity tracking</li>
+        <li>✍️ AI-assisted cover-letter generator</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/applyhawk_screenshot.png"><img src=".github/screenshots/applyhawk_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="ApplyHawk Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 10) FocusLock
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./focuslock/icons/icon128.png" width="80" alt="FocusLock Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Maintain flow state while browsing.</p>
-    <ul>
-      <li>Deep work mode</li>
-      <li>Context-aware nudges</li>
-      <li>Score-based focus tracking</li>
-      <li>Local productivity analytics</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/focuslock_screenshot.png"><img src=".github/screenshots/focuslock_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="FocusLock Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./focuslock/icons/icon128.png" width="80" alt="FocusLock Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Maintain flow state while browsing.</p>
+      <ul>
+        <li>🧘 Dedicated deep work mode</li>
+        <li>🔔 Context-aware nudges & alerts</li>
+        <li>🎯 Score-based focus tracking</li>
+        <li>📊 Local productivity analytics</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/focuslock_screenshot.png"><img src=".github/screenshots/focuslock_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="FocusLock Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 11) PromptChain
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./promptchain/icons/icon128.png" width="80" alt="PromptChain Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Run repeatable multi-step AI tasks locally.</p>
-    <ul>
-      <li>Chain builder & execution runner</li>
-      <li>Saved chain library</li>
-      <li>Page-context prompts</li>
-      <li>Model selection</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/promptchain_screenshot.png"><img src=".github/screenshots/promptchain_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PromptChain Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./promptchain/icons/icon128.png" width="80" alt="PromptChain Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Run repeatable multi-step AI tasks locally.</p>
+      <ul>
+        <li>⛓️ Visual chain builder & execution runner</li>
+        <li>📚 Saved prompt chain library</li>
+        <li>🔗 Page-context aware prompts</li>
+        <li>⚙️ Dynamic model selection</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/promptchain_screenshot.png"><img src=".github/screenshots/promptchain_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="PromptChain Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 12) StandupScribe
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./standupscribe/icons/icon128.png" width="80" alt="StandupScribe Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Generate standup updates from your actual browsing/work activity.</p>
-    <ul>
-      <li>Auto-generated Yesterday/Today/Blockers</li>
-      <li>Editable drafts</li>
-      <li>History view</li>
-      <li>AI model integration</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/standupscribe_screenshot.png"><img src=".github/screenshots/standupscribe_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="StandupScribe Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./standupscribe/icons/icon128.png" width="80" alt="StandupScribe Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Generate standup updates from your actual browsing/work activity.</p>
+      <ul>
+        <li>🤖 Auto-generated Yesterday/Today/Blockers</li>
+        <li>✏️ Easily editable daily drafts</li>
+        <li>📅 Comprehensive history view</li>
+        <li>🧠 Deep AI model integration</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/standupscribe_screenshot.png"><img src=".github/screenshots/standupscribe_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="StandupScribe Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 13) TabVault
 
-<div align="left" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
-  <div style="flex: 0 0 80px; text-align: center;">
-    <img src="./tabvault/icons/icon128.png" width="80" alt="TabVault Icon">
-  </div>
-  <div style="flex: 1; padding: 0 20px;">
-    <p><strong>Purpose:</strong> Manage tab sprawl and session recovery.</p>
-    <ul>
-      <li>Save/restore tab sets</li>
-      <li>Stale-tab detection</li>
-      <li>Memory estimate panel</li>
-      <li>Optional AI-generated session summaries</li>
-    </ul>
-  </div>
-  <div style="flex: 0 0 220px; text-align: center;">
-    <a href=".github/screenshots/tabvault_screenshot.png"><img src=".github/screenshots/tabvault_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="TabVault Screenshot" /></a>
-  </div>
-</div>
-
-<br clear="all" />
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./tabvault/icons/icon128.png" width="80" alt="TabVault Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Manage tab sprawl and session recovery.</p>
+      <ul>
+        <li>💾 Save & restore complex tab sets</li>
+        <li>🕸️ Stale-tab & duplicate detection</li>
+        <li>💾 Real-time memory estimate panel</li>
+        <li>📄 AI-generated session summaries</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/tabvault_screenshot.png"><img src=".github/screenshots/tabvault_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="TabVault Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
-## ⚙️ How It Works Internally
+### 14) Tab Handoff
 
-The extensions utilize a **Service Worker Relay Architecture** to securely and reliably execute tasks. 
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./tabhandoff/icons/icon128.png" width="80" alt="Tab Handoff Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Instant Tab Sharing across paired devices.</p>
+      <ul>
+        <li>🔗 Pair multiple Chrome browsers</li>
+        <li>📤 Instantly push active tabs to devices</li>
+        <li>📥 Pull tabs from paired devices</li>
+        <li>🔄 Seamlessly sync open tabs & windows</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/tabhandoff_screenshot.png"><img src=".github/screenshots/tabhandoff_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Tab Handoff Screenshot" /></a>
+    </td>
+  </tr>
+</table>
 
-1. **Isolated Contexts**: Extension popups, sidepanels, and content scripts run in isolated environments.
-2. **Background Service Worker**: All API calls (whether to local Ollama or cloud providers) are routed through the `service-worker.js` background script via `chrome.runtime.sendMessage`. 
-3. **CORS Bypass**: Routing through the service worker natively avoids Cross-Origin Resource Sharing (CORS) blocks, allowing seamless communication with `http://127.0.0.1:11434` (Ollama) without manual browser configuration.
-4. **State Management**: `chrome.storage.local` is used as the single source of truth across all extension components.
+---
+
+## ⚙️ How It Works — Technical Deep Dive
+
+> This section is written for developers who want to **understand, learn from, or contribute** to this codebase.
+
+### 🏛️ Service Worker Relay Architecture
+
+Every extension follows the same core architecture pattern:
+
+```mermaid
+graph TD
+    subgraph "Browser Tab"
+        A["Popup UI / Side Panel"]
+        E["Content Script (injected into page)"]
+    end
+    subgraph "Extension Background"
+        B("Service Worker<br/>service-worker.js")
+    end
+    subgraph "Local Machine"
+        C["Ollama (localhost:11434)"]
+    end
+    subgraph "Cloud (optional)"
+        F["OpenAI / Anthropic / Cursor API"]
+    end
+
+    A -- "chrome.runtime.sendMessage()" --> B
+    E -- "chrome.runtime.sendMessage()" --> B
+    B -- "fetch() — no CORS issues" --> C
+    B -- "fetch() + encrypted API key" --> F
+    C -- "JSON response" --> B
+    F -- "JSON response" --> B
+    B -- "chrome.storage.local" --> D[(Local Storage)]
+    D -- "State updates" --> A
+```
+
+**Why a relay?** Extension popups and content scripts run in restricted contexts where direct `fetch()` calls to `localhost` are blocked by CORS. The background service worker has no such restrictions — so all network requests are relayed through it via `chrome.runtime.sendMessage()`.
+
+```js
+// In popup (restricted context) — sends message to service worker
+async _fetch(url, options = {}) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      { action: 'aiFetch', url, options },
+      (response) => resolve(response)
+    );
+  });
+}
+```
+
+```js
+// In service worker — executes fetch directly
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action !== 'aiFetch') return false;
+  fetch(msg.url, { ...msg.options })
+    .then(res => res.json())
+    .then(data => sendResponse({ ok: true, data }));
+  return true; // keeps async channel open
+});
+```
+
+Additionally, `declarativeNetRequest` rules are used to spoof the `Origin` header on Ollama requests, preventing Ollama's own CORS check from rejecting extension traffic:
+
+```js
+chrome.declarativeNetRequest.updateDynamicRules({
+  removeRuleIds: [11434],
+  addRules: [{
+    id: 11434,
+    condition: { urlFilter: "http://127.0.0.1:11434/*" },
+    action: {
+      type: "modifyHeaders",
+      requestHeaders: [{ header: "origin", operation: "set", value: "http://127.0.0.1" }]
+    }
+  }]
+});
+```
+
+---
+
+### 📦 Shared Module System (`shared/`)
+
+All extensions import from a common `shared/` directory that is **copied** into each extension folder (no build step, no bundler). This keeps extensions self-contained while sharing code.
+
+| Module | Purpose | Key Classes/Functions |
+|--------|---------|----------------------|
+| `ai-client.js` | Multi-provider AI abstraction | `AIClient`, `KeyVault`, `registerAIFetchHandler()` |
+| `ollama-client.js` | Ollama-only client (legacy) | `OllamaClient`, `registerOllamaHandler()` |
+| `storage-utils.js` | Chrome storage + IndexedDB wrapper | `StorageUtils`, `LocalDB` |
+| `chart-utils.js` | Canvas-based charting (zero deps) | `ChartUtils.barChart()`, `.lineChart()`, `.doughnutChart()` |
+| `ui-components.css` | Design system tokens + components | CSS custom properties, glassmorphism cards |
+| `split-screen.js` | Full-tab split view controller | Draggable divider, iframe navigation, notes panel |
+| `detach-utils.js` | Detached popup window mode | `DetachUtils.openDetachedWindow()` |
+
+---
+
+### 🤖 Multi-Provider AI Client (`ai-client.js`)
+
+The `AIClient` class provides a **unified interface** across 4 providers:
+
+| Provider | Endpoint | Auth | Models |
+|----------|----------|------|--------|
+| **Ollama** (local) | `http://127.0.0.1:11434/api/generate` | None | Auto-detected via `/api/tags` |
+| **OpenAI** | `https://api.openai.com/v1/chat/completions` | Bearer token | GPT-4o, GPT-4.1, o3-mini |
+| **Anthropic** | `https://api.anthropic.com/v1/messages` | `x-api-key` header | Claude Sonnet 4, Claude 3.5 |
+| **Cursor** | `https://api.cursor.com/v1/chat/completions` | Bearer token | Cursor Small/Large |
+
+**Key design decisions:**
+- **Auto-fallback**: If the selected Ollama model isn't available, it automatically falls back to the first model returned by `/api/tags`
+- **URL allowlisting**: The service worker only proxies requests to hardcoded `ALLOWED_ORIGINS` — no arbitrary URLs can be fetched
+- **Convenience methods**: `.summarize()`, `.categorize()`, `.analyzeInsights()` wrap common prompt patterns with tuned temperatures
+
+```js
+// Usage in any extension popup
+const ai = new AIClient();
+const result = await ai.generate("Summarize this page", {
+  system: "You are a helpful assistant",
+  temperature: 0.3,
+  maxTokens: 512
+});
+```
+
+---
+
+### 🔐 API Key Encryption (`KeyVault`)
+
+Cloud provider API keys are **never stored in plaintext**. They are encrypted at rest using **AES-256-GCM** via the Web Crypto API:
+
+```mermaid
+graph LR
+    A["User enters API key"] --> B["PBKDF2 key derivation<br/>(extension ID + random salt, 100K iterations)"]
+    B --> C["AES-GCM encrypt<br/>(random 12-byte IV)"]
+    C --> D["Store {iv, ciphertext}<br/>in chrome.storage.local"]
+    D --> E["On use: decrypt with<br/>same derived key"]
+```
+
+- **Key derivation**: Uses `PBKDF2` with the Chrome extension's unique `chrome.runtime.id` as the passphrase and a per-install random salt
+- **Per-encrypt IV**: Every encryption operation generates a fresh 12-byte IV
+- **Legacy migration**: If plaintext keys from older versions are detected, they're automatically re-encrypted and the plaintext is deleted
+
+---
+
+### 🎭 Content Script Patterns
+
+Extensions that interact with web pages use **content scripts** injected into specific URL patterns:
+
+| Extension | Content Script | Injected On | What It Does |
+|-----------|---------------|-------------|--------------|
+| **DeepWork Guardian** | `blocker.js` | `<all_urls>` at `document_start` | Replaces the entire page with a "Stay Focused" overlay during focus sessions |
+| **GhostHunter** | `detector.js` | LinkedIn, Indeed, Glassdoor at `document_idle` | Scans job listings for ghost job signals and overlays risk badges |
+| **CodeArmor** | Content script | Risky paste targets | Intercepts clipboard paste events and scans for secret patterns |
+
+**How blocking works (DeepWork Guardian):**
+```js
+// Content script asks service worker if current site is blocked
+const response = await chrome.runtime.sendMessage({
+  type: 'CHECK_BLOCKED',
+  url: window.location.href
+});
+
+if (response.blocked) {
+  // Replace entire page DOM with a motivational block screen
+  document.documentElement.innerHTML = '';
+  // ... render overlay with timer + quotes
+}
+```
+
+**How ghost job detection works (GhostHunter):**
+```js
+const GHOST_SIGNALS = {
+  reposted:    { weight: 3, patterns: [/repost/i, /30\+\s*days?\s*ago/i] },
+  alwaysHiring: { weight: 3, patterns: [/always\s+hiring/i] },
+  noSalary:    { weight: 2, check: (text) => !(/\$[\d,]+/i.test(text)) },
+  vagueDescription: { weight: 2, check: (text) => text.split(/\s+/).length < 80 },
+};
+// Each listing is scored; high scores get "⚠️ Ghost Job" badges
+```
+
+---
+
+### 🗄️ Data Persistence Layer
+
+Two storage mechanisms are used, chosen based on data volume:
+
+| Mechanism | Use Case | Limit | Example |
+|-----------|----------|-------|---------|
+| `chrome.storage.local` | Settings, state, small datasets | ~10MB | Focus session config, blocked sites list |
+| `IndexedDB` (via `LocalDB` class) | Large collections, search-heavy data | Unlimited | NeuroTab saved pages, ClipWise clipboard history |
+
+The `LocalDB` class wraps IndexedDB with a clean async API:
+
+```js
+const db = new LocalDB('neurotab-db', 1);
+await db.open([
+  { name: 'pages', keyPath: 'id', indexes: [
+    { name: 'date', keyPath: 'savedAt' },
+    { name: 'domain', keyPath: 'domain' }
+  ]}
+]);
+
+await db.put('pages', { id: 'abc123', title: '...', content: '...' });
+const all = await db.getAll('pages');
+```
+
+---
+
+### 📊 Canvas Chart System (`chart-utils.js`)
+
+All dashboards use a **custom Canvas 2D charting library** with zero external dependencies. This avoids shipping Chart.js (~200KB) in every extension.
+
+**Supported chart types:**
+- `ChartUtils.barChart()` — Vertical bars with rounded corners & glow effects
+- `ChartUtils.lineChart()` — Multi-dataset lines with gradient fills & dot markers
+- `ChartUtils.doughnutChart()` — Ring charts with center text
+- `ChartUtils.horizontalBarChart()` — Horizontal bars for leaderboard-style data
+
+**Features:** DPR-aware rendering, cubic-ease animations, auto-scaling Y-axis, glassmorphism-compatible color palette.
+
+---
+
+### 🎨 Design System (`ui-components.css`)
+
+All extensions share a **unified design language** defined in CSS custom properties:
+
+```css
+:root {
+  --bg-primary: #0f0f1a;        /* Deep navy background */
+  --bg-card: rgba(255,255,255,0.04);  /* Glassmorphism cards */
+  --accent-purple: #6c5ce7;     /* Primary brand color */
+  --accent-cyan: #00cec9;       /* Secondary accent */
+  --radius-md: 12px;            /* Consistent border radius */
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+```
+
+**Component library includes:** Cards with `backdrop-filter: blur()`, animated stat cards, segmented tab controls, toggle switches, toast notifications, progress bars, badge system, and responsive popup/sidepanel layouts via `@media` queries.
+
+**Typography:** Inter font loaded from Google Fonts with weights 400–800.
+
+---
+
+### 🖥️ View Modes
+
+Every extension supports **3 view modes** with the same codebase:
+
+| Mode | How It Opens | Layout |
+|------|-------------|--------|
+| **Popup** | Click extension icon | Fixed 400×580px bubble |
+| **Side Panel** | `chrome.sidePanel.open()` | Full-height sidebar |
+| **Full Page (Split View)** | `fullpage.html` in a new tab | Draggable 2-pane layout with iframe + notes |
+
+The `split-screen.js` module handles the full-page mode with a draggable divider that persists its position to `chrome.storage.local`.
 
 ---
 
 ## 🤖 LLM Data Sharing & Formatting
 
-The extensions utilize a unified `AIClient` and `OllamaClient` to communicate with the models. Data is strictly sent based on explicit user triggers, and **no background telemetry or passive browsing data is ever transmitted**.
+The `AIClient` and `OllamaClient` communicate with models **only on explicit user action**. No background telemetry or passive browsing data is ever transmitted.
 
-### 1. What Data is Sent
-Depending on the extension and action triggered, the system sends contextually relevant text to the AI:
-- **Summarization/Tagging** (e.g., NeuroTab, ClipWise): The raw text of the clipped article or snippet is sent.
-- **Chat/Q&A** (e.g., PagePilot, NeuroTab): The user's query and the active page's text context/DOM representation.
-- **Structural Analysis** (e.g., PriceHawk, GhostHunter): JSON blobs of formatted page metrics (like prices, dates, or job listing keywords).
+| Action Type | Extensions | Data Sent |
+|-------------|-----------|-----------|
+| Summarization/Tagging | NeuroTab, ClipWise | Raw text of the clipped article or snippet |
+| Chat/Q&A | PagePilot, NeuroTab | User query + active page text/DOM context |
+| Structural Analysis | PriceHawk, GhostHunter | JSON blobs of page metrics (prices, dates, keywords) |
+| Standup Generation | StandupScribe | Aggregated browsing activity summaries |
+| PR Summarization | GitPulse | PR diff text and metadata |
 
-### 2. Communication Format
-All network requests are standard `fetch` calls carrying `application/json` payloads.
-
-**Local Ollama Example (`POST /api/generate`):**
+**Ollama request format** (`POST /api/generate`):
 ```json
 {
   "model": "llama3.2",
   "prompt": "System instructions here\n\nUser target text here",
   "stream": false,
-  "options": {
-    "temperature": 0.7,
-    "num_predict": 1024
-  }
+  "options": { "temperature": 0.7, "num_predict": 1024 }
 }
 ```
 
-**Cloud Provider Example:**
-If an external provider (like OpenAI or Anthropic) is configured by the user via API keys, requests mirror standard chat interfaces (e.g., `/chat/completions`) utilizing AES-GCM encrypted API keys stored locally.
+**Cloud provider requests** use standard chat completion APIs with AES-GCM encrypted API keys stored locally.
 
 ---
 
@@ -405,11 +662,20 @@ extensions-google-chrome/
 │   ├── chart-utils.js       # Canvas-based charting library
 │   ├── ollama-client.js     # Ollama API client
 │   └── storage-utils.js     # Chrome storage helpers
-├── deepwork-guardian/       # ⏱️ Focus & Analytics
-├── neurotab/                # 🧠 AI Second Brain
-├── pricehawk/               # 💰 Price Tracker
+├── applyhawk/               # 🦅 Speedy Job Applications
 ├── clipwise/                # 📋 Clipboard Manager
-└── pagepilot/               # 🔍 Page Assistant & Dev Tools
+├── codearmor/               # 🛡️ Credential Leakage Prevention
+├── deepwork-guardian/       # ⏱️ Focus & Analytics
+├── focuslock/               # 🧘 Deep Work Mode
+├── ghosthunter/             # 👻 Fake Job Detector
+├── gitpulse/                # 🐙 PR Review Central
+├── neurotab/                # 🧠 AI Second Brain
+├── pagepilot/               # 🔍 Page Assistant & Dev Tools
+├── pricehawk/               # 💰 Price Tracker
+├── promptchain/             # ⛓️ Multi-step AI tasks
+├── standupscribe/           # 📝 Auto-Standup Generator
+├── tabhandoff/              # 🤝 Device Tab Sharing
+└── tabvault/                # 💾 Tab Session Manager
 ```
 
 ---

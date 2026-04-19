@@ -78,6 +78,20 @@ body {
   background: var(--bg-primary);
 }
 
+/* Side Panel / Full Window Adaptability */
+@media (min-width: 401px), (min-height: 581px) {
+  html, body {
+    height: 100%;
+  }
+  .popup-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0;
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
