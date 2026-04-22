@@ -22,6 +22,13 @@
       <p id="date" class="date-display">Monday, January 1</p>
     </main>
 
+    <!-- Search Bar -->
+    <div class="search-container fade-in">
+      <form id="search-form" class="search-form">
+        <input type="text" id="search-input" placeholder="Search Google or type a URL..." class="search-input" autofocus>
+      </form>
+    </div>
+
     <!-- Widgets Grid -->
     <section class="widgets-grid">
       
@@ -60,6 +67,17 @@
         <ul id="todo-list" class="item-list"></ul>
       </div>
 
+      <!-- Quick Links Widget -->
+      <div class="widget glass-card links-widget slide-up" style="animation-delay: 0.4s;">
+        <h2>🔗 Quick Links</h2>
+        <div class="input-group">
+          <input type="text" id="link-name-input" placeholder="Name" class="glass-input" style="width: 40%">
+          <input type="text" id="link-url-input" placeholder="URL" class="glass-input" style="width: 60%">
+          <button id="add-link-btn" class="glass-btn btn-primary">+</button>
+        </div>
+        <ul id="links-list" class="item-list links-list"></ul>
+      </div>
+
     </section>
   </div>
 
@@ -69,5 +87,7 @@
   <script src="js/todo.js"></script>
   <script src="js/goals.js"></script>
   <script src="js/timer.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/links.js"></script>
 </body>
 </html>
