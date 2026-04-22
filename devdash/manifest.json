@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "DevDash",
+  "version": "1.0",
+  "description": "Developer productivity dashboard for your new tab.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": [
+    "storage"
+  ]
+}

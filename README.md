@@ -1,6 +1,6 @@
 # 🚀 Chrome Extensions Suite
 
-> **14 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
+> **15 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
 
 ---
 
@@ -343,6 +343,30 @@
 
 ---
 
+### 15) DevDash
+
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./devdash/icons/icon128.png" width="80" alt="DevDash Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Developer productivity dashboard for your new tab.</p>
+      <ul>
+        <li>⏰ Large digital clock and date</li>
+        <li>💡 Rotating motivational developer quotes</li>
+        <li>🎯 Goals and ToDo lists with local persistence</li>
+        <li>🍅 Built-in Pomodoro focus timer</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/devdash_screenshot.png"><img src=".github/screenshots/devdash_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="DevDash Screenshot" /></a>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## ⚙️ How It Works — Technical Deep Dive
 
 > This section is written for developers who want to **understand, learn from, or contribute** to this codebase.
@@ -675,7 +699,8 @@ extensions-google-chrome/
 ├── promptchain/             # ⛓️ Multi-step AI tasks
 ├── standupscribe/           # 📝 Auto-Standup Generator
 ├── tabhandoff/              # 🤝 Device Tab Sharing
-└── tabvault/                # 💾 Tab Session Manager
+├── tabvault/                # 💾 Tab Session Manager
+└── devdash/                 # 🚀 Developer New Tab Dashboard
 ```
 
 ---
