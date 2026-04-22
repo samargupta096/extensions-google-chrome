@@ -79,6 +79,23 @@
       </div>
 
     </section>
+
+    <!-- GitHub Contribution Graph -->
+    <section class="github-container fade-in" style="animation-delay: 0.5s;">
+      <div class="glass-card github-card">
+        <div class="github-header">
+          <h2>🐙 GitHub Contributions</h2>
+          <div class="input-group github-input-group">
+            <input type="text" id="github-username-input" placeholder="Enter GitHub Username" class="glass-input">
+            <button id="save-github-btn" class="glass-btn btn-primary">Save</button>
+          </div>
+        </div>
+        <div id="github-graph-container" class="github-graph-container">
+          <p class="placeholder-text">Enter your GitHub username to see your contribution graph.</p>
+        </div>
+      </div>
+    </section>
+
   </div>
 
   <script src="shared/storage-utils.js"></script>
@@ -89,5 +106,6 @@
   <script src="js/timer.js"></script>
   <script src="js/search.js"></script>
   <script src="js/links.js"></script>
+  <script src="js/github.js"></script>
 </body>
 </html>
