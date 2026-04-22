@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderGraph(username) {
     if (!username) return;
-    // We use a color that matches the theme: 4facfe (cyan-ish)
-    graphContainer.innerHTML = `<img src="https://ghchart.rshah.org/4facfe/${username}" alt="${username}'s GitHub Chart" />`;
+    // Using github-readme-activity-graph for reliable dynamic SVG generation
+    graphContainer.innerHTML = `<img src="https://github-readme-activity-graph.vercel.app/graph?username=${username}&bg_color=0f0f1a&color=4facfe&line=4facfe&point=fff&hide_border=true" alt="${username}'s GitHub Activity Graph" style="width: 100%; border-radius: 8px;"/>`;
   }
 
   saveBtn.addEventListener('click', () => {
