@@ -34,7 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Toggle Panel
   toggleBtn.addEventListener('click', () => {
-    panel.classList.toggle('active');
+    const isActive = panel.classList.contains('active');
+    // Close all panels
+    document.querySelectorAll('.theme-panel, .wallpaper-modal, .visibility-panel').forEach(p => p.classList.remove('active'));
+    // If it wasn't active, open it
+    if (!isActive) {
+      panel.classList.add('active');
+    }
   });
 
   // Apply Theme

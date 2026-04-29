@@ -9,7 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Toggle modal
   toggleBtn.addEventListener('click', () => {
-    modal.classList.toggle('active');
+    const isActive = modal.classList.contains('active');
+    // Close all panels
+    document.querySelectorAll('.theme-panel, .wallpaper-modal, .visibility-panel').forEach(p => p.classList.remove('active'));
+    // If it wasn't active, open it
+    if (!isActive) {
+      modal.classList.add('active');
+    }
   });
 
   // Load wallpaper from storage
