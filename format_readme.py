@@ -103,6 +103,20 @@ extensions = [
         "purpose": "Instant Tab Sharing across paired devices.",
         "icon": "./tabhandoff/icons/icon128.png",
         "features": ["🔗 Pair multiple Chrome browsers", "📤 Instantly push active tabs to devices", "📥 Pull tabs from paired devices", "🔄 Seamlessly sync open tabs & windows"]
+    },
+    {
+        "id": "devdash",
+        "name": "DevDash",
+        "purpose": "Developer productivity dashboard for your new tab.",
+        "icon": "./devdash/icons/icon128.png",
+        "features": [
+            "⏰ Large digital clock and world clock",
+            "🤖 Local Ollama AI Chat Integration",
+            "💻 Real-time System CPU/RAM Monitor",
+            "🐙 GitHub PR Tracker & Stack Overflow Watcher",
+            "📰 Hacker News & Subreddit Feeds",
+            "📝 Persistent Auto-saving Scratchpad & Goals"
+        ]
     }
 ]
 

@@ -353,10 +353,12 @@
     <td width="45%" valign="top">
       <p><strong>Purpose:</strong> Developer productivity dashboard for your new tab.</p>
       <ul>
-        <li>⏰ Large digital clock and date</li>
-        <li>💡 Rotating motivational developer quotes</li>
-        <li>🎯 Goals and ToDo lists with local persistence</li>
-        <li>🍅 Built-in Pomodoro focus timer</li>
+        <li>⏰ Large digital clock and world clock</li>
+        <li>🤖 Local Ollama AI Chat Integration</li>
+        <li>💻 Real-time System CPU/RAM Monitor</li>
+        <li>🐙 GitHub PR Tracker & Stack Overflow Watcher</li>
+        <li>📰 Hacker News & Subreddit Feeds</li>
+        <li>📝 Persistent Auto-saving Scratchpad & Goals</li>
       </ul>
     </td>
     <td width="40%" align="center" valign="top">
