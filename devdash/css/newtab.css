@@ -634,3 +634,240 @@ button {
 .visibility-list input[type="checkbox"] {
   cursor: pointer;
 }
+
+/* ====================================================
+   Shared Widget Header Row (used by new widgets)
+   ==================================================== */
+.widget-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+.widget-header-row h2 {
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+.widget-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.widget-status-text {
+  font-size: 0.75rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* Glass Select (for News source dropdown) */
+.glass-select {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ddd;
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.glass-select:hover,
+.glass-select:focus {
+  border-color: #4facfe;
+  color: #fff;
+}
+.glass-select option {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+/* ====================================================
+   News Feed Widget
+   ==================================================== */
+.news-list {
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.news-item {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.6rem 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+.news-title {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s;
+}
+.news-title:hover {
+  color: #4facfe;
+}
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #777;
+}
+.news-comments-link {
+  color: #4facfe;
+  text-decoration: none;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.news-comments-link:hover {
+  opacity: 1;
+}
+.news-loading {
+  color: #888;
+  font-size: 0.9rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+.news-error {
+  color: #ff6b6b;
+}
+
+/* ====================================================
+   GitHub PR Monitor Widget
+   ==================================================== */
+.pr-badge {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-review {
+  background: rgba(255, 170, 50, 0.2);
+  color: #ffaa32;
+  border: 1px solid rgba(255, 170, 50, 0.3);
+}
+.badge-author {
+  background: rgba(79, 172, 254, 0.15);
+  color: #4facfe;
+  border: 1px solid rgba(79, 172, 254, 0.3);
+}
+
+/* ====================================================
+   Scratchpad Widget
+   ==================================================== */
+.scratchpad-widget {
+  display: flex;
+  flex-direction: column;
+}
+.scratchpad-textarea {
+  flex-grow: 1;
+  width: 100%;
+  min-height: 160px;
+  resize: none;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #e0e0e0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.scratchpad-textarea:focus {
+  border-color: rgba(79, 172, 254, 0.5);
+  box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+}
+.scratchpad-textarea::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+/* Custom scrollbar */
+.scratchpad-textarea::-webkit-scrollbar {
+  width: 5px;
+}
+.scratchpad-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scratchpad-textarea::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+}
+
+/* ====================================================
+   System Monitor Widget
+   ==================================================== */
+.sysmonitor-widget {
+  display: flex;
+  flex-direction: column;
+}
+.sysmonitor-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  flex-grow: 1;
+  justify-content: center;
+}
+.sysmonitor-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.sysmonitor-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+.sysmonitor-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+.sysmonitor-bar-track {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.sysmonitor-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s;
+}
+.bar-low {
+  background: linear-gradient(90deg, #43e97b, #38f9d7);
+}
+.bar-mid {
+  background: linear-gradient(90deg, #f6d365, #fda085);
+}
+.bar-high {
+  background: linear-gradient(90deg, #ff6b6b, #ee5253);
+}
+.sysmonitor-detail {
+  font-size: 0.8rem;
+  color: #777;
+  text-align: center;
+  margin-top: 0.5rem;
+}

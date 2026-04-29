@@ -96,6 +96,94 @@
       </div>
     </section>
 
+    <!-- Second Row Widgets -->
+    <section class="widgets-grid">
+
+      <!-- News Feed Widget -->
+      <div class="widget glass-card news-widget slide-up" data-widget-id="news" style="animation-delay: 0.6s;">
+        <div class="widget-header-row">
+          <h2>📰 Tech News</h2>
+          <div class="widget-header-controls">
+            <select id="news-source-select" class="glass-select">
+              <option value="hn">Hacker News</option>
+              <option value="webdev">r/webdev</option>
+              <option value="programming">r/programming</option>
+              <option value="javascript">r/javascript</option>
+            </select>
+            <button id="news-refresh-btn" class="glass-btn" title="Refresh">↻</button>
+          </div>
+        </div>
+        <ul id="news-list" class="news-list item-list">
+          <li class="news-loading">⏳ Loading stories...</li>
+        </ul>
+      </div>
+
+      <!-- GitHub PR Monitor Widget -->
+      <div class="widget glass-card ghmonitor-widget slide-up" data-widget-id="ghmonitor" style="animation-delay: 0.7s;">
+        <div class="widget-header-row">
+          <h2>🔀 My Pull Requests</h2>
+          <div class="widget-header-controls">
+            <span id="gh-status" class="widget-status-text"></span>
+            <button id="gh-refresh-btn" class="glass-btn" title="Refresh">↻</button>
+          </div>
+        </div>
+        <div id="gh-token-section" class="input-group" style="display:none;">
+          <input type="password" id="gh-token-input" placeholder="Paste GitHub PAT..." class="glass-input">
+          <button id="gh-save-token-btn" class="glass-btn btn-primary">Save</button>
+        </div>
+        <ul id="gh-pr-list" class="news-list item-list">
+          <li class="news-loading">Enter a GitHub PAT to load your PRs.</li>
+        </ul>
+      </div>
+
+      <!-- Scratchpad Widget -->
+      <div class="widget glass-card scratchpad-widget slide-up" data-widget-id="scratchpad" style="animation-delay: 0.8s;">
+        <div class="widget-header-row">
+          <h2>📝 Scratchpad</h2>
+          <div class="widget-header-controls">
+            <span id="scratchpad-char-count" class="widget-status-text">0 chars</span>
+            <button id="scratchpad-copy-btn" class="glass-btn" title="Copy All">📋</button>
+            <button id="scratchpad-clear-btn" class="glass-btn btn-danger" title="Clear">🗑️</button>
+          </div>
+        </div>
+        <textarea
+          id="scratchpad-textarea"
+          class="scratchpad-textarea"
+          placeholder="Quick notes, JSON, bash commands... Auto-saved ✓"
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <!-- System Monitor Widget -->
+      <div class="widget glass-card sysmonitor-widget slide-up" data-widget-id="sysmonitor" style="animation-delay: 0.9s;">
+        <h2>💻 System Monitor</h2>
+        <div class="sysmonitor-stats">
+          <div class="sysmonitor-row">
+            <div class="sysmonitor-label">
+              <span>CPU</span>
+              <span id="cpu-label" class="sysmonitor-value">0%</span>
+            </div>
+            <div class="sysmonitor-bar-track">
+              <div id="cpu-bar-fill" class="sysmonitor-bar-fill bar-low"></div>
+            </div>
+          </div>
+          <div class="sysmonitor-row">
+            <div class="sysmonitor-label">
+              <span>RAM</span>
+              <span id="ram-label" class="sysmonitor-value">0%</span>
+            </div>
+            <div class="sysmonitor-bar-track">
+              <div id="ram-bar-fill" class="sysmonitor-bar-fill bar-low"></div>
+            </div>
+          </div>
+          <div class="sysmonitor-detail">
+            <span id="ram-used">-- GB</span> used of <span id="ram-total">-- GB</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
   </div>
 
   <!-- Wallpaper Settings -->
@@ -127,5 +215,9 @@
   <script src="js/resize.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/visibility.js"></script>
+  <script src="js/news.js"></script>
+  <script src="js/scratchpad.js"></script>
+  <script src="js/sysmonitor.js"></script>
+  <script src="js/ghmonitor.js"></script>
 </body>
 </html>
