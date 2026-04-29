@@ -9,14 +9,6 @@
 </head>
 <body class="theme-dark">
   <div class="dashboard-container">
-    
-    <!-- Quote Widget (Now part of the grid or at least draggable) -->
-    <div class="widget glass-card quote-container fade-in" data-widget-id="quote">
-      <h2>✨ Daily Inspiration</h2>
-      <p id="quote-text" class="quote-text">"It works on my machine."</p>
-      <span id="quote-author" class="quote-author">- Developer</span>
-      <button id="refresh-quote-btn" class="glass-btn quote-refresh-btn" title="Get new quote">↻</button>
-    </div>
 
     <!-- Center: Clock & Date -->
     <main class="time-container fade-in">
@@ -31,9 +23,17 @@
       </form>
     </div>
 
-    <!-- Widgets Grid -->
+    <!-- ===== SINGLE UNIFIED WIDGETS GRID ===== -->
     <section class="widgets-grid">
-      
+
+      <!-- Quote Widget -->
+      <div class="widget glass-card quote-container fade-in" data-widget-id="quote">
+        <h2>✨ Daily Inspiration</h2>
+        <p id="quote-text" class="quote-text">"It works on my machine."</p>
+        <span id="quote-author" class="quote-author">- Developer</span>
+        <button id="refresh-quote-btn" class="glass-btn quote-refresh-btn" title="Get new quote">↻</button>
+      </div>
+
       <!-- Goals Widget -->
       <div class="widget glass-card goals-widget slide-up" data-widget-id="goals" style="animation-delay: 0.1s;">
         <h2>🎯 Active Goals</h2>
@@ -80,23 +80,21 @@
         <ul id="links-list" class="item-list links-list"></ul>
       </div>
 
-    </section>
-
-    <!-- GitHub Contribution Graph -->
-    <div class="github-container fade-in widget glass-card" data-widget-id="github" style="animation-delay: 0.5s;">
-      <div class="github-header">
-        <h2>🐙 GitHub Contributions</h2>
-        <div class="input-group github-input-group">
-          <input type="text" id="github-username-input" placeholder="Enter GitHub Username" class="glass-input">
-          <button id="save-github-btn" class="glass-btn btn-primary">Save</button>
+      <!-- GitHub Contribution Graph -->
+      <div class="github-container widget glass-card fade-in" data-widget-id="github" style="animation-delay: 0.5s;">
+        <div class="github-header">
+          <h2>🐙 GitHub Contributions</h2>
+          <div class="input-group github-input-group">
+            <input type="text" id="github-username-input" placeholder="Enter GitHub Username" class="glass-input">
+            <button id="save-github-btn" class="glass-btn btn-primary">Save</button>
+          </div>
+        </div>
+        <div id="github-graph-container" class="github-graph-container">
+          <p class="placeholder-text">Enter your GitHub username to see your contribution graph.</p>
         </div>
       </div>
-      <div id="github-graph-container" class="github-graph-container">
-        <p class="placeholder-text">Enter your GitHub username to see your contribution graph.</p>
-      </div>
-    </div>
 
-    <!-- News Feed Widget -->
+      <!-- News Feed Widget -->
       <div class="widget glass-card news-widget slide-up" data-widget-id="news" style="animation-delay: 0.6s;">
         <div class="widget-header-row">
           <h2>📰 Tech News</h2>
@@ -179,7 +177,7 @@
         </div>
       </div>
 
-    <!-- Ollama Chat Widget -->
+      <!-- Ollama Chat Widget -->
       <div class="widget glass-card ollama-widget slide-up" data-widget-id="ollama" style="animation-delay: 1.0s;">
         <div class="widget-header-row">
           <h2>🤖 AI Chat</h2>
@@ -257,7 +255,7 @@
         </div>
       </div>
 
-    <!-- Regex Tester Widget -->
+      <!-- Regex Tester Widget -->
       <div class="widget glass-card regex-widget slide-up" data-widget-id="regex" style="animation-delay: 1.4s;">
         <div class="widget-header-row">
           <h2>🔍 Regex Tester</h2>
@@ -306,7 +304,7 @@
         </ul>
       </div>
 
-    <!-- JSON Formatter Widget -->
+      <!-- JSON Formatter Widget -->
       <div class="widget glass-card json-widget slide-up" data-widget-id="jsonformatter" style="animation-delay: 1.7s;">
         <div class="widget-header-row">
           <h2>📋 JSON Formatter</h2>
@@ -378,6 +376,7 @@
       </div>
 
     </section>
+    <!-- ===== END WIDGETS GRID ===== -->
 
   </div>
 
