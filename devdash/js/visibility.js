@@ -40,13 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
 
   // Toggle Panel
-  toggleBtn.addEventListener('click', () => {
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     const isActive = panel.classList.contains('active');
     // Close all panels
     document.querySelectorAll('.theme-panel, .wallpaper-modal, .visibility-panel').forEach(p => p.classList.remove('active'));
     // If it wasn't active, open it
     if (!isActive) {
       panel.classList.add('active');
+    }
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    if (panel.classList.contains('active')) {
+      if (!panel.contains(e.target) && !toggleBtn.contains(e.target)) {
+        panel.classList.remove('active');
+      }
     }
   });
 
