@@ -871,3 +871,131 @@ button {
   text-align: center;
   margin-top: 0.5rem;
 }
+
+/* ---------------------------------------------------
+   New Developer Widgets Styles
+   --------------------------------------------------- */
+
+/* Ollama Chat Widget */
+.ollama-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.ollama-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 200px;
+  margin-bottom: 0.5rem;
+}
+.ollama-message {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  margin: 0.25rem 0;
+}
+.ollama-message.user {
+  background: rgba(79, 172, 254, 0.2);
+  align-self: flex-end;
+}
+.ollama-message.assistant {
+  background: rgba(255, 255, 255, 0.1);
+  align-self: flex-start;
+}
+.ollama-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+.ollama-textarea {
+  flex: 1;
+  min-height: 40px;
+  resize: none;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #e0e0e0;
+  padding: 0.4rem;
+}
+.ollama-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 0.3rem;
+  display: inline-block;
+}
+.ollama-status-dot.connected {
+  background: #4facfe;
+}
+.ollama-status-dot.disconnected {
+  background: #ff6b6b;
+}
+
+/* Stack Overflow Widget */
+.so-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.so-tag-manager {
+  margin-bottom: 0.5rem;
+}
+.so-active-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.so-tag {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.so-tag:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.so-questions-list .news-item {
+  padding: 0.5rem 0;
+}
+.so-questions-list .news-title {
+  font-size: 0.85rem;
+}
+
+/* World Clock Widget */
+.worldclock-widget .wc-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin: 0.3rem 0;
+}
+.worldclock-widget .wc-remove-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.worldclock-widget .wc-info {
+  display: flex;
+  flex-direction: column;
+}
+.worldclock-widget .wc-label {
+  font-weight: 600;
+  color: #fff;
+}
+.worldclock-widget .wc-offset {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+.worldclock-widget .wc-time {
+  font-size: 1rem;
+  color: #4facfe;
+}
+.worldclock-widget .wc-date {
+  font-size: 0.75rem;
+  color: #ccc;
+}
+
+/* End of New Widgets Styles */
