@@ -246,6 +246,25 @@
         </div>
       </div>
 
+      <!-- Weather Widget -->
+      <div class="widget glass-card weather-widget slide-up" data-widget-id="weather" style="animation-delay: 1.3s;">
+        <div class="widget-header-row">
+          <h2>🌤️ Weather</h2>
+        </div>
+        <div class="weather-display">
+          <div id="weather-icon" class="weather-icon">--</div>
+          <div class="weather-info">
+            <div id="weather-temp" class="weather-temp">--°</div>
+            <div id="weather-desc" class="weather-desc">Loading...</div>
+            <div id="weather-city-name" class="weather-city-name">City</div>
+          </div>
+        </div>
+        <div class="input-group" style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.07);">
+          <input type="text" id="weather-city-input" placeholder="Enter city name..." class="glass-input">
+          <button id="weather-add-btn" class="glass-btn btn-primary">Set</button>
+        </div>
+      </div>
+
     </section>
 
   </div>
@@ -286,5 +305,6 @@
   <script src="js/ollama.js"></script>
   <script src="js/worldclock.js"></script>
   <script src="js/stackoverflow.js"></script>
+  <script src="js/weather.js"></script>
 </body>
 </html>

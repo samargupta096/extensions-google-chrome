@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github'];
+  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather'];
   let visibleWidgets = [...defaultVisible];
 
   // UI Setup
@@ -14,7 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <label><input type="checkbox" value="timer" checked> Focus Timer</label>
         <label><input type="checkbox" value="todo" checked> Today's Tasks</label>
         <label><input type="checkbox" value="links" checked> Quick Links</label>
-        <label><input type="checkbox" value="github" checked> GitHub</label>
+        <label><input type="checkbox" value="github" checked> GitHub Graph</label>
+        <label><input type="checkbox" value="news" checked> Tech News</label>
+        <label><input type="checkbox" value="ghmonitor" checked> PR Monitor</label>
+        <label><input type="checkbox" value="scratchpad" checked> Scratchpad</label>
+        <label><input type="checkbox" value="sysmonitor" checked> System Monitor</label>
+        <label><input type="checkbox" value="ollama" checked> AI Chat</label>
+        <label><input type="checkbox" value="stackoverflow" checked> Stack Overflow</label>
+        <label><input type="checkbox" value="worldclock" checked> World Clock</label>
+        <label><input type="checkbox" value="weather" checked> Weather</label>
       </div>
     </div>
   `;

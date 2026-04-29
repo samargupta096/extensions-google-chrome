@@ -798,6 +798,45 @@ button {
   border-color: rgba(79, 172, 254, 0.5);
   box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
+
+/* ====================================================
+   Weather Widget
+   ==================================================== */
+.weather-widget {
+  display: flex;
+  flex-direction: column;
+}
+.weather-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  flex-grow: 1;
+}
+.weather-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+.weather-info {
+  display: flex;
+  flex-direction: column;
+}
+.weather-temp {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+.weather-desc {
+  font-size: 0.9rem;
+  color: #4facfe;
+  font-weight: 500;
+  margin-top: 0.2rem;
+}
+.weather-city-name {
+  font-size: 0.8rem;
+  color: #aaa;
+}
 .scratchpad-textarea::placeholder {
   color: rgba(255,255,255,0.25);
 }

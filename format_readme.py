@@ -110,7 +110,7 @@ extensions = [
         "purpose": "Developer productivity dashboard for your new tab.",
         "icon": "./devdash/icons/icon128.png",
         "features": [
-            "⏰ Large digital clock and world clock",
+            "⏰ Large digital clock, world clock, & 🌤️ weather",
             "🤖 Local Ollama AI Chat Integration",
             "💻 Real-time System CPU/RAM Monitor",
             "🐙 GitHub PR Tracker & Stack Overflow Watcher",
