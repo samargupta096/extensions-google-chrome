@@ -267,6 +267,60 @@
 
     </section>
 
+    <!-- Fourth Row Widgets (Dev Tools) -->
+    <section class="widgets-grid">
+
+      <!-- Regex Tester Widget -->
+      <div class="widget glass-card regex-widget slide-up" data-widget-id="regex" style="animation-delay: 1.4s;">
+        <div class="widget-header-row">
+          <h2>🔍 Regex Tester</h2>
+        </div>
+        <div class="input-group" style="margin-bottom: 0.5rem;">
+          <input type="text" id="regex-pattern" placeholder="Pattern (e.g. \d+)" class="glass-input" style="width: 70%">
+          <input type="text" id="regex-flags" placeholder="Flags (e.g. gmi)" class="glass-input" style="width: 30%">
+        </div>
+        <textarea id="regex-test-string" class="regex-test-string" placeholder="Test string here..." rows="3"></textarea>
+        <div class="regex-result-container">
+          <div id="regex-result" class="regex-result">Result will appear here...</div>
+        </div>
+        <div id="regex-match-count" class="widget-status-text" style="text-align:right; margin-top:0.2rem;">0 matches</div>
+      </div>
+
+      <!-- Unix Epoch Converter Widget -->
+      <div class="widget glass-card epoch-widget slide-up" data-widget-id="epoch" style="animation-delay: 1.5s;">
+        <div class="widget-header-row">
+          <h2>⏳ Epoch Time</h2>
+        </div>
+        <div class="epoch-current-container">
+          <span class="epoch-label">Current:</span>
+          <span id="epoch-current" class="epoch-current" title="Click to copy">Loading...</span>
+        </div>
+        <div class="input-group" style="margin-top: 1rem;">
+          <input type="text" id="epoch-input" placeholder="Timestamp or Date string" class="glass-input">
+          <button id="epoch-convert-btn" class="glass-btn btn-primary">Convert</button>
+        </div>
+        <div id="epoch-result" class="epoch-result"></div>
+      </div>
+
+      <!-- NPM Package Tracker Widget -->
+      <div class="widget glass-card npm-widget slide-up" data-widget-id="npmtracker" style="animation-delay: 1.6s;">
+        <div class="widget-header-row">
+          <h2>📦 NPM Tracker</h2>
+          <div class="widget-header-controls">
+            <button id="npm-refresh-btn" class="glass-btn" title="Refresh">↻</button>
+          </div>
+        </div>
+        <div class="input-group" style="margin-bottom: 0.5rem;">
+          <input type="text" id="npm-pkg-input" placeholder="Package name (e.g. react)" class="glass-input">
+          <button id="npm-add-btn" class="glass-btn btn-primary">+</button>
+        </div>
+        <ul id="npm-pkg-list" class="news-list item-list">
+          <li class="news-loading">⏳ Loading packages...</li>
+        </ul>
+      </div>
+
+    </section>
+
   </div>
 
   <!-- Wallpaper Settings -->
@@ -306,5 +360,8 @@
   <script src="js/worldclock.js"></script>
   <script src="js/stackoverflow.js"></script>
   <script src="js/weather.js"></script>
+  <script src="js/regex.js"></script>
+  <script src="js/epoch.js"></script>
+  <script src="js/npmtracker.js"></script>
 </body>
 </html>

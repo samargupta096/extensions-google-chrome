@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather'];
+  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker'];
   let visibleWidgets = [...defaultVisible];
 
   // UI Setup
@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <label><input type="checkbox" value="stackoverflow" checked> Stack Overflow</label>
         <label><input type="checkbox" value="worldclock" checked> World Clock</label>
         <label><input type="checkbox" value="weather" checked> Weather</label>
+        <label><input type="checkbox" value="regex" checked> Regex Tester</label>
+        <label><input type="checkbox" value="epoch" checked> Epoch Time</label>
+        <label><input type="checkbox" value="npmtracker" checked> NPM Tracker</label>
       </div>
     </div>
   `;

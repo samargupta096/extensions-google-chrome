@@ -837,6 +837,157 @@ button {
   font-size: 0.8rem;
   color: #aaa;
 }
+
+/* ====================================================
+   Regex Tester Widget
+   ==================================================== */
+.regex-widget {
+  display: flex;
+  flex-direction: column;
+}
+.regex-test-string {
+  width: 100%;
+  resize: vertical;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: transparent; /* Text is transparent, caret is visible */
+  caret-color: #fff;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  padding: 0.5rem;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  z-index: 2;
+  position: relative;
+}
+.regex-result-container {
+  position: relative;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  min-height: 80px;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.regex-result {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  padding: 0.5rem;
+  color: #ccc;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.regex-highlight {
+  background-color: rgba(79, 172, 254, 0.4);
+  color: #fff;
+  border-radius: 2px;
+}
+.regex-error {
+  color: #ff6b6b;
+}
+.regex-placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+/* ====================================================
+   Unix Epoch Converter Widget
+   ==================================================== */
+.epoch-widget {
+  display: flex;
+  flex-direction: column;
+}
+.epoch-current-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+.epoch-label {
+  color: #888;
+  font-size: 0.9rem;
+}
+.epoch-current {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4facfe;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.epoch-current:hover {
+  opacity: 0.8;
+}
+.epoch-result {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #ddd;
+  min-height: 3rem;
+}
+.epoch-result-row {
+  margin-bottom: 0.25rem;
+}
+.epoch-result-row span {
+  color: #888;
+  display: inline-block;
+  width: 60px;
+}
+
+/* ====================================================
+   NPM Package Tracker Widget
+   ==================================================== */
+.npm-item {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center;
+  padding: 0.5rem 0.2rem !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+.npm-item-info {
+  display: flex;
+  flex-direction: column;
+}
+.npm-pkg-name {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+.npm-pkg-name:hover {
+  color: #4facfe;
+}
+.npm-pkg-version {
+  color: #00e676;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+.npm-remove-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+.npm-remove-btn:hover {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+}
+
 .scratchpad-textarea::placeholder {
   color: rgba(255,255,255,0.25);
 }

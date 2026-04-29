@@ -359,6 +359,7 @@
         <li>🐙 GitHub PR Tracker & Stack Overflow Watcher</li>
         <li>📰 Hacker News & Subreddit Feeds</li>
         <li>📝 Persistent Auto-saving Scratchpad & Goals</li>
+        <li>🛠️ Regex Tester, Epoch Converter, & NPM Package Tracker</li>
       </ul>
     </td>
     <td width="40%" align="center" valign="top">
