@@ -1,8 +1,8 @@
 // Widget Resize — each widget starts at 350×350 and can be freely resized.
 // Sizes are persisted in chrome.storage.local under `widgetSizes`.
 document.addEventListener('DOMContentLoaded', () => {
-  const DEFAULT_W = 350;
-  const DEFAULT_H = 350;
+  const DEFAULT_W = 300;
+  const DEFAULT_H = 300;
   const MIN_W = 200;
   const MIN_H = 150;
   const MAX_W = 1400;

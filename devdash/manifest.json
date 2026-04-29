@@ -12,6 +12,17 @@
     "system.cpu",
     "system.memory"
   ],
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "https://*.npmjs.org/*",
+    "https://hacker-news.firebaseio.com/*",
+    "https://www.reddit.com/*",
+    "https://api.github.com/*",
+    "https://api.openweathermap.org/*",
+    "https://api.stackexchange.com/*",
+    "https://ghchart.rshah.org/*"
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
