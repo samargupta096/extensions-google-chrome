@@ -1,94 +1,91 @@
+// Widget Resize — each widget starts at 350×350 and can be freely resized.
+// Sizes are persisted in chrome.storage.local under `widgetSizes`.
 document.addEventListener('DOMContentLoaded', () => {
+  const DEFAULT_W = 350;
+  const DEFAULT_H = 350;
+  const MIN_W = 200;
+  const MIN_H = 150;
+  const MAX_W = 1400;
+  const MAX_H = 1000;
+
   const widgets = document.querySelectorAll('.widget, .github-container');
 
   widgets.forEach((widget) => {
-    // Create resize handles
-    const handles = [
-      { class: 'resize-v', dir: 'v' },
-      { class: 'resize-h', dir: 'h' },
-      { class: 'resize-d', dir: 'd' }
-    ];
+    // Ensure position:relative so handles position correctly
+    widget.style.position = 'relative';
 
-    handles.forEach(h => {
-      const handle = document.createElement('div');
-      handle.className = `resize-handle ${h.class}`;
-      widget.appendChild(handle);
+    // ---------- Resize handle (bottom-right corner) ----------
+    const handle = document.createElement('div');
+    handle.className = 'resize-handle resize-d';
+    handle.title = 'Drag to resize';
+    widget.appendChild(handle);
 
-      let startX, startY, startWidth, startHeight;
+    let startX, startY, startW, startH;
 
-      handle.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        startX = e.clientX;
-        startY = e.clientY;
-        startWidth = parseInt(document.defaultView.getComputedStyle(widget).width, 10);
-        startHeight = parseInt(document.defaultView.getComputedStyle(widget).height, 10);
-        
-        widget.style.maxHeight = 'none';
-        widget.style.maxWidth = 'none';
+    handle.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();           // don't trigger drag-and-drop
+      startX = e.clientX;
+      startY = e.clientY;
+      startW = widget.offsetWidth;
+      startH = widget.offsetHeight;
 
-        const doDrag = (me) => {
-          if (h.dir === 'v' || h.dir === 'd') {
-            let newHeight = startHeight + me.clientY - startY;
-            if (newHeight < 150) newHeight = 150;
-            if (newHeight > 1000) newHeight = 1000;
-            widget.style.height = newHeight + 'px';
-          }
-          if (h.dir === 'h' || h.dir === 'd') {
-            let newWidth = startWidth + me.clientX - startX;
-            if (newWidth < 200) newWidth = 200;
-            if (newWidth > 1400) newWidth = 1400;
-            widget.style.width = newWidth + 'px';
-          }
-        };
+      const onMove = (me) => {
+        let newW = startW + (me.clientX - startX);
+        let newH = startH + (me.clientY - startY);
+        newW = Math.min(MAX_W, Math.max(MIN_W, newW));
+        newH = Math.min(MAX_H, Math.max(MIN_H, newH));
+        widget.style.width  = newW + 'px';
+        widget.style.height = newH + 'px';
+      };
 
-        const stopDrag = () => {
-          document.documentElement.removeEventListener('mousemove', doDrag);
-          document.documentElement.removeEventListener('mouseup', stopDrag);
-          saveSize(widget);
-        };
+      const onUp = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        saveSize(widget);
+      };
 
-        document.documentElement.addEventListener('mousemove', doDrag);
-        document.documentElement.addEventListener('mouseup', stopDrag);
-      });
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    // ---------- Double-click corner → reset to default ----------
+    handle.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      widget.style.width  = DEFAULT_W + 'px';
+      widget.style.height = DEFAULT_H + 'px';
+      saveSize(widget);
     });
   });
 
-  // Restore sizes
+  // ---------- Restore saved sizes ----------
   chrome.storage.local.get(['widgetSizes'], (result) => {
-    if (result.widgetSizes) {
-      widgets.forEach((widget) => {
-        let id = widget.dataset.widgetId;
-        if (!id) {
-          const match = Array.from(widget.classList).find(c => c.endsWith('-widget'));
-          if (match) id = match.replace('-widget', '');
-        }
-        if (id && result.widgetSizes[id]) {
-           const size = result.widgetSizes[id];
-           if (size.height) widget.style.height = size.height + 'px';
-           if (size.width) widget.style.width = size.width + 'px';
-           widget.style.maxHeight = 'none';
-           widget.style.maxWidth = 'none';
-        }
-      });
-    }
+    if (!result.widgetSizes) return;
+    widgets.forEach((widget) => {
+      const id = getWidgetId(widget);
+      if (id && result.widgetSizes[id]) {
+        const { w, h } = result.widgetSizes[id];
+        if (w) widget.style.width  = w + 'px';
+        if (h) widget.style.height = h + 'px';
+      }
+    });
   });
 
+  // ---------- Helpers ----------
+  function getWidgetId(widget) {
+    if (widget.dataset.widgetId) return widget.dataset.widgetId;
+    const match = Array.from(widget.classList).find(c => c.endsWith('-widget') || c === 'github-container');
+    if (match) return match.replace('-widget', '');
+    return null;
+  }
+
   function saveSize(widget) {
-    let id = widget.dataset.widgetId;
-    if (!id) {
-      const match = Array.from(widget.classList).find(c => c.endsWith('-widget'));
-      if (match) id = match.replace('-widget', '');
-    }
-    
-    if (id) {
-      chrome.storage.local.get(['widgetSizes'], (result) => {
-        const sizes = result.widgetSizes || {};
-        sizes[id] = {
-          height: parseInt(widget.style.height, 10),
-          width: parseInt(widget.style.width, 10)
-        };
-        chrome.storage.local.set({ widgetSizes: sizes });
-      });
-    }
+    const id = getWidgetId(widget);
+    if (!id) return;
+    chrome.storage.local.get(['widgetSizes'], (result) => {
+      const sizes = result.widgetSizes || {};
+      sizes[id] = { w: widget.offsetWidth, h: widget.offsetHeight };
+      chrome.storage.local.set({ widgetSizes: sizes });
+    });
   }
 });
