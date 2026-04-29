@@ -10,11 +10,13 @@
 <body class="theme-dark">
   <div class="dashboard-container">
     
-    <!-- Top Bar: Quote -->
-    <header class="quote-container glass-card fade-in">
+    <!-- Quote Widget (Now part of the grid or at least draggable) -->
+    <div class="widget glass-card quote-container fade-in" data-widget-id="quote">
+      <h2>✨ Daily Inspiration</h2>
       <p id="quote-text" class="quote-text">"It works on my machine."</p>
       <span id="quote-author" class="quote-author">- Developer</span>
-    </header>
+      <button id="refresh-quote-btn" class="glass-btn" style="position:absolute; bottom:1rem; right:1rem; padding:0.2rem 0.5rem;" title="Get new quote">↻</button>
+    </div>
 
     <!-- Center: Clock & Date -->
     <main class="time-container fade-in">
@@ -81,18 +83,16 @@
     </section>
 
     <!-- GitHub Contribution Graph -->
-    <section class="github-container fade-in" style="animation-delay: 0.5s;">
-      <div class="glass-card github-card">
-        <div class="github-header">
-          <h2>🐙 GitHub Contributions</h2>
-          <div class="input-group github-input-group">
-            <input type="text" id="github-username-input" placeholder="Enter GitHub Username" class="glass-input">
-            <button id="save-github-btn" class="glass-btn btn-primary">Save</button>
-          </div>
+    <section class="github-container fade-in widget glass-card" data-widget-id="github" style="animation-delay: 0.5s;">
+      <div class="github-header">
+        <h2>🐙 GitHub Contributions</h2>
+        <div class="input-group github-input-group">
+          <input type="text" id="github-username-input" placeholder="Enter GitHub Username" class="glass-input">
+          <button id="save-github-btn" class="glass-btn btn-primary">Save</button>
         </div>
-        <div id="github-graph-container" class="github-graph-container">
-          <p class="placeholder-text">Enter your GitHub username to see your contribution graph.</p>
-        </div>
+      </div>
+      <div id="github-graph-container" class="github-graph-container">
+        <p class="placeholder-text">Enter your GitHub username to see your contribution graph.</p>
       </div>
     </section>
 
@@ -126,5 +126,6 @@
   <script src="js/drag.js"></script>
   <script src="js/resize.js"></script>
   <script src="js/theme.js"></script>
+  <script src="js/visibility.js"></script>
 </body>
 </html>
