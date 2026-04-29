@@ -630,10 +630,27 @@ button {
 .visibility-list label {
   color: #ccc;
   font-size: 0.95rem;
-  cursor: pointer;
+  cursor: grab;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 0.3rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.visibility-list label:active {
+  cursor: grabbing;
+}
+.visibility-list label:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.list-drag-handle {
+  color: rgba(255, 255, 255, 0.2);
+  margin-right: 0.2rem;
+  font-size: 1rem;
+}
+.visibility-list label:hover .list-drag-handle {
+  color: #fff;
 }
 .visibility-list input[type="checkbox"] {
   cursor: pointer;
