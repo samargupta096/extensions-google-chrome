@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject Theme Panel UI
   const themeContainer = document.createElement('div');
   themeContainer.innerHTML = `
-    <button id="theme-toggle-btn" class="theme-btn">🎨</button>
+    <button id="theme-toggle-btn" class="fab-btn theme-btn">🎨</button>
     <div id="theme-panel" class="theme-panel">
       <h3>Select Theme</h3>
       <div class="theme-swatches">

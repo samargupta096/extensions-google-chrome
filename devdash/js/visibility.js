@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // UI Setup
   const visibilityContainer = document.createElement('div');
   visibilityContainer.innerHTML = `
-    <button id="visibility-toggle-btn" class="visibility-btn" title="Manage Widgets">🧩</button>
+    <button id="visibility-toggle-btn" class="fab-btn visibility-btn" title="Manage Widgets">🧩</button>
     <div id="visibility-panel" class="visibility-panel">
       <h3>Manage Widgets</h3>
       <div class="visibility-list">
