@@ -33,7 +33,7 @@
     <section class="widgets-grid">
       
       <!-- Goals Widget -->
-      <div class="widget glass-card goals-widget slide-up" style="animation-delay: 0.1s;">
+      <div class="widget glass-card goals-widget slide-up" data-widget-id="goals" style="animation-delay: 0.1s;">
         <h2>🎯 Active Goals</h2>
         <div class="input-group">
           <input type="text" id="goal-input" placeholder="Add a new goal..." class="glass-input">
@@ -43,7 +43,7 @@
       </div>
 
       <!-- Timer Widget -->
-      <div class="widget glass-card timer-widget slide-up" style="animation-delay: 0.2s;">
+      <div class="widget glass-card timer-widget slide-up" data-widget-id="timer" style="animation-delay: 0.2s;">
         <h2>🍅 Focus Timer</h2>
         <div class="timer-display" id="timer-display">25:00</div>
         <div class="timer-controls">
@@ -58,7 +58,7 @@
       </div>
 
       <!-- ToDo Widget -->
-      <div class="widget glass-card todo-widget slide-up" style="animation-delay: 0.3s;">
+      <div class="widget glass-card todo-widget slide-up" data-widget-id="todo" style="animation-delay: 0.3s;">
         <h2>📝 Today's Tasks</h2>
         <div class="input-group">
           <input type="text" id="todo-input" placeholder="What needs to be done?" class="glass-input">
@@ -68,7 +68,7 @@
       </div>
 
       <!-- Quick Links Widget -->
-      <div class="widget glass-card links-widget slide-up" style="animation-delay: 0.4s;">
+      <div class="widget glass-card links-widget slide-up" data-widget-id="links" style="animation-delay: 0.4s;">
         <h2>🔗 Quick Links</h2>
         <div class="input-group">
           <input type="text" id="link-name-input" placeholder="Name" class="glass-input" style="width: 40%">
@@ -98,6 +98,21 @@
 
   </div>
 
+  <!-- Wallpaper Settings -->
+  <button id="wallpaper-toggle-btn" class="wallpaper-btn">🖼️</button>
+  <div id="wallpaper-modal" class="wallpaper-modal">
+    <h3>Set Wallpaper</h3>
+    <div class="input-group">
+      <input type="text" id="wallpaper-url-input" placeholder="Image URL (e.g. Unsplash)" class="glass-input">
+      <button id="set-url-btn" class="glass-btn btn-primary">Set</button>
+    </div>
+    <div>
+      <label style="font-size: 0.9rem; color: #ccc;">Or Upload Image:</label>
+      <input type="file" id="wallpaper-upload" accept="image/*" style="margin-top: 0.5rem; width: 100%;">
+    </div>
+    <button id="reset-wallpaper-btn" class="glass-btn btn-danger" style="margin-top: 0.5rem; width: 100%;">Reset Default</button>
+  </div>
+
   <script src="shared/storage-utils.js"></script>
   <script src="js/clock.js"></script>
   <script src="js/quotes.js"></script>
@@ -107,5 +122,9 @@
   <script src="js/search.js"></script>
   <script src="js/links.js"></script>
   <script src="js/github.js"></script>
+  <script src="js/wallpaper.js"></script>
+  <script src="js/drag.js"></script>
+  <script src="js/resize.js"></script>
+  <script src="js/theme.js"></script>
 </body>
 </html>
