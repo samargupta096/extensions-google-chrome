@@ -991,6 +991,171 @@ button {
 .scratchpad-textarea::placeholder {
   color: rgba(255,255,255,0.25);
 }
+
+/* ====================================================
+   JSON Formatter Widget
+   ==================================================== */
+.json-widget {
+  display: flex;
+  flex-direction: column;
+}
+.json-textarea {
+  width: 100%;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  resize: vertical;
+}
+.json-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.json-output {
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: #a6e22e; /* green-ish typical of JSON strings */
+  overflow: auto;
+  max-height: 150px;
+  white-space: pre-wrap;
+}
+
+/* ====================================================
+   JWT Decoder Widget
+   ==================================================== */
+.jwt-widget {
+  display: flex;
+  flex-direction: column;
+}
+.jwt-input {
+  width: 100%;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  resize: vertical;
+}
+.jwt-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+  overflow: auto;
+  max-height: 200px;
+}
+.jwt-section-label {
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+}
+.jwt-output {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #e6db74; /* yellowish for object data */
+  margin: 0;
+  white-space: pre-wrap;
+}
+#jwt-header-out { color: #fd971f; }
+#jwt-payload-out { color: #a6e22e; }
+
+/* ====================================================
+   Base64 Converter Widget
+   ==================================================== */
+.b64-widget {
+  display: flex;
+  flex-direction: column;
+}
+.b64-textarea {
+  width: 100%;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  resize: vertical;
+}
+.b64-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  justify-content: center;
+}
+#b64-output {
+  background: rgba(0, 0, 0, 0.4);
+  color: #ccc;
+}
+
+/* ====================================================
+   UUID Generator Widget
+   ==================================================== */
+.uuid-widget {
+  display: flex;
+  flex-direction: column;
+}
+.uuid-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.uuid-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 180px;
+}
+.uuid-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.2);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.uuid-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: #ddd;
+}
+.uuid-copy-btn {
+  background: none;
+  border: none;
+  color: #4facfe;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  padding: 0 0.3rem;
+}
+.uuid-copy-btn:hover {
+  opacity: 1;
+}
 /* Custom scrollbar */
 .scratchpad-textarea::-webkit-scrollbar {
   width: 5px;

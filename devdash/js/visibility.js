@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker'];
+  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid'];
   let visibleWidgets = [...defaultVisible];
 
   // UI Setup
@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <label><input type="checkbox" value="regex" checked> Regex Tester</label>
         <label><input type="checkbox" value="epoch" checked> Epoch Time</label>
         <label><input type="checkbox" value="npmtracker" checked> NPM Tracker</label>
+        <label><input type="checkbox" value="jsonformatter" checked> JSON Formatter</label>
+        <label><input type="checkbox" value="jwt" checked> JWT Decoder</label>
+        <label><input type="checkbox" value="base64" checked> Base64</label>
+        <label><input type="checkbox" value="uuid" checked> UUID Generator</label>
       </div>
     </div>
   `;

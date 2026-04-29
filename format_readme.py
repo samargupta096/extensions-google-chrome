@@ -116,7 +116,8 @@ extensions = [
             "🐙 GitHub PR Tracker & Stack Overflow Watcher",
             "📰 Hacker News & Subreddit Feeds",
             "📝 Persistent Auto-saving Scratchpad & Goals",
-            "🛠️ Regex Tester, Epoch Converter, & NPM Package Tracker"
+            "🛠️ Regex Tester, Epoch Converter, & NPM Package Tracker",
+            "🔣 JSON Formatter, JWT Decoder, Base64, & UUID Generator"
         ]
     }
 ]

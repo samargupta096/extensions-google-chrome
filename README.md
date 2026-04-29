@@ -360,6 +360,7 @@
         <li>📰 Hacker News & Subreddit Feeds</li>
         <li>📝 Persistent Auto-saving Scratchpad & Goals</li>
         <li>🛠️ Regex Tester, Epoch Converter, & NPM Package Tracker</li>
+        <li>🔣 JSON Formatter, JWT Decoder, Base64, & UUID Generator</li>
       </ul>
     </td>
     <td width="40%" align="center" valign="top">

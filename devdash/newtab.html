@@ -321,6 +321,82 @@
 
     </section>
 
+    <!-- Fifth Row Widgets (Data & Encoding Tools) -->
+    <section class="widgets-grid">
+
+      <!-- JSON Formatter Widget -->
+      <div class="widget glass-card json-widget slide-up" data-widget-id="jsonformatter" style="animation-delay: 1.7s;">
+        <div class="widget-header-row">
+          <h2>📋 JSON Formatter</h2>
+          <div class="widget-header-controls">
+            <span id="json-status" class="widget-status-text"></span>
+            <button id="json-copy-btn" class="glass-btn" title="Copy output">📋</button>
+          </div>
+        </div>
+        <textarea id="json-input" class="json-textarea" placeholder='Paste JSON here... (auto-formats on paste)'></textarea>
+        <div class="json-toolbar">
+          <button id="json-format-btn" class="glass-btn btn-primary">Format</button>
+          <button id="json-minify-btn" class="glass-btn">Minify</button>
+        </div>
+        <pre id="json-output" class="json-output"></pre>
+      </div>
+
+      <!-- JWT Decoder Widget -->
+      <div class="widget glass-card jwt-widget slide-up" data-widget-id="jwt" style="animation-delay: 1.8s;">
+        <div class="widget-header-row">
+          <h2>🔐 JWT Decoder</h2>
+          <div class="widget-header-controls">
+            <span id="jwt-expiry" class="widget-status-text"></span>
+            <button id="jwt-clear-btn" class="glass-btn" title="Clear">🗑️</button>
+          </div>
+        </div>
+        <textarea id="jwt-input" class="jwt-input" placeholder="Paste JWT token here... (decoded locally, never sent over network)"></textarea>
+        <div class="jwt-sections">
+          <div class="jwt-section">
+            <div class="jwt-section-label">Header</div>
+            <pre id="jwt-header-out" class="jwt-output"></pre>
+          </div>
+          <div class="jwt-section">
+            <div class="jwt-section-label">Payload</div>
+            <pre id="jwt-payload-out" class="jwt-output"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Base64 Widget -->
+      <div class="widget glass-card b64-widget slide-up" data-widget-id="base64" style="animation-delay: 1.9s;">
+        <div class="widget-header-row">
+          <h2>🔤 Base64</h2>
+          <div class="widget-header-controls">
+            <span id="b64-status" class="widget-status-text"></span>
+            <button id="b64-copy-btn" class="glass-btn" title="Copy output">📋</button>
+          </div>
+        </div>
+        <textarea id="b64-input" class="b64-textarea" placeholder="Input text or Base64 string..."></textarea>
+        <div class="b64-toolbar">
+          <button id="b64-encode-btn" class="glass-btn btn-primary">Encode →</button>
+          <button id="b64-decode-btn" class="glass-btn">← Decode</button>
+        </div>
+        <textarea id="b64-output" class="b64-textarea" placeholder="Output..." readonly></textarea>
+      </div>
+
+      <!-- UUID Generator Widget -->
+      <div class="widget glass-card uuid-widget slide-up" data-widget-id="uuid" style="animation-delay: 2.0s;">
+        <div class="widget-header-row">
+          <h2>🆔 UUID Generator</h2>
+          <div class="widget-header-controls">
+            <button id="uuid-clear-btn" class="glass-btn btn-danger" title="Clear">🗑️</button>
+          </div>
+        </div>
+        <div class="uuid-controls">
+          <button id="uuid-generate-btn" class="glass-btn btn-primary uuid-gen-btn">+ Generate v4</button>
+          <button id="uuid-bulk-btn" class="glass-btn">+ Generate 5</button>
+        </div>
+        <ul id="uuid-list" class="uuid-list"></ul>
+      </div>
+
+    </section>
+
   </div>
 
   <!-- Wallpaper Settings -->
@@ -363,5 +439,9 @@
   <script src="js/regex.js"></script>
   <script src="js/epoch.js"></script>
   <script src="js/npmtracker.js"></script>
+  <script src="js/jsonformatter.js"></script>
+  <script src="js/jwt.js"></script>
+  <script src="js/base64.js"></script>
+  <script src="js/uuid.js"></script>
 </body>
 </html>
