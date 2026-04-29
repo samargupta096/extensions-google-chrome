@@ -18,4 +18,10 @@ function setRandomQuote() {
   document.getElementById('quote-author').textContent = `- ${quote.author}`;
 }
 
-setRandomQuote();
+document.addEventListener('DOMContentLoaded', () => {
+  setRandomQuote();
+  const refreshBtn = document.getElementById('refresh-quote-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', setRandomQuote);
+  }
+});
