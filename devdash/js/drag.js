@@ -13,18 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
       widget.dataset.widgetId = widgetClass ? widgetClass.replace('-widget', '') : `widget-${index}`;
     }
 
-    // Add drag handle icon to header area
-    const header = widget.querySelector('h2');
-    if (header) {
-      header.style.position = 'relative';
-      const dragHandle = document.createElement('div');
-      dragHandle.className = 'drag-handle';
-      dragHandle.innerHTML = '⠿';
-      header.appendChild(dragHandle);
-      
-      // Make widget draggable ONLY from the header/drag-handle
-      widget.setAttribute('draggable', 'true');
+    // Add drag handle icon
+    const dragHandle = document.createElement('div');
+    dragHandle.className = 'drag-handle';
+    dragHandle.innerHTML = '⠿';
+    
+    let controls = widget.querySelector('.widget-header-controls');
+    if (controls) {
+      dragHandle.style.position = 'static';
+      dragHandle.style.padding = '0';
+      dragHandle.style.marginRight = '8px';
+      dragHandle.style.display = 'flex';
+      dragHandle.style.alignItems = 'center';
+      controls.insertBefore(dragHandle, controls.firstChild);
+    } else {
+      widget.style.position = 'relative';
+      widget.appendChild(dragHandle);
     }
+    
+    // Make widget draggable ONLY from the header/drag-handle
+    widget.setAttribute('draggable', 'true');
 
     // Drag Events
     widget.addEventListener('dragstart', handleDragStart);
