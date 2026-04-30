@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Dashboard — DevDash</title>
+  <link rel="stylesheet" href="css/newtab.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      padding: 0;
+    }
+    .focus-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+    }
+    .timer-widget {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 2.5rem !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+    .timer-circle-container {
+      width: 250px !important;
+      height: 250px !important;
+    }
+    .timer-display {
+      font-size: 4.5rem !important;
+    }
+    .timer-view.active {
+      gap: 1.5rem;
+    }
+    .header-actions #maximize-timer-btn {
+      display: none; /* Already maximized */
+    }
+  </style>
+</head>
+<body>
+  <div id="wallpaper-overlay" class="wallpaper-overlay"></div>
+  
+  <div class="focus-container">
+    <!-- Reusing the Timer Widget Structure -->
+    <div class="widget glass-card timer-widget" data-widget-id="timer">
+      <div class="widget-header-row">
+        <h2>🛡️ DeepWork Guardian</h2>
+        <div class="header-actions">
+          <button id="maximize-timer-btn" class="icon-btn">↗️</button>
+          <button id="focus-settings-btn" class="icon-btn" title="Focus Settings">⚙️</button>
+        </div>
+      </div>
+      
+      <div id="timer-main-view" class="timer-view active">
+        <div class="timer-circle-container">
+          <svg class="timer-svg" viewBox="0 0 100 100">
+            <circle class="timer-track" cx="50" cy="50" r="45"></circle>
+            <circle class="timer-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <div id="timer-display" class="timer-display">25:00</div>
+        </div>
+
+        <div class="timer-controls">
+          <button id="dec-timer-btn" class="glass-btn btn-small">-5m</button>
+          <button id="start-timer-btn" class="glass-btn btn-primary">Start</button>
+          <button id="pause-timer-btn" class="glass-btn btn-warning" style="display: none;">Pause</button>
+          <button id="inc-timer-btn" class="glass-btn btn-small">+5m</button>
+        </div>
+
+        <div class="timer-footer">
+          <div class="timer-modes">
+            <label><input type="radio" name="timer-mode" value="work" checked> Work</label>
+            <label><input type="radio" name="timer-mode" value="shortBreak"> Break</label>
+          </div>
+          <button id="reset-timer-btn" class="text-btn">Reset</button>
+        </div>
+      </div>
+
+      <div id="timer-settings-view" class="timer-view">
+        <div class="settings-content">
+          <p class="section-desc">Block distractions during focus:</p>
+          <div class="input-group">
+            <input type="text" id="blocklist-input" placeholder="e.g. facebook.com" class="glass-input">
+            <button id="add-block-btn" class="glass-btn btn-primary">+</button>
+          </div>
+          <ul id="blocklist-items" class="item-list scrollable"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/timer.js"></script>
+  <script src="js/wallpaper.js"></script>
+</body>
+</html>

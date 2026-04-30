@@ -2,12 +2,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid'];
   let visibleWidgets = [...defaultVisible];
 
+  const templates = {
+    all: defaultVisible,
+    dev: ['github', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama'],
+    productivity: ['quote', 'goals', 'timer', 'todo', 'links', 'scratchpad', 'weather'],
+    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github']
+  };
+
   // UI Setup
   const visibilityContainer = document.createElement('div');
   visibilityContainer.innerHTML = `
     <button id="visibility-toggle-btn" class="fab-btn visibility-btn" title="Manage Widgets">🧩</button>
     <div id="visibility-panel" class="visibility-panel">
       <h3>Manage Widgets</h3>
+      
+      <div class="template-section" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 0.5rem;">Select Template</label>
+        <select id="widget-template-select" class="glass-select" style="width: 100%;">
+          <option value="" disabled selected>Choose a Preset...</option>
+          <option value="all">Full Dashboard (All)</option>
+          <option value="dev">Developer Suite</option>
+          <option value="productivity">Daily Focus</option>
+          <option value="info">Information Hub</option>
+          <option value="custom">Custom (Current)</option>
+        </select>
+      </div>
+
       <div class="visibility-list">
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="quote" checked> Quote</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="goals" checked> Active Goals</label>
@@ -38,6 +58,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('visibility-toggle-btn');
   const panel = document.getElementById('visibility-panel');
   const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
+  const templateSelect = document.getElementById('widget-template-select');
+  const trayButtons = document.querySelectorAll('.tray-btn');
+
+  function updateTrayActive(templateKey) {
+    trayButtons.forEach(btn => {
+      if (btn.dataset.template === templateKey) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // Template Tray Logic
+  trayButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const templateKey = btn.dataset.template;
+      if (templates[templateKey]) {
+        visibleWidgets = [...templates[templateKey]];
+        applyVisibility();
+        updateTrayActive(templateKey);
+        if (templateSelect) templateSelect.value = templateKey;
+        chrome.storage.local.set({ visibleWidgets, activeTemplate: templateKey });
+      }
+    });
+  });
+
+  // Template Selection Logic (Panel)
+  templateSelect.addEventListener('change', (e) => {
+    const templateKey = e.target.value;
+    if (templates[templateKey]) {
+      visibleWidgets = [...templates[templateKey]];
+      applyVisibility();
+      updateTrayActive(templateKey);
+      chrome.storage.local.set({ visibleWidgets, activeTemplate: templateKey });
+    }
+  });
 
   // Toggle Panel
   toggleBtn.addEventListener('click', (e) => {
@@ -88,18 +145,29 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         visibleWidgets = visibleWidgets.filter(w => w !== id);
       }
+      
+      // Set select to "custom" if manual change
+      if (templateSelect) templateSelect.value = 'custom';
+      updateTrayActive('custom');
+      
       applyVisibility();
-      chrome.storage.local.set({ visibleWidgets });
+      chrome.storage.local.set({ visibleWidgets, activeTemplate: 'custom' });
     });
   });
 
   // Load Saved Visibility
-  chrome.storage.local.get(['visibleWidgets'], (result) => {
+  chrome.storage.local.get(['visibleWidgets', 'activeTemplate'], (result) => {
     if (result.visibleWidgets) {
       visibleWidgets = result.visibleWidgets;
     } else {
       visibleWidgets = [...defaultVisible];
     }
+    
+    if (result.activeTemplate) {
+      updateTrayActive(result.activeTemplate);
+      if (templateSelect) templateSelect.value = result.activeTemplate;
+    }
+
     // We need a slight delay or to ensure other scripts have initialized their data-widget-ids
     setTimeout(applyVisibility, 50); 
   });

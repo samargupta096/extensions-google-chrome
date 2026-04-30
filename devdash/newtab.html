@@ -10,21 +10,40 @@
 <body class="theme-dark">
   <div class="dashboard-container">
 
-    <!-- Center: Clock & Date -->
-    <main class="time-container fade-in">
-      <h1 id="clock" class="clock-display">00:00</h1>
-      <p id="date" class="date-display">Monday, January 1</p>
-    </main>
-
-    <!-- Search Bar -->
-    <div class="search-container fade-in">
-      <form id="search-form" class="search-form">
-        <input type="text" id="search-input" placeholder="Search Google or type a URL..." class="search-input" autofocus>
-      </form>
-    </div>
-
     <!-- ===== SINGLE UNIFIED WIDGETS GRID ===== -->
     <section class="widgets-grid">
+
+      <!-- Hero Section (Clock, Date, Search) -->
+      <div id="hero-section" class="hero-section">
+        <!-- Center: Clock & Date -->
+        <main class="time-container fade-in">
+          <h1 id="clock" class="clock-display">00:00</h1>
+          <p id="date" class="date-display">Monday, January 1</p>
+        </main>
+
+        <!-- Search Bar -->
+        <div class="search-container fade-in">
+          <form id="search-form" class="search-form">
+            <div class="search-input-wrapper">
+              <svg class="search-engine-logo" viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              <input type="text" id="search-input" placeholder="Search Google or type a URL..." class="search-input" autofocus>
+            </div>
+          </form>
+        </div>
+
+        <!-- Template Quick Tray -->
+        <div class="template-tray fade-in" id="template-tray">
+          <button class="tray-btn active" data-template="all">Full</button>
+          <button class="tray-btn" data-template="dev">Developer</button>
+          <button class="tray-btn" data-template="productivity">Daily Focus</button>
+          <button class="tray-btn" data-template="info">Information</button>
+        </div>
+      </div>
 
       <!-- Quote Widget -->
       <div class="widget glass-card quote-container fade-in" data-widget-id="quote">
@@ -46,16 +65,50 @@
 
       <!-- Timer Widget -->
       <div class="widget glass-card timer-widget slide-up" data-widget-id="timer" style="animation-delay: 0.2s;">
-        <h2>🍅 Focus Timer</h2>
-        <div class="timer-display" id="timer-display">25:00</div>
-        <div class="timer-controls">
-          <button id="start-timer-btn" class="glass-btn btn-primary">Start</button>
-          <button id="pause-timer-btn" class="glass-btn btn-warning" style="display: none;">Pause</button>
-          <button id="reset-timer-btn" class="glass-btn btn-danger">Reset</button>
+        <div class="widget-header-row">
+          <h2>🍅 Focus Timer</h2>
+          <div class="header-actions">
+            <button id="maximize-timer-btn" class="icon-btn" title="Full Dashboard">↗️</button>
+            <button id="focus-settings-btn" class="icon-btn" title="Focus Settings">⚙️</button>
+          </div>
         </div>
-        <div class="timer-settings">
-          <label><input type="radio" name="timer-mode" value="work" checked> Work (25m)</label>
-          <label><input type="radio" name="timer-mode" value="shortBreak"> Break (5m)</label>
+        
+        <!-- Main Timer View -->
+        <div id="timer-main-view" class="timer-view active">
+          <div class="timer-circle-container">
+            <svg class="timer-svg" viewBox="0 0 100 100">
+              <circle class="timer-track" cx="50" cy="50" r="45"></circle>
+              <circle class="timer-progress" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div id="timer-display" class="timer-display">25:00</div>
+          </div>
+
+          <div class="timer-controls">
+            <button id="dec-timer-btn" class="glass-btn btn-small">-5m</button>
+            <button id="start-timer-btn" class="glass-btn btn-primary">Start</button>
+            <button id="pause-timer-btn" class="glass-btn btn-warning" style="display: none;">Pause</button>
+            <button id="inc-timer-btn" class="glass-btn btn-small">+5m</button>
+          </div>
+
+          <div class="timer-footer">
+            <div class="timer-modes">
+              <label><input type="radio" name="timer-mode" value="work" checked> Work</label>
+              <label><input type="radio" name="timer-mode" value="shortBreak"> Break</label>
+            </div>
+            <button id="reset-timer-btn" class="text-btn">Reset</button>
+          </div>
+        </div>
+
+        <!-- Inline Settings View -->
+        <div id="timer-settings-view" class="timer-view">
+          <div class="settings-content">
+            <p class="section-desc">Block distractions during focus:</p>
+            <div class="input-group">
+              <input type="text" id="blocklist-input" placeholder="e.g. facebook.com" class="glass-input">
+              <button id="add-block-btn" class="glass-btn btn-primary">+</button>
+            </div>
+            <ul id="blocklist-items" class="item-list scrollable"></ul>
+          </div>
         </div>
       </div>
 
@@ -231,7 +284,8 @@
         </div>
         <div id="world-clocks" class="world-clocks"></div>
         <div class="input-group" style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.07);">
-          <input type="text" id="worldclock-tz-input" placeholder="e.g. Sydney - Australia/Sydney" class="glass-input">
+          <input type="text" id="worldclock-tz-input" list="worldclock-zones" placeholder="Search City or Timezone..." class="glass-input">
+          <datalist id="worldclock-zones"></datalist>
           <button id="worldclock-add-btn" class="glass-btn btn-primary">+</button>
         </div>
       </div>

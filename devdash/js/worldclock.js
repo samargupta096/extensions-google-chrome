@@ -17,9 +17,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   chrome.storage.local.get(['worldClockZones'], (result) => {
     zones = result.worldClockZones || DEFAULT_ZONES;
+    populateDatalist();
     render();
     tick();
   });
+
+  function populateDatalist() {
+    const datalist = document.getElementById('worldclock-zones');
+    if (!datalist) return;
+
+    // Popular cities first
+    const popular = [
+      "London - Europe/London",
+      "New York - America/New_York",
+      "San Francisco - America/Los_Angeles",
+      "Tokyo - Asia/Tokyo",
+      "Sydney - Australia/Sydney",
+      "Singapore - Asia/Singapore",
+      "Dubai - Asia/Dubai",
+      "Mumbai - Asia/Kolkata",
+      "Paris - Europe/Paris",
+      "Berlin - Europe/Berlin",
+      "Moscow - Europe/Moscow",
+      "Hong Kong - Asia/Hong_Kong"
+    ];
+
+    // Get all supported zones
+    const allZones = Intl.supportedValuesOf('timeZone');
+    
+    // Merge popular and all (avoid duplicates)
+    const suggestions = [...popular];
+    allZones.forEach(tz => {
+      if (!popular.some(p => p.endsWith(tz))) {
+        suggestions.push(tz);
+      }
+    });
+
+    datalist.innerHTML = suggestions.map(s => `<option value="${s}">`).join('');
+  }
 
   function getOffset(tz) {
     try {
@@ -95,24 +130,35 @@ document.addEventListener('DOMContentLoaded', () => {
   addTzBtn && addTzBtn.addEventListener('click', () => {
     const val = addTzInput.value.trim();
     if (!val) return;
-    // Format: "Label/Timezone" e.g. "Berlin/Europe/Berlin"
-    const slashIdx = val.indexOf('/');
+    
     let label, tz;
     if (val.includes(' - ')) {
-      [label, tz] = val.split(' - ').map(s => s.trim());
+      // Handle format "City - Timezone"
+      const parts = val.split(' - ');
+      label = parts[0].trim();
+      tz = parts[1].trim();
     } else {
-      // Try as IANA tz directly and derive label from last segment
+      // Try as IANA tz directly
       tz = val;
+      // Derive label from the timezone string (e.g. "Europe/Berlin" -> "Berlin")
       label = val.split('/').pop().replace(/_/g, ' ');
     }
+
     // Validate
     try {
       new Date().toLocaleTimeString('en-US', { timeZone: tz });
     } catch {
-      addTzInput.style.borderColor = '#ff6b6b';
-      setTimeout(() => { addTzInput.style.borderColor = ''; }, 1500);
+      addTzInput.classList.add('input-error');
+      setTimeout(() => { addTzInput.classList.remove('input-error'); }, 1500);
       return;
     }
+    
+    // Check if already exists
+    if (zones.some(z => z.tz === tz)) {
+      addTzInput.value = '';
+      return;
+    }
+
     zones.push({ label, tz });
     chrome.storage.local.set({ worldClockZones: zones });
     addTzInput.value = '';

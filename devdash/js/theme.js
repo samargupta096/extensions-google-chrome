@@ -74,6 +74,33 @@ document.addEventListener('DOMContentLoaded', () => {
               <option value="rose">Rose</option>
             </select>
           </div>
+          <div class="control-group">
+            <label>Font Style</label>
+            <select id="font-style-select" class="glass-select">
+              <option value="'Inter', sans-serif" selected>Modern Sans</option>
+              <option value="'Playfair Display', serif">Classic Serif</option>
+              <option value="'JetBrains Mono', monospace">Tech Mono</option>
+              <option value="'Outfit', sans-serif">Elegant Outfit</option>
+              <option value="'Roboto', sans-serif">Clean Roboto</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Clock Size</label>
+            <select id="clock-size-select" class="glass-select">
+              <option value="4rem">Small</option>
+              <option value="6rem">Medium</option>
+              <option value="8rem" selected>Large</option>
+              <option value="12rem">Extra Large</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Hero Position</label>
+            <select id="hero-pos-select" class="glass-select">
+              <option value="left">Left</option>
+              <option value="center" selected>Center</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -87,6 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const glassSelect = document.getElementById('widget-glass-select');
   const tintSelect = document.getElementById('widget-tint-select');
   const textColorSelect = document.getElementById('text-color-select');
+  const fontStyleSelect = document.getElementById('font-style-select');
+  const clockSizeSelect = document.getElementById('clock-size-select');
+  const heroPosSelect = document.getElementById('hero-pos-select');
+  const heroSection = document.getElementById('hero-section');
 
   // Toggle Panel
   toggleBtn.addEventListener('click', (e) => {
@@ -106,27 +137,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Apply Theme
-  function applyTheme(themeId) {
+  function applyTheme(themeId, isManual = false) {
     if (themes[themeId]) {
       document.documentElement.style.setProperty('--bg-gradient', themes[themeId]);
+      
       chrome.storage.local.get(['customWallpaper'], (result) => {
-        if (!result.customWallpaper) {
+        // If manual click, clear wallpaper
+        if (isManual) {
+          chrome.storage.local.remove(['customWallpaper']);
+          body.style.backgroundImage = '';
+          body.style.background = themes[themeId];
+          body.style.backgroundAttachment = 'fixed';
+          body.style.backgroundSize = 'cover';
+        } 
+        // If on load, only apply theme if NO wallpaper exists
+        else if (!result.customWallpaper) {
           body.style.background = themes[themeId];
           body.style.backgroundAttachment = 'fixed';
           body.style.backgroundSize = 'cover';
         }
       });
+
       swatches.forEach(s => s.classList.remove('active'));
       const activeSwatch = document.querySelector(`.theme-swatch[data-theme-id="${themeId}"]`);
       if (activeSwatch) activeSwatch.classList.add('active');
     }
   }
 
-  // Apply Widget Style
-  function applyWidgetStyle(radius, glass, tint, textColor) {
+  // Apply All Styles
+  function applyStyles(settings) {
+    const { radius, glass, tint, textColor, fontStyle, clockSize, heroPos } = settings;
+    
+    // 1. Widget Radius
     document.documentElement.style.setProperty('--widget-radius', radius);
     
-    // Set Text Color
+    // 2. Text Color
     let textMain, textDim;
     switch(textColor) {
       case 'cyan': textMain = '#00ffff'; textDim = 'rgba(0, 255, 255, 0.7)'; break;
@@ -139,6 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.style.setProperty('--text-main', textMain);
     document.documentElement.style.setProperty('--text-dim', textDim);
 
+    // 3. Font Style
+    document.documentElement.style.setProperty('--font-main', fontStyle);
+
+    // 4. Widget Tint & Glass
     let tintColor;
     switch(tint) {
       case 'midnight': tintColor = '0, 0, 0'; break;
@@ -151,80 +200,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let opacity, blur, borderOpacity;
     switch(glass) {
-      case 'soft':
-        opacity = 0.02;
-        blur = '5px';
-        borderOpacity = 0.03;
-        break;
-      case 'strong':
-        opacity = 0.1;
-        blur = '25px';
-        borderOpacity = 0.15;
-        break;
+      case 'soft': opacity = 0.02; blur = '5px'; borderOpacity = 0.03; break;
+      case 'strong': opacity = 0.1; blur = '25px'; borderOpacity = 0.15; break;
       case 'medium':
-      default:
-        opacity = 0.05;
-        blur = '12px';
-        borderOpacity = 0.08;
-        break;
+      default: opacity = 0.05; blur = '12px'; borderOpacity = 0.08; break;
     }
     
     document.documentElement.style.setProperty('--widget-bg', `rgba(${tintColor}, ${opacity})`);
     document.documentElement.style.setProperty('--widget-blur', blur);
     document.documentElement.style.setProperty('--widget-border', `rgba(${tintColor}, ${borderOpacity})`);
+
+    // 5. Hero Section (Clock & Position)
+    document.documentElement.style.setProperty('--clock-size', clockSize);
+    if (heroSection) {
+      heroSection.setAttribute('data-align', heroPos);
+    }
+  }
+
+  function getSettings() {
+    return {
+      radius: radiusSelect.value,
+      glass: glassSelect.value,
+      tint: tintSelect.value,
+      textColor: textColorSelect.value,
+      fontStyle: fontStyleSelect.value,
+      clockSize: clockSizeSelect.value,
+      heroPos: heroPosSelect.value
+    };
   }
 
   // Handle swatch click
   swatches.forEach(swatch => {
     swatch.addEventListener('click', () => {
       const themeId = swatch.dataset.themeId;
-      applyTheme(themeId);
+      applyTheme(themeId, true); // true for manual
       chrome.storage.local.set({ bgTheme: themeId });
     });
   });
 
   // Handle widget style changes
-  radiusSelect.addEventListener('change', (e) => {
-    const radius = e.target.value;
-    chrome.storage.local.set({ widgetRadius: radius });
-    applyWidgetStyle(radius, glassSelect.value, tintSelect.value, textColorSelect.value);
-  });
-
-  glassSelect.addEventListener('change', (e) => {
-    const glass = e.target.value;
-    chrome.storage.local.set({ widgetGlass: glass });
-    applyWidgetStyle(radiusSelect.value, glass, tintSelect.value, textColorSelect.value);
-  });
-
-  tintSelect.addEventListener('change', (e) => {
-    const tint = e.target.value;
-    chrome.storage.local.set({ widgetTint: tint });
-    applyWidgetStyle(radiusSelect.value, glassSelect.value, tint, textColorSelect.value);
-  });
-
-  textColorSelect.addEventListener('change', (e) => {
-    const textColor = e.target.value;
-    chrome.storage.local.set({ widgetTextColor: textColor });
-    applyWidgetStyle(radiusSelect.value, glassSelect.value, tintSelect.value, textColor);
+  [radiusSelect, glassSelect, tintSelect, textColorSelect, fontStyleSelect, clockSizeSelect, heroPosSelect].forEach(select => {
+    select.addEventListener('change', () => {
+      const settings = getSettings();
+      chrome.storage.local.set({
+        widgetRadius: settings.radius,
+        widgetGlass: settings.glass,
+        widgetTint: settings.tint,
+        widgetTextColor: settings.textColor,
+        fontStyle: settings.fontStyle,
+        clockSize: settings.clockSize,
+        heroPos: settings.heroPos
+      });
+      applyStyles(settings);
+    });
   });
 
   // Load Saved Settings
-  chrome.storage.local.get(['bgTheme', 'widgetRadius', 'widgetGlass', 'widgetTint', 'widgetTextColor'], (result) => {
+  chrome.storage.local.get(['bgTheme', 'widgetRadius', 'widgetGlass', 'widgetTint', 'widgetTextColor', 'fontStyle', 'clockSize', 'heroPos'], (result) => {
     if (result.bgTheme && themes[result.bgTheme]) {
-      applyTheme(result.bgTheme);
+      applyTheme(result.bgTheme, false); // false for load
     } else {
-      applyTheme('dark');
+      applyTheme('dark', false);
     }
 
-    const radius = result.widgetRadius || '16px';
-    const glass = result.widgetGlass || 'medium';
-    const tint = result.widgetTint || 'clear';
-    const textColor = result.widgetTextColor || 'white';
+    const settings = {
+      radius: result.widgetRadius || '16px',
+      glass: result.widgetGlass || 'medium',
+      tint: result.widgetTint || 'clear',
+      textColor: result.widgetTextColor || 'white',
+      fontStyle: result.fontStyle || "'Inter', sans-serif",
+      clockSize: result.clockSize || '8rem',
+      heroPos: result.heroPos || 'center'
+    };
     
-    radiusSelect.value = radius;
-    glassSelect.value = glass;
-    tintSelect.value = tint;
-    textColorSelect.value = textColor;
-    applyWidgetStyle(radius, glass, tint, textColor);
+    radiusSelect.value = settings.radius;
+    glassSelect.value = settings.glass;
+    tintSelect.value = settings.tint;
+    textColorSelect.value = settings.textColor;
+    fontStyleSelect.value = settings.fontStyle;
+    clockSizeSelect.value = settings.clockSize;
+    heroPosSelect.value = settings.heroPos;
+
+    applyStyles(settings);
   });
 });

@@ -10,8 +10,14 @@
     "storage",
     "unlimitedStorage",
     "system.cpu",
-    "system.memory"
+    "system.memory",
+    "declarativeNetRequest",
+    "notifications",
+    "alarms"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "http://localhost/*",
     "http://127.0.0.1/*",

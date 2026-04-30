@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setBodyBackground(imgData) {
     body.style.backgroundImage = `url('${imgData}')`;
+    body.style.backgroundAttachment = 'fixed';
+    body.style.backgroundSize = 'cover';
+    
+    // Clear active theme swatch visual state
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
   }
 
   // Set from URL
