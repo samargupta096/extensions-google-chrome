@@ -448,6 +448,50 @@
         </div>
       </div>
 
+      <!-- API Request Tester Widget -->
+      <div class="widget glass-card api-tester-widget slide-up" data-widget-id="apitester" style="animation-delay: 2.1s;">
+        <div class="widget-header-row">
+          <h2>🌐 API PingBox</h2>
+          <div class="widget-header-controls">
+            <span id="api-tester-status" class="widget-status-text"></span>
+          </div>
+        </div>
+        <div class="api-tester-toolbar">
+          <select id="api-tester-method" class="glass-select">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+          <input type="text" id="api-tester-url" placeholder="https://api.github.com" class="glass-input" style="flex: 1;">
+          <button id="api-tester-send-btn" class="glass-btn btn-primary">Send</button>
+        </div>
+        <textarea id="api-tester-body" class="api-tester-body-input" placeholder='Request body (JSON) - optional...' style="display: none;"></textarea>
+        <pre id="api-tester-output" class="api-tester-output"></pre>
+      </div>
+
+      <!-- Color Utility Widget -->
+      <div class="widget glass-card color-utility-widget slide-up" data-widget-id="colorutility" style="animation-delay: 2.2s;">
+        <div class="widget-header-row">
+          <h2>🎨 ColorBox</h2>
+          <div class="widget-header-controls">
+            <button id="color-copy-btn" class="glass-btn" title="Copy HEX">📋</button>
+          </div>
+        </div>
+        <div class="color-utility-controls">
+          <input type="color" id="color-utility-picker" value="#4facfe" class="color-picker-input">
+          <div class="color-utility-values">
+            <div class="color-value-row"><span>HEX:</span> <span id="color-hex-out">#4facfe</span></div>
+            <div class="color-value-row"><span>RGB:</span> <span id="color-rgb-out">rgb(79, 172, 254)</span></div>
+            <div class="color-value-row"><span>HSL:</span> <span id="color-hsl-out">hsl(208, 99%, 65%)</span></div>
+          </div>
+        </div>
+        <div class="color-utility-contrast">
+          <div class="contrast-box text-white" id="contrast-white">White Text: <span id="contrast-score-white">Pass</span></div>
+          <div class="contrast-box text-black" id="contrast-black">Black Text: <span id="contrast-score-black">Fail</span></div>
+        </div>
+      </div>
+
       <!-- Base64 Widget -->
       <div class="widget glass-card b64-widget slide-up" data-widget-id="base64" style="animation-delay: 1.9s;">
         <div class="widget-header-row">
@@ -532,5 +576,7 @@
   <script src="js/jwt.js"></script>
   <script src="js/base64.js"></script>
   <script src="js/uuid.js"></script>
+  <script src="js/apitester.js"></script>
+  <script src="js/colorutility.js"></script>
 </body>
 </html>

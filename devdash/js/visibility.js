@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid'];
+  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility'];
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
     all: defaultVisible,
-    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama'],
+    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility'],
     productivity: ['quote', 'goals', 'timer', 'todo', 'links', 'scratchpad', 'weather'],
     info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats']
   };
@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="jwt" checked> JWT Decoder</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="base64" checked> Base64</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="uuid" checked> UUID Generator</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="apitester" checked> API PingBox</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="colorutility" checked> ColorBox</label>
       </div>
     </div>
   `;
