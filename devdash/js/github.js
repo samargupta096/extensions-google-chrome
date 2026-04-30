@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderGraph(username) {
     if (!username) return;
-    // Using github-readme-activity-graph for reliable dynamic SVG generation
-    graphContainer.innerHTML = `<img src="https://github-readme-activity-graph.vercel.app/graph?username=${username}&bg_color=0f0f1a&color=4facfe&line=4facfe&point=fff&hide_border=true" alt="${username}'s GitHub Activity Graph" style="width: 100%; border-radius: 8px;"/>`;
+    // Using github-readme-activity-graph with transparent background (bg_color=00000000)
+    graphContainer.innerHTML = `<img src="https://github-readme-activity-graph.vercel.app/graph?username=${username}&bg_color=00000000&color=4facfe&line=4facfe&point=fff&hide_border=true&area=true" alt="${username}'s GitHub Activity Graph" style="width: 100%; border-radius: 8px;"/>`;
   }
 
   saveBtn.addEventListener('click', () => {
