@@ -409,6 +409,33 @@
         </ul>
       </div>
 
+      <!-- Bundle Size Widget -->
+      <div class="widget glass-card bundle-widget slide-up" data-widget-id="bundlesize" style="animation-delay: 1.65s;">
+        <div class="widget-header-row">
+          <h2>📦 Bundle Size</h2>
+          <div class="widget-header-controls">
+            <span id="bundle-status" class="widget-status-text"></span>
+          </div>
+        </div>
+        <div class="input-group" style="margin-bottom: 0.75rem;">
+          <input type="text" id="bundle-input" placeholder="e.g. lodash, react..." class="glass-input">
+          <button id="bundle-search-btn" class="glass-btn btn-primary">Check</button>
+        </div>
+        <div id="bundle-result" class="bundle-result-container" style="display: none;">
+          <div class="bundle-main-stats">
+            <div class="bundle-stat">
+              <label>Minified</label>
+              <span id="bundle-minified" class="stat-value">--</span>
+            </div>
+            <div class="bundle-stat">
+              <label>Min + Gzip</label>
+              <span id="bundle-gzip" class="stat-value">--</span>
+            </div>
+          </div>
+          <div id="bundle-extra-info" class="bundle-extra-info"></div>
+        </div>
+      </div>
+
       <!-- JSON Formatter Widget -->
       <div class="widget glass-card json-widget slide-up" data-widget-id="jsonformatter" style="animation-delay: 1.7s;">
         <div class="widget-header-row">
@@ -578,5 +605,6 @@
   <script src="js/uuid.js"></script>
   <script src="js/apitester.js"></script>
   <script src="js/colorutility.js"></script>
+  <script src="js/bundlesize.js"></script>
 </body>
 </html>

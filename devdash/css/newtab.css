@@ -1933,4 +1933,49 @@ button {
 .contrast-box.text-white { color: #ffffff; }
 .contrast-box.text-black { color: #000000; }
 
+/* Bundle Size Widget */
+.bundle-result-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.bundle-main-stats {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bundle-stat {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.6rem;
+  text-align: center;
+}
+
+.bundle-stat label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.bundle-stat .stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4facfe;
+}
+
+.bundle-extra-info {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
 
