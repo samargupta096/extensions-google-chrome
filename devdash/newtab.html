@@ -476,6 +476,139 @@
         </div>
       </div>
 
+      <!-- HTTP Status Code Reference Widget -->
+      <div class="widget glass-card httpref-widget slide-up" data-widget-id="httpref" style="animation-delay: 2.5s;">
+        <div class="widget-header-row">
+          <h2>📡 HTTP Codes</h2>
+        </div>
+        <input type="text" id="http-code-search" placeholder="Search codes... (e.g. 404, forbidden, redirect)" class="glass-input" style="margin-bottom: 0.5rem;">
+        <div class="http-tab-bar">
+          <button class="http-tab-btn active" data-cat="all">All</button>
+          <button class="http-tab-btn" data-cat="1xx">1xx</button>
+          <button class="http-tab-btn" data-cat="2xx">2xx</button>
+          <button class="http-tab-btn" data-cat="3xx">3xx</button>
+          <button class="http-tab-btn" data-cat="4xx">4xx</button>
+          <button class="http-tab-btn" data-cat="5xx">5xx</button>
+        </div>
+        <div id="http-code-list" class="http-code-list scrollable"></div>
+      </div>
+
+      <!-- DP/PX/SP Converter Widget -->
+      <div class="widget glass-card dppx-widget slide-up" data-widget-id="dppxconverter" style="animation-delay: 2.6s;">
+        <div class="widget-header-row">
+          <h2>📐 DP/PX/SP</h2>
+        </div>
+        <div class="dppx-input-row">
+          <input type="number" id="dppx-value" placeholder="Enter value..." class="glass-input" value="16">
+          <select id="dppx-unit" class="glass-select">
+            <option value="dp">dp</option>
+            <option value="px">px</option>
+            <option value="sp">sp</option>
+          </select>
+        </div>
+        <div id="dppx-results" class="dppx-results"></div>
+      </div>
+
+      <!-- Command CheatSheet Widget -->
+      <div class="widget glass-card cheat-widget slide-up" data-widget-id="cmdcheat" style="animation-delay: 2.7s;">
+        <div class="widget-header-row">
+          <h2>💻 Cmd CheatSheet</h2>
+        </div>
+        <input type="text" id="cheat-search" placeholder="Search commands... (e.g. tar, grep, docker)" class="glass-input" style="margin-bottom: 0.5rem;">
+        <div class="cheat-tab-bar">
+          <button class="cheat-cat-btn active" data-cat="all">All</button>
+          <button class="cheat-cat-btn" data-cat="files">Files</button>
+          <button class="cheat-cat-btn" data-cat="network">Net</button>
+          <button class="cheat-cat-btn" data-cat="process">Proc</button>
+          <button class="cheat-cat-btn" data-cat="perms">Perms</button>
+          <button class="cheat-cat-btn" data-cat="archive">Zip</button>
+          <button class="cheat-cat-btn" data-cat="git">Git</button>
+          <button class="cheat-cat-btn" data-cat="docker">Docker</button>
+        </div>
+        <div id="cheat-list" class="cheat-list scrollable"></div>
+      </div>
+
+      <!-- Cloud Region Compass Widget -->
+      <div class="widget glass-card region-widget slide-up" data-widget-id="regioncompass" style="animation-delay: 2.8s;">
+        <div class="widget-header-row">
+          <h2>🌐 Region Compass</h2>
+          <div class="widget-header-controls">
+            <button id="region-ping-btn" class="glass-btn btn-primary">Ping</button>
+          </div>
+        </div>
+        <div id="region-list" class="region-list scrollable"></div>
+      </div>
+
+      <!-- Env Var Vault Widget -->
+      <div class="widget glass-card envvault-widget slide-up" data-widget-id="envvault" style="animation-delay: 2.9s;">
+        <div class="widget-header-row">
+          <h2>🔐 Env Vault</h2>
+          <div class="widget-header-controls">
+            <button id="env-add-var-btn" class="glass-btn" title="Add Var">+</button>
+            <button id="env-copy-all-btn" class="glass-btn">Copy All</button>
+          </div>
+        </div>
+        <div class="env-profile-bar">
+          <select id="env-profile-select" class="glass-select"></select>
+          <button id="env-add-profile-btn" class="glass-btn" title="New Profile">📁</button>
+        </div>
+        <div id="env-var-list" class="env-var-list scrollable"></div>
+      </div>
+
+      <!-- Intent/Deep Link Builder Widget -->
+      <div class="widget glass-card intent-widget slide-up" data-widget-id="intentbuilder" style="animation-delay: 3.0s;">
+        <div class="widget-header-row">
+          <h2>🔗 Intent Builder</h2>
+          <div class="widget-header-controls">
+            <button id="intent-copy-btn" class="glass-btn" title="Copy URI">📋</button>
+          </div>
+        </div>
+        <div class="intent-fields">
+          <input type="text" id="intent-scheme" placeholder="scheme (https)" class="glass-input" value="https">
+          <input type="text" id="intent-host" placeholder="host (example.com)" class="glass-input">
+          <input type="text" id="intent-path" placeholder="path (optional)" class="glass-input">
+          <input type="text" id="intent-package" placeholder="package (com.app)" class="glass-input">
+          <select id="intent-action" class="glass-select">
+            <option value="android.intent.action.VIEW">VIEW</option>
+            <option value="android.intent.action.SEND">SEND</option>
+            <option value="android.intent.action.EDIT">EDIT</option>
+            <option value="android.intent.action.MAIN">MAIN</option>
+          </select>
+        </div>
+        <pre id="intent-output" class="intent-output">intent://example.com#Intent;scheme=https;action=android.intent.action.VIEW;end</pre>
+      </div>
+
+      <!-- Docker Status Monitor Widget -->
+      <div class="widget glass-card docker-widget slide-up" data-widget-id="dockermon" style="animation-delay: 3.1s;">
+        <div class="widget-header-row">
+          <h2>🐳 Docker Monitor</h2>
+          <div class="widget-header-controls">
+            <span id="docker-status" class="widget-status-text"></span>
+            <button id="docker-refresh-btn" class="glass-btn" title="Refresh">↻</button>
+          </div>
+        </div>
+        <div id="docker-container-list" class="docker-list scrollable"></div>
+      </div>
+
+      <!-- IAM Error Decoder Widget -->
+      <div class="widget glass-card iam-widget slide-up" data-widget-id="iamdecoder" style="animation-delay: 3.2s;">
+        <div class="widget-header-row">
+          <h2>🛡️ IAM Decoder</h2>
+        </div>
+        <textarea id="iam-error-input" class="glass-input" style="width:100%;height:60px;resize:vertical;font-family:monospace;font-size:0.8rem;" placeholder="Paste your AWS/GCP error message here..."></textarea>
+        <button id="iam-decode-btn" class="glass-btn btn-primary" style="margin-top:0.5rem;width:100%;">Decode Error</button>
+        <div id="iam-result" style="display:none;margin-top:0.5rem;"></div>
+      </div>
+
+      <!-- Material Palette Quick Pick Widget -->
+      <div class="widget glass-card matpalette-widget slide-up" data-widget-id="materialpalette" style="animation-delay: 3.3s;">
+        <div class="widget-header-row">
+          <h2>🎨 Material Palette</h2>
+        </div>
+        <div class="mat-palette-hint">Click any swatch to copy its hex code</div>
+        <div id="material-palette-grid" class="mat-palette-grid scrollable"></div>
+      </div>
+
       <!-- JSON Formatter Widget -->
       <div class="widget glass-card json-widget slide-up" data-widget-id="jsonformatter" style="animation-delay: 1.7s;">
         <div class="widget-header-row">
@@ -648,5 +781,14 @@
   <script src="js/bundlesize.js"></script>
   <script src="js/traceviewer.js"></script>
   <script src="js/cronsentinel.js"></script>
+  <script src="js/httpref.js"></script>
+  <script src="js/dppxconverter.js"></script>
+  <script src="js/cmdcheat.js"></script>
+  <script src="js/regioncompass.js"></script>
+  <script src="js/envvault.js"></script>
+  <script src="js/intentbuilder.js"></script>
+  <script src="js/dockermon.js"></script>
+  <script src="js/iamdecoder.js"></script>
+  <script src="js/materialpalette.js"></script>
 </body>
 </html>

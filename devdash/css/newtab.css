@@ -2089,4 +2089,491 @@ button {
   gap: 0.5rem;
 }
 
+/* ====================================================
+   HTTP Status Code Reference Widget
+   ==================================================== */
+.http-tab-bar, .cheat-tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
 
+.http-tab-btn, .cheat-cat-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: var(--text-dim);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.http-tab-btn.active, .cheat-cat-btn.active {
+  background: rgba(79, 172, 254, 0.2);
+  color: #4facfe;
+  border-color: rgba(79, 172, 254, 0.4);
+}
+
+.http-tab-btn:hover, .cheat-cat-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.http-code-list {
+  max-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.http-code-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.http-code-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.http-code-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  min-width: 36px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.http-code-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.http-code-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.http-code-desc {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  line-height: 1.3;
+}
+
+/* ====================================================
+   DP/PX/SP Converter Widget
+   ==================================================== */
+.dppx-input-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.dppx-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dppx-header-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr 1fr;
+  gap: 4px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dppx-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr 1fr;
+  gap: 4px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+}
+
+.dppx-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dppx-row.dppx-base {
+  background: rgba(79, 172, 254, 0.08);
+  border-left: 2px solid #4facfe;
+}
+
+.dppx-density {
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: #4facfe;
+}
+
+.dppx-val {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-main);
+}
+
+.dppx-formula {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ====================================================
+   Command CheatSheet Widget
+   ==================================================== */
+.cheat-list {
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cheat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.cheat-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cheat-cmd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #4ade80;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cheat-desc {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cheat-copy-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.cheat-item:hover .cheat-copy-btn {
+  opacity: 1;
+}
+
+/* ====================================================
+   Cloud Region Compass Widget
+   ==================================================== */
+.region-list {
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.region-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.region-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.region-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.region-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.region-code {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.region-latency {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ====================================================
+   Env Var Vault Widget
+   ==================================================== */
+.env-profile-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.env-var-list {
+  max-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.env-var-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.env-var-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.env-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #4ade80;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.env-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.env-copy-btn, .env-del-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.env-var-item:hover .env-copy-btn,
+.env-var-item:hover .env-del-btn {
+  opacity: 1;
+}
+
+.env-del-btn {
+  color: #f87171;
+  font-size: 1rem;
+}
+
+/* ====================================================
+   Intent/Deep Link Builder Widget
+   ==================================================== */
+.intent-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.intent-output {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #a78bfa;
+  word-break: break-all;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* ====================================================
+   Docker Status Monitor Widget
+   ==================================================== */
+.docker-list {
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.docker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.docker-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.docker-icon {
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.docker-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.docker-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.docker-image {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.docker-state {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* ====================================================
+   IAM Error Decoder Widget
+   ==================================================== */
+.iam-match {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 0.75rem;
+  border-left: 3px solid #4facfe;
+}
+
+.iam-service-badge {
+  display: inline-block;
+  background: rgba(79, 172, 254, 0.2);
+  color: #4facfe;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.iam-suggestion, .iam-fix, .iam-action {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.iam-suggestion strong, .iam-fix strong, .iam-action strong {
+  color: var(--text-main);
+}
+
+/* ====================================================
+   Material Palette Quick Pick Widget
+   ==================================================== */
+.mat-palette-hint {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.mat-palette-grid {
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mat-palette-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mat-palette-name {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  width: 65px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.mat-swatches {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+}
+
+.mat-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s, outline 0.15s;
+  outline: 2px solid transparent;
+  outline-offset: 1px;
+}
+
+.mat-swatch:hover {
+  transform: scale(1.3);
+  z-index: 2;
+}

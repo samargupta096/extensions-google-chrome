@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel'];
+  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'];
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
     all: defaultVisible,
-    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel'],
+    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'],
     productivity: ['quote', 'goals', 'timer', 'todo', 'links', 'scratchpad', 'weather'],
     info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats']
   };
@@ -56,6 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="colorutility" checked> ColorBox</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="traceviewer" checked> OTel TraceBox</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="cronsentinel" checked> Cron Sentinel</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="httpref" checked> HTTP Codes</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="dppxconverter" checked> DP/PX/SP</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="cmdcheat" checked> Cmd CheatSheet</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="regioncompass" checked> Region Compass</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="envvault" checked> Env Vault</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="intentbuilder" checked> Intent Builder</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="dockermon" checked> Docker Monitor</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="iamdecoder" checked> IAM Decoder</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="materialpalette" checked> Material Palette</label>
       </div>
     </div>
   `;
