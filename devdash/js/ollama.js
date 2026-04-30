@@ -151,7 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       conversationHistory.push({ role: 'assistant', content: fullResponse });
     } catch (e) {
-      contentSpan.textContent = `Error: ${e.message}`;
+      console.error('Ollama Chat Error:', e);
+      let errorMsg = `Error: ${e.message}`;
+      if (e.message.includes('Failed to fetch')) {
+        errorMsg = '⚠️ Connection failed. Ensure Ollama is running and OLLAMA_ORIGINS is set correctly.';
+      }
+      contentSpan.innerHTML = `<span style="color: #ff4b2b;">${errorMsg}</span>`;
     } finally {
       isStreaming = false;
       sendBtn.disabled = false;

@@ -1564,19 +1564,31 @@ button {
   margin-bottom: 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
 }
 .ollama-message {
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  margin: 0.25rem 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  margin: 0.4rem 0;
+  max-width: 85%;
+  word-break: break-word;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  position: relative;
 }
 .ollama-message.user {
-  background: rgba(79, 172, 254, 0.2);
+  background: rgba(79, 172, 254, 0.25);
   align-self: flex-end;
+  border-bottom-right-radius: 2px;
+  border: 1px solid rgba(79, 172, 254, 0.2);
 }
 .ollama-message.assistant {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   align-self: flex-start;
+  border-bottom-left-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .ollama-input-row {
   display: flex;
