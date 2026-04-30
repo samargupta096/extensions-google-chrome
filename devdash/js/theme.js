@@ -14,7 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
     midnight: 'linear-gradient(135deg, #0d0221 0%, #2d1b69 100%)',
     forest: 'linear-gradient(135deg, #0a1628 0%, #1a3a1a 100%)',
     rose: 'linear-gradient(135deg, #1a0a0a 0%, #3d1a2a 100%)',
-    carbon: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)'
+    carbon: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
+    lush: 'linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)',
+    deepspace: 'linear-gradient(135deg, #000000 0%, #434343 100%)',
+    electric: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    twilight: 'linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
+    royal: 'linear-gradient(135deg, #141e30 0%, #243b55 100%)',
+    frost: 'linear-gradient(135deg, #000428 0%, #004e92 100%)',
+    magma: 'linear-gradient(135deg, #000000 0%, #e74c3c 100%)',
+    candy: 'linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%)'
   };
 
   // Inject Theme Panel UI
