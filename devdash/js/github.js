@@ -19,8 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderGraph(username) {
     if (!username) return;
+    
+    // 1. Contribution Graph
     // Using github-readme-activity-graph with transparent background (bg_color=00000000)
-    graphContainer.innerHTML = `<img src="https://github-readme-activity-graph.vercel.app/graph?username=${username}&bg_color=00000000&color=4facfe&line=4facfe&point=fff&hide_border=true&area=true" alt="${username}'s GitHub Activity Graph" style="width: 100%; border-radius: 8px;"/>`;
+    const graphContainer = document.getElementById('github-graph-container');
+    if (graphContainer) {
+      graphContainer.innerHTML = `<img src="https://github-readme-activity-graph.vercel.app/graph?username=${username}&bg_color=00000000&color=4facfe&line=4facfe&point=fff&hide_border=true&area=true" alt="${username}'s GitHub Activity" style="width: 100%; border-radius: 8px;"/>`;
+    }
+
+    // 2. Stats Card
+    const statsContainer = document.getElementById('github-stats-card');
+    if (statsContainer) {
+      // Using github-readme-stats with transparent theme
+      const statsUrl = `https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true&theme=transparent&hide_border=true&title_color=4facfe&icon_color=4facfe&text_color=ffffff&bg_color=00000000`;
+      statsContainer.innerHTML = `<img src="${statsUrl}" alt="${username}'s Stats" style="width: 100%; border-radius: 8px;"/>`;
+    }
   }
 
   saveBtn.addEventListener('click', () => {

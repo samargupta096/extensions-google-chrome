@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid'];
+  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid'];
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
     all: defaultVisible,
-    dev: ['github', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama'],
+    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama'],
     productivity: ['quote', 'goals', 'timer', 'todo', 'links', 'scratchpad', 'weather'],
-    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github']
+    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats']
   };
 
   // UI Setup
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="todo" checked> Today's Tasks</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="links" checked> Quick Links</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="github" checked> GitHub Graph</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="githubstats" checked> GitHub Stats</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="news" checked> Tech News</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="ghmonitor" checked> PR Monitor</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="scratchpad" checked> Scratchpad</label>
