@@ -39,25 +39,48 @@ body.theme-dark {
 
 /* Quote widget — now just a normal widget in the grid */
 .quote-container {
-  position: relative;
+  display: flex;
+  flex-direction: column;
 }
+
+.quote-view {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.quote-view.active {
+  display: flex;
+}
+
 .quote-text {
   font-size: 1.1rem;
   font-style: italic;
   margin: 0 0 0.5rem 0;
   color: var(--text-main);
-  flex-grow: 1;
 }
+
 .quote-author {
   font-size: 0.9rem;
   color: var(--text-dim);
 }
-.quote-refresh-btn {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  padding: 0.4rem 0.8rem;
-  font-size: 1.1rem;
+
+.quote-edit-input {
+  width: 100%;
+  min-height: 80px;
+  resize: none;
+  margin-bottom: 0.5rem;
+}
+
+.quote-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  width: 100%;
+  justify-content: center;
 }
 
 /* Hero Layout */
@@ -350,19 +373,27 @@ button {
 }
 
 /* Scrollbar styling for item-list */
+.item-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
 .item-list::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 .item-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  background: transparent;
 }
 .item-list::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+.item-list:hover::-webkit-scrollbar-thumb {
+  background: rgba(79, 172, 254, 0.4);
+  box-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
 }
 .item-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(79, 172, 254, 0.7);
 }
 
 .item-list li {
@@ -941,10 +972,7 @@ button {
   border-bottom: none;
   padding-bottom: 0;
   font-size: 1.1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
+  line-height: 1.2;
 }
 .widget-header-controls {
   display: flex;
@@ -1652,10 +1680,26 @@ button {
   flex: 1;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.1) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
-.so-questions-list::-webkit-scrollbar { width: 4px; }
-.so-questions-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+.so-questions-list::-webkit-scrollbar { 
+  width: 5px; 
+}
+.so-questions-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.so-questions-list::-webkit-scrollbar-thumb { 
+  background: rgba(255, 255, 255, 0.1); 
+  border-radius: 10px; 
+  transition: all 0.3s ease; 
+}
+.so-questions-list:hover::-webkit-scrollbar-thumb { 
+  background: rgba(79, 172, 254, 0.4); 
+  box-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
+}
+.so-questions-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 172, 254, 0.7);
+}
 
 /* World Clock Widget */
 .worldclock-widget {
@@ -1666,10 +1710,22 @@ button {
   flex: 1;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.1) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
-#world-clocks::-webkit-scrollbar { width: 4px; }
-#world-clocks::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+#world-clocks::-webkit-scrollbar { width: 5px; }
+#world-clocks::-webkit-scrollbar-track { background: transparent; }
+#world-clocks::-webkit-scrollbar-thumb { 
+  background: rgba(255, 255, 255, 0.1); 
+  border-radius: 10px; 
+  transition: all 0.3s ease; 
+}
+#world-clocks:hover::-webkit-scrollbar-thumb { 
+  background: rgba(79, 172, 254, 0.4); 
+  box-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
+}
+#world-clocks::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 172, 254, 0.7);
+}
 .worldclock-widget .wc-item {
   display: flex;
   align-items: center;
@@ -1760,3 +1816,6 @@ button {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
+
+
+

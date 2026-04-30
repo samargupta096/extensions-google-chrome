@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tempDisplay = document.getElementById('weather-temp');
   const cityDisplay = document.getElementById('weather-city-name');
   const descDisplay = document.getElementById('weather-desc');
+  const presetSelect = document.getElementById('weather-preset-select');
 
   if (!tempDisplay) return;
 
@@ -16,13 +17,25 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchWeather(currentCity);
   });
 
-  addBtn && addBtn.addEventListener('click', () => {
-    const city = cityInput.value.trim();
+  function updateCity(city) {
+    city = city.trim();
     if (!city) return;
     currentCity = city;
     chrome.storage.local.set({ weatherCity: city });
-    cityInput.value = '';
     fetchWeather(currentCity);
+  }
+
+  addBtn && addBtn.addEventListener('click', () => {
+    updateCity(cityInput.value);
+    cityInput.value = '';
+  });
+
+  presetSelect && presetSelect.addEventListener('change', (e) => {
+    const city = e.target.value;
+    if (city) {
+      updateCity(city);
+      e.target.value = ''; // reset select
+    }
   });
 
   cityInput && cityInput.addEventListener('keydown', (e) => {

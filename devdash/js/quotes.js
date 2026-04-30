@@ -11,17 +11,75 @@ const quotes = [
   { text: "Fix the cause, not the symptom.", author: "Steve Maguire" }
 ];
 
+let customQuote = null;
+
+function displayQuote(quote) {
+  const quoteText = document.getElementById('quote-text');
+  const quoteAuthor = document.getElementById('quote-author');
+  if (quoteText && quoteAuthor) {
+    quoteText.textContent = `"${quote.text}"`;
+    quoteAuthor.textContent = `- ${quote.author}`;
+  }
+}
+
 function setRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
-  const quote = quotes[randomIndex];
-  document.getElementById('quote-text').textContent = `"${quote.text}"`;
-  document.getElementById('quote-author').textContent = `- ${quote.author}`;
+  displayQuote(quotes[randomIndex]);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  setRandomQuote();
   const refreshBtn = document.getElementById('refresh-quote-btn');
-  if (refreshBtn) {
-    refreshBtn.addEventListener('click', setRandomQuote);
-  }
+  const settingsBtn = document.getElementById('quote-settings-btn');
+  const saveBtn = document.getElementById('save-custom-quote-btn');
+  const clearBtn = document.getElementById('clear-custom-quote-btn');
+  const displayView = document.getElementById('quote-display-view');
+  const editView = document.getElementById('quote-edit-view');
+  const quoteInput = document.getElementById('custom-quote-input');
+  const authorInput = document.getElementById('custom-author-input');
+
+  // Load custom quote
+  chrome.storage.local.get(['customQuote'], (res) => {
+    if (res.customQuote) {
+      customQuote = res.customQuote;
+      displayQuote(customQuote);
+      quoteInput.value = customQuote.text;
+      authorInput.value = customQuote.author;
+    } else {
+      setRandomQuote();
+    }
+  });
+
+  refreshBtn && refreshBtn.addEventListener('click', () => {
+    customQuote = null;
+    chrome.storage.local.remove('customQuote');
+    setRandomQuote();
+  });
+
+  settingsBtn && settingsBtn.addEventListener('click', () => {
+    displayView.classList.toggle('active');
+    editView.classList.toggle('active');
+  });
+
+  saveBtn && saveBtn.addEventListener('click', () => {
+    const text = quoteInput.value.trim();
+    const author = authorInput.value.trim() || 'Anonymous';
+    
+    if (text) {
+      customQuote = { text, author };
+      chrome.storage.local.set({ customQuote });
+      displayQuote(customQuote);
+      displayView.classList.add('active');
+      editView.classList.remove('active');
+    }
+  });
+
+  clearBtn && clearBtn.addEventListener('click', () => {
+    quoteInput.value = '';
+    authorInput.value = '';
+    customQuote = null;
+    chrome.storage.local.remove('customQuote');
+    setRandomQuote();
+    displayView.classList.add('active');
+    editView.classList.remove('active');
+  });
 });

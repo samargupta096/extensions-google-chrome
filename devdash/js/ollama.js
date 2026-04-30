@@ -65,13 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.set({ ollamaModel: modelSelect.value });
   });
 
-  function appendMessage(role, content, isStreaming = false) {
+  function appendMessage(role, content, isStreamingMessage = false) {
     const div = document.createElement('div');
-    div.className = `ollama-msg ollama-msg-${role}`;
-    if (isStreaming) div.id = 'ollama-streaming-msg';
+    div.className = `ollama-message ${role}`;
+    if (isStreamingMessage) div.id = 'ollama-streaming-msg';
 
     const icon = role === 'user' ? '👤' : '🤖';
-    div.innerHTML = `<span class="msg-icon">${icon}</span><span class="msg-content">${escapeHtml(content)}</span>`;
+    div.innerHTML = `<span class="msg-content">${escapeHtml(content)}</span>`;
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return div;
@@ -121,12 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       contentSpan.textContent = '';
+      let buffer = '';
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        const lines = decoder.decode(value, { stream: true }).split('\n').filter(Boolean);
+        
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // Keep the partial line in the buffer
+
         for (const line of lines) {
+          if (!line.trim()) continue;
           try {
             const json = JSON.parse(line);
             if (json.message?.content) {
@@ -137,7 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (json.done) {
               contentSpan.innerHTML = escapeHtml(fullResponse);
             }
-          } catch {}
+          } catch (err) {
+            console.error('Error parsing JSON line:', line, err);
+          }
         }
       }
 

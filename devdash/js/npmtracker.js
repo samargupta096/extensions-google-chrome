@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const addBtn = document.getElementById('npm-add-btn');
   const pkgList = document.getElementById('npm-pkg-list');
   const refreshBtn = document.getElementById('npm-refresh-btn');
+  const presetSelect = document.getElementById('npm-preset-select');
 
   if (!pkgList) return;
 
@@ -15,14 +16,29 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchPackages();
   });
 
-  addBtn && addBtn.addEventListener('click', () => {
-    const pkg = pkgInput.value.trim().toLowerCase();
+  function addPackage(pkg) {
+    pkg = pkg.trim().toLowerCase();
     if (!pkg || trackedPackages.includes(pkg)) return;
     trackedPackages.push(pkg);
     chrome.storage.local.set({ npmPackages: trackedPackages });
-    pkgInput.value = '';
     renderList();
     fetchPackages();
+  }
+
+  addBtn && addBtn.addEventListener('click', () => {
+    const pkg = pkgInput.value.trim();
+    if (pkg) {
+      addPackage(pkg);
+      pkgInput.value = '';
+    }
+  });
+
+  presetSelect && presetSelect.addEventListener('change', (e) => {
+    const pkg = e.target.value;
+    if (pkg) {
+      addPackage(pkg);
+      e.target.value = ''; // reset select
+    }
   });
 
   pkgInput && pkgInput.addEventListener('keydown', (e) => {
