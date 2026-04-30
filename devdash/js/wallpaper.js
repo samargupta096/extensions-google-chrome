@@ -8,13 +8,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const resetBtn = document.getElementById('reset-wallpaper-btn');
 
   // Toggle modal
-  toggleBtn.addEventListener('click', () => {
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     const isActive = modal.classList.contains('active');
     // Close all panels
     document.querySelectorAll('.theme-panel, .wallpaper-modal, .visibility-panel').forEach(p => p.classList.remove('active'));
     // If it wasn't active, open it
     if (!isActive) {
       modal.classList.add('active');
+    }
+  });
+
+  // Close modal when clicking outside
+  document.addEventListener('click', (e) => {
+    if (modal.classList.contains('active')) {
+      if (!modal.contains(e.target) && !toggleBtn.contains(e.target)) {
+        modal.classList.remove('active');
+      }
     }
   });
 
@@ -56,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Reset
   resetBtn.addEventListener('click', () => {
-    body.style.backgroundImage = 'none';
+    body.style.backgroundImage = '';
     chrome.storage.local.remove(['customWallpaper']);
     modal.classList.remove('active');
     urlInput.value = '';

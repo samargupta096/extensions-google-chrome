@@ -388,9 +388,12 @@
       <input type="text" id="wallpaper-url-input" placeholder="Image URL (e.g. Unsplash)" class="glass-input">
       <button id="set-url-btn" class="glass-btn btn-primary">Set</button>
     </div>
-    <div>
-      <label style="font-size: 0.9rem; color: #ccc;">Or Upload Image:</label>
-      <input type="file" id="wallpaper-upload" accept="image/*" style="margin-top: 0.5rem; width: 100%;">
+    <div class="file-upload-section">
+      <label class="section-label">Or Upload Image:</label>
+      <label for="wallpaper-upload" class="glass-btn file-upload-label">
+        <span>📁 Choose Image</span>
+      </label>
+      <input type="file" id="wallpaper-upload" accept="image/*">
     </div>
     <button id="reset-wallpaper-btn" class="glass-btn btn-danger" style="margin-top: 0.5rem; width: 100%;">Reset Default</button>
   </div>
