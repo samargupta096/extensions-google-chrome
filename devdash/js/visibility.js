@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility'];
+  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel'];
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
     all: defaultVisible,
-    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility'],
+    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel'],
     productivity: ['quote', 'goals', 'timer', 'todo', 'links', 'scratchpad', 'weather'],
     info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats']
   };
@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="uuid" checked> UUID Generator</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="apitester" checked> API PingBox</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="colorutility" checked> ColorBox</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="traceviewer" checked> OTel TraceBox</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="cronsentinel" checked> Cron Sentinel</label>
       </div>
     </div>
   `;

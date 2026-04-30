@@ -436,6 +436,46 @@
         </div>
       </div>
 
+      <!-- OTel Trace Viewer Widget -->
+      <div class="widget glass-card trace-widget slide-up" data-widget-id="traceviewer" style="animation-delay: 2.3s;">
+        <div class="widget-header-row">
+          <h2>📊 OTel TraceBox</h2>
+          <div class="widget-header-controls">
+             <button id="trace-clear-btn" class="glass-btn" title="Clear">🗑️</button>
+          </div>
+        </div>
+        <div class="input-group" style="margin-bottom: 0.5rem;">
+          <input type="text" id="trace-json-input" placeholder="Paste Trace JSON..." class="glass-input">
+          <button id="trace-visualize-btn" class="glass-btn btn-primary">Visualize</button>
+        </div>
+        <div id="trace-waterfall" class="trace-waterfall scrollable">
+           <div class="trace-empty-state">Paste a list of OTel spans to see the waterfall...</div>
+        </div>
+      </div>
+
+      <!-- Cron Job Sentinel Widget -->
+      <div class="widget glass-card cron-widget slide-up" data-widget-id="cronsentinel" style="animation-delay: 2.4s;">
+        <div class="widget-header-row">
+          <h2>⏲️ Cron Sentinel</h2>
+          <div class="widget-header-controls">
+             <button id="cron-add-btn" class="glass-btn" title="Add Job">+</button>
+          </div>
+        </div>
+        <div id="cron-job-list" class="cron-job-list item-list scrollable">
+          <!-- Jobs will be added here -->
+        </div>
+        
+        <!-- Add Job Modal (Inline Mini) -->
+        <div id="cron-modal" class="cron-mini-modal glass-card" style="display: none;">
+          <input type="text" id="cron-name" placeholder="Job Name" class="glass-input">
+          <input type="text" id="cron-exp" placeholder="Expression (e.g. */5 * * * *)" class="glass-input">
+          <div class="modal-btns">
+            <button id="cron-save-btn" class="glass-btn btn-primary">Save</button>
+            <button id="cron-cancel-btn" class="glass-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
       <!-- JSON Formatter Widget -->
       <div class="widget glass-card json-widget slide-up" data-widget-id="jsonformatter" style="animation-delay: 1.7s;">
         <div class="widget-header-row">
@@ -606,5 +646,7 @@
   <script src="js/apitester.js"></script>
   <script src="js/colorutility.js"></script>
   <script src="js/bundlesize.js"></script>
+  <script src="js/traceviewer.js"></script>
+  <script src="js/cronsentinel.js"></script>
 </body>
 </html>
