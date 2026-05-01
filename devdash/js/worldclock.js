@@ -17,15 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   chrome.storage.local.get(['worldClockZones'], (result) => {
     zones = result.worldClockZones || DEFAULT_ZONES;
-    populateDatalist();
     render();
     tick();
   });
 
-  function populateDatalist() {
-    const datalist = document.getElementById('worldclock-zones');
-    if (!datalist) return;
+  const dropdown = document.getElementById('worldclock-dropdown');
+  let suggestions = [];
 
+  function initSuggestions() {
     // Popular cities first
     const popular = [
       "London - Europe/London",
@@ -46,15 +45,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const allZones = Intl.supportedValuesOf('timeZone');
     
     // Merge popular and all (avoid duplicates)
-    const suggestions = [...popular];
+    suggestions = [...popular];
     allZones.forEach(tz => {
       if (!popular.some(p => p.endsWith(tz))) {
         suggestions.push(tz);
       }
     });
-
-    datalist.innerHTML = suggestions.map(s => `<option value="${s}">`).join('');
   }
+
+  function filterDropdown(query) {
+    if (!dropdown) return;
+    const q = query.toLowerCase();
+    const filtered = suggestions.filter(s => s.toLowerCase().includes(q)).slice(0, 50);
+
+    if (filtered.length === 0 || !query) {
+      dropdown.classList.remove('show');
+      return;
+    }
+
+    dropdown.innerHTML = filtered.map(s => `<div class="dropdown-item">${s}</div>`).join('');
+    dropdown.classList.add('show');
+
+    // Bind clicks
+    dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', () => {
+        addTzInput.value = item.textContent;
+        dropdown.classList.remove('show');
+        addTzBtn.click();
+      });
+    });
+  }
+
+  addTzInput.addEventListener('input', (e) => filterDropdown(e.target.value));
+  addTzInput.addEventListener('focus', (e) => filterDropdown(e.target.value));
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.input-group')) {
+      dropdown && dropdown.classList.remove('show');
+    }
+  });
+
+  initSuggestions();
 
   function getOffset(tz) {
     try {

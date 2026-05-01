@@ -56,10 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function handleDragStart(e) {
-    // Only allow drag if started from header/drag handle (prevent dragging from inputs)
-    if (e.target.tagName !== 'DIV' && !e.target.closest('.drag-handle') && !e.target.closest('h2')) {
-      // It's a bit tricky to prevent dragstart on children easily while keeping the parent draggable.
-      // A common pattern is to just check if it's the widget itself.
+    // Respect dashboard lock
+    if (window.DevDashLock && window.DevDashLock.isLocked()) {
+      e.preventDefault();
+      return false;
     }
     
     draggedItem = this;
@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleDragOver(e) {
+    if (window.DevDashLock && window.DevDashLock.isLocked()) return false;
     if (e.preventDefault) {
       e.preventDefault(); // Necessary. Allows us to drop.
     }
@@ -91,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleDragEnter(e) {
+    if (window.DevDashLock && window.DevDashLock.isLocked()) return;
     if (this !== draggedItem) {
       this.classList.add('drag-over');
     }
@@ -101,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleDrop(e) {
+    if (window.DevDashLock && window.DevDashLock.isLocked()) return false;
     if (e.stopPropagation) {
       e.stopPropagation(); 
     }
@@ -125,4 +128,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentOrder = Array.from(grid.querySelectorAll('.widget')).map(w => w.dataset.widgetId);
     chrome.storage.local.set({ widgetOrder: currentOrder });
   }
+
+  // ── React to lock/unlock events ─────────────────────────────────
+  function applyDragLock(locked) {
+    widgets.forEach(widget => {
+      widget.setAttribute('draggable', locked ? 'false' : 'true');
+      const handle = widget.querySelector('.drag-handle');
+      if (handle) {
+        handle.style.cursor = locked ? 'not-allowed' : 'grab';
+        handle.style.opacity = locked ? '0.2' : '';
+      }
+    });
+  }
+
+  document.addEventListener('lockchange', (e) => {
+    applyDragLock(e.detail.locked);
+  });
 });

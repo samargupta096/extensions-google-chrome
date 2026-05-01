@@ -29,11 +29,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const swatch = e.target.closest('.mat-swatch');
     if (!swatch) return;
     const color = swatch.dataset.color;
-    navigator.clipboard.writeText(color);
+    try {
+      navigator.clipboard.writeText(color).catch(fallbackCopy);
+    } catch (e) {
+      fallbackCopy();
+    }
+
+    function fallbackCopy() {
+      const input = document.createElement('input');
+      input.value = color;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+    }
 
     // Visual feedback
+    StorageUtils.showToast(`Copied: ${color}`, 'success', color);
+    
     const original = swatch.style.outline;
     swatch.style.outline = '2px solid #fff';
-    setTimeout(() => swatch.style.outline = original, 800);
+    swatch.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+      swatch.style.outline = original;
+      swatch.style.transform = '';
+    }, 400);
   });
 });

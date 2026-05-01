@@ -76,23 +76,69 @@ document.addEventListener('DOMContentLoaded', () => {
     renderVars();
   });
 
+  function showModal(title, fields, callback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'env-modal-overlay';
+    
+    let fieldsHtml = fields.map((f, i) => `
+      <div style="margin-bottom: 1rem;">
+        <label style="display:block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-dim);">${f.label}</label>
+        <input type="text" id="modal-input-${f.id}" class="glass-input" style="width: 100%; box-sizing: border-box;" placeholder="${f.placeholder || ''}" ${i === 0 ? 'autofocus' : ''}>
+      </div>
+    `).join('');
+
+    overlay.innerHTML = `
+      <div class="env-modal glass-card" style="width: 300px; padding: 1.5rem; border-radius: var(--widget-radius); animation: fade-in 0.2s ease;">
+        <h3 style="margin-top: 0; margin-bottom: 1.5rem;">${title}</h3>
+        ${fieldsHtml}
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem;">
+          <button id="modal-cancel" class="glass-btn">Cancel</button>
+          <button id="modal-save" class="glass-btn btn-primary">Save</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(overlay);
+
+    const firstInput = overlay.querySelector('input');
+    if (firstInput) firstInput.focus();
+
+    overlay.querySelector('#modal-cancel').addEventListener('click', () => {
+      document.body.removeChild(overlay);
+      callback(null);
+    });
+
+    overlay.querySelector('#modal-save').addEventListener('click', () => {
+      const results = {};
+      fields.forEach(f => {
+        results[f.id] = overlay.querySelector(`#modal-input-${f.id}`).value.trim();
+      });
+      document.body.removeChild(overlay);
+      callback(results);
+    });
+  }
+
   addProfileBtn.addEventListener('click', () => {
-    const name = prompt('New profile name:');
-    if (name && !profiles[name]) {
-      profiles[name] = [];
-      activeProfile = name;
-      save();
-      renderProfiles();
-    }
+    showModal('New Profile', [{ id: 'name', label: 'Profile Name', placeholder: 'e.g. testing' }], (res) => {
+      if (res && res.name && !profiles[res.name]) {
+        profiles[res.name] = [];
+        activeProfile = res.name;
+        save();
+        renderProfiles();
+      }
+    });
   });
 
   addVarBtn.addEventListener('click', () => {
-    const key = prompt('Variable name (e.g. API_KEY):');
-    if (!key) return;
-    const value = prompt('Value:');
-    if (value === null) return;
-    profiles[activeProfile].push({ key, value });
-    save();
+    showModal('New Variable', [
+      { id: 'key', label: 'Variable Name', placeholder: 'API_KEY' },
+      { id: 'value', label: 'Value', placeholder: 'your_value_here' }
+    ], (res) => {
+      if (res && res.key) {
+        profiles[activeProfile].push({ key: res.key, value: res.value || '' });
+        save();
+      }
+    });
   });
 
   copyAllBtn.addEventListener('click', () => {

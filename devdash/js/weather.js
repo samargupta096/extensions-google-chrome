@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const tempDisplay = document.getElementById('weather-temp');
   const cityDisplay = document.getElementById('weather-city-name');
   const descDisplay = document.getElementById('weather-desc');
-  const presetSelect = document.getElementById('weather-preset-select');
 
   if (!tempDisplay) return;
 
@@ -30,20 +29,59 @@ document.addEventListener('DOMContentLoaded', () => {
     cityInput.value = '';
   });
 
-  presetSelect && presetSelect.addEventListener('change', (e) => {
-    const city = e.target.value;
-    if (city) {
-      updateCity(city);
-      e.target.value = ''; // reset select
-    }
-  });
+  const presetTrigger = document.getElementById('weather-preset-trigger');
+  const dropdown = document.getElementById('weather-dropdown');
+
+  const PRESET_CITIES = [
+    "London", "New York", "Tokyo", "San Francisco", "Mumbai", "Paris", "Berlin", "Sydney",
+    "Dubai", "Singapore", "Moscow", "Hong Kong", "Toronto", "Chicago", "Los Angeles", 
+    "Seoul", "Shanghai", "Sao Paulo", "Mexico City", "Cairo", "Lagos", "Istanbul", 
+    "Bangkok", "Jakarta", "Delhi", "Beijing", "Madrid", "Rome", "Amsterdam", "Stockholm"
+  ];
+
+  if (dropdown) {
+    dropdown.innerHTML = PRESET_CITIES.map(city => `<div class="dropdown-item">${city}</div>`).join('');
+    
+    presetTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('show');
+    });
+
+    dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', () => {
+        updateCity(item.textContent);
+        dropdown.classList.remove('show');
+      });
+    });
+
+    document.addEventListener('click', () => {
+      dropdown.classList.remove('show');
+    });
+  }
 
   cityInput && cityInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') addBtn.click();
   });
 
+  const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in ms
+
   async function fetchWeather(city) {
     try {
+      const cacheKey = `weatherCache_${city.toLowerCase()}`;
+      
+      // Check cache first
+      const cachedData = await new Promise(resolve => {
+        chrome.storage.local.get([cacheKey], res => resolve(res[cacheKey]));
+      });
+
+      if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION)) {
+        tempDisplay.textContent = cachedData.temp;
+        cityDisplay.textContent = cachedData.name;
+        weatherIcon.textContent = cachedData.icon;
+        descDisplay.textContent = cachedData.desc;
+        return; // Return early, use cached data
+      }
+
       tempDisplay.textContent = '...';
       cityDisplay.textContent = city;
       
@@ -69,12 +107,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const temp = Math.round(weatherData.current.temperature_2m);
       const code = weatherData.current.weather_code;
       
-      tempDisplay.textContent = `${temp}°C`;
+      const tempString = `${temp}°C`;
+      tempDisplay.textContent = tempString;
       
       // Map WMO weather codes to emojis and descriptions
       const weatherInfo = getWeatherInfo(code);
       weatherIcon.textContent = weatherInfo.icon;
       descDisplay.textContent = weatherInfo.desc;
+
+      // Save to cache
+      chrome.storage.local.set({
+        [cacheKey]: {
+          timestamp: Date.now(),
+          temp: tempString,
+          name: name,
+          icon: weatherInfo.icon,
+          desc: weatherInfo.desc
+        }
+      });
       
     } catch (err) {
       tempDisplay.textContent = '--°';

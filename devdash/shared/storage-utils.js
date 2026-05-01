@@ -114,6 +114,43 @@ class StorageUtils {
     }
     return merged;
   }
+
+  /**
+   * Show a toast notification
+   */
+  static showToast(message, type = 'success', bgColor = null) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    
+    if (bgColor) {
+      toast.style.background = bgColor;
+      toast.style.border = 'none';
+      toast.style.color = this.getContrastColor(bgColor);
+      toast.style.boxShadow = `0 4px 15px rgba(0,0,0,0.3)`;
+    }
+    
+    document.body.appendChild(toast);
+    
+    // Auto-remove after animation
+    setTimeout(() => {
+      if (toast.parentNode) {
+        document.body.removeChild(toast);
+      }
+    }, 2500);
+  }
+
+  /**
+   * Simple helper to decide if text should be white or black based on background hex
+   */
+  static getContrastColor(hex) {
+    if (!hex || hex.length < 6) return '#ffffff';
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? '#000000' : '#ffffff';
+  }
 }
 
 /**

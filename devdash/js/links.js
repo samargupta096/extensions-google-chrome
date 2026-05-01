@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'delete-btn';
       deleteBtn.innerHTML = '&times;';
+      deleteBtn.title = 'Delete';
       deleteBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         quickLinks.splice(index, 1);
@@ -49,8 +50,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
       li.appendChild(a);
       li.appendChild(deleteBtn);
+
+      // Add drag handle
+      const dragHandle = document.createElement('div');
+      dragHandle.className = 'list-item-handle';
+      dragHandle.innerHTML = '⠿';
+      li.insertBefore(dragHandle, li.firstChild);
+
       linksList.appendChild(li);
     });
+
+    // Initialize Drag & Drop
+    if (window.ListDrag) {
+      ListDrag.init(linksList, quickLinks, () => {
+        saveLinks();
+        renderLinks();
+      });
+    }
   }
 
   function addLink() {

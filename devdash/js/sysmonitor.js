@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const ramLabel = document.getElementById('ram-label');
   const ramUsedEl = document.getElementById('ram-used');
   const ramTotalEl = document.getElementById('ram-total');
+  const batteryBar = document.getElementById('battery-bar-fill');
+  const batteryLabel = document.getElementById('battery-label');
 
   if (!cpuBar || !ramBar) return;
 
@@ -31,13 +33,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setBar(barEl, labelEl, value, unit = '%') {
+    if (!barEl) return;
     const clamped = Math.min(100, Math.max(0, value));
     barEl.style.width = clamped + '%';
-    labelEl.textContent = `${clamped}${unit}`;
+    if (labelEl) labelEl.textContent = `${clamped}${unit}`;
     barEl.classList.remove('bar-low', 'bar-mid', 'bar-high');
     if (clamped < 40) barEl.classList.add('bar-low');
     else if (clamped < 75) barEl.classList.add('bar-mid');
     else barEl.classList.add('bar-high');
+  }
+
+
+  async function updateBattery() {
+    if ('getBattery' in navigator) {
+      const battery = await navigator.getBattery();
+      const pct = Math.round(battery.level * 100);
+      setBar(batteryBar, batteryLabel, pct);
+      if (batteryLabel) {
+        batteryLabel.textContent = `${pct}% ${battery.charging ? '⚡' : ''}`;
+      }
+    } else {
+      if (batteryLabel) batteryLabel.textContent = 'N/A';
+    }
   }
 
   async function pollStats() {
@@ -47,11 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const usage = calculateCpuUsage(info, lastCpuInfo);
         lastCpuInfo = info;
         if (lastCpuInfo) {
-          setBar(cpuBar, cpuLabel, usage);
+          setBar(cpuBar, null, usage);
+          if (cpuLabel) cpuLabel.textContent = `${usage}% (${info.numOfProcessors} Cores)`;
         }
       });
     } else {
-      cpuLabel.textContent = 'N/A';
+      if (cpuLabel) cpuLabel.textContent = 'N/A';
     }
 
     // RAM
@@ -60,13 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalGb = (info.capacity / 1e9).toFixed(1);
         const usedGb = ((info.capacity - info.availableCapacity) / 1e9).toFixed(1);
         const pct = Math.round(((info.capacity - info.availableCapacity) / info.capacity) * 100);
-        setBar(ramBar, ramLabel, pct);
+        setBar(ramBar, null, pct); // Don't use standard setBar for the label
+        if (ramLabel) ramLabel.textContent = `${usedGb} / ${totalGb} GB`;
         if (ramUsedEl) ramUsedEl.textContent = `${usedGb} GB`;
         if (ramTotalEl) ramTotalEl.textContent = `${totalGb} GB`;
       });
     } else {
       ramLabel.textContent = 'N/A';
     }
+
+    // Battery
+    updateBattery();
   }
 
   // Initial + poll every 2 seconds

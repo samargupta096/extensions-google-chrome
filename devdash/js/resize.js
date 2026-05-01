@@ -1,7 +1,8 @@
-// Widget Resize — each widget starts at 350×350 and can be freely resized.
+// Widget Resize — each widget starts at 340×300 and can be freely resized.
 // Sizes are persisted in chrome.storage.local under `widgetSizes`.
+// Respects the dashboard lock (window.DevDashLock).
 document.addEventListener('DOMContentLoaded', () => {
-  const DEFAULT_W = 300;
+  const DEFAULT_W = 340;
   const DEFAULT_H = 300;
   const MIN_W = 200;
   const MIN_H = 150;
@@ -23,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let startX, startY, startW, startH;
 
     handle.addEventListener('mousedown', (e) => {
+      // Respect dashboard lock
+      if (window.DevDashLock && window.DevDashLock.isLocked()) return;
+
       e.preventDefault();
       e.stopPropagation();           // don't trigger drag-and-drop
       startX = e.clientX;
@@ -51,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---------- Double-click corner → reset to default ----------
     handle.addEventListener('dblclick', (e) => {
+      if (window.DevDashLock && window.DevDashLock.isLocked()) return;
       e.stopPropagation();
       widget.style.width  = DEFAULT_W + 'px';
       widget.style.height = DEFAULT_H + 'px';
@@ -88,4 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
       chrome.storage.local.set({ widgetSizes: sizes });
     });
   }
+
+  // ── React to lock/unlock events ─────────────────────────────────
+  function applyResizeLock(locked) {
+    document.querySelectorAll('.resize-handle').forEach(handle => {
+      handle.style.cursor        = locked ? 'not-allowed' : 'nwse-resize';
+      handle.style.opacity       = locked ? '0' : '';
+      handle.style.pointerEvents = locked ? 'none' : '';
+    });
+  }
+
+  document.addEventListener('lockchange', (e) => {
+    applyResizeLock(e.detail.locked);
+  });
 });
