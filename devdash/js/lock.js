@@ -36,7 +36,7 @@
     }
 
     if (iconEl) {
-      iconEl.textContent = locked ? '🔒 Locked' : '🔓 Unlock';
+      iconEl.textContent = locked ? '🔒' : '🔓';
     }
     if (btn) {
       btn.title = locked ? 'Unlock Dashboard (enable drag & resize)' : 'Lock Dashboard (freeze layout)';

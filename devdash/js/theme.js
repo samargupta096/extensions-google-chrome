@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   themeContainer.innerHTML = `
     <button id="theme-toggle-btn" class="fab-btn theme-btn">🎨</button>
     <div id="theme-panel" class="theme-panel">
-      <h3>Personalize</h3>
+      <h3>🎨 Personalize</h3>
       
       <div class="theme-section">
         <h4>Background Theme</h4>

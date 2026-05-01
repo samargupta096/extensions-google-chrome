@@ -17,17 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
     bing: {
       name: 'Bing',
       url: 'https://www.bing.com/search?q=',
-      icon: `<path d="M5.5 2h13l-4 12h-9l-5 8h-1l6-22z" fill="#008373"/><path d="M18.5 2l-4 12h-9l5-12h8z" fill="#00A1F1"/>`
+      icon: `<path d="M3.1 3L11 5.7v12.7l-7.9 4.3V3z" fill="#008373"/><path d="M11.1 5.8l7.8 2.8-5.3 2.1-2.5-1.9v-3z" fill="#00A1F1"/>`
     },
     duckduckgo: {
       name: 'DuckDuckGo',
       url: 'https://duckduckgo.com/?q=',
-      icon: `<path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z" fill="#DE5833"/>`
+      icon: `<path d="M12 24c6.6 0 12-5.4 12-12S18.6 0 12 0 0 5.4 0 12s5.4 12 12 12z" fill="#DE5833"/><path d="M16.5 12c0 1.5-1.5 2.5-3 2.5s-3-1-3-2.5 1.5-2.5 3-2.5 3 1 3 2.5z" fill="#fff"/>`
     },
     yahoo: {
       name: 'Yahoo',
       url: 'https://search.yahoo.com/search?p=',
-      icon: `<path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.333 16h-1.333l-3-5.333-3 5.333h-1.334l3.667-6.333-3.667-6.334h1.334l3 5.334 3-5.334h1.333l-3.666 6.334 3.666 6.333z" fill="#6001D2"/>`
+      icon: `<path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0z" fill="#6001D2"/><path d="M15.5 8h-2.5l-1 2.5-1-2.5h-2.5l2 4.5v3.5h2v-3.5l2-4.5z" fill="#fff"/>`
     }
   };
 
@@ -38,7 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.placeholder = `Search ${engine.name} or type a URL...`;
     
     engineOptions.forEach(opt => {
-      if (opt.dataset.engine === engineKey) {
+      const key = opt.dataset.engine;
+      // Inject icon if not present
+      if (!opt.querySelector('svg')) {
+        const iconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${engines[key].icon}</svg>`;
+        opt.innerHTML = `${iconSvg} ${engines[key].name}`;
+      }
+
+      if (key === engineKey) {
         opt.classList.add('selected');
       } else {
         opt.classList.remove('selected');
@@ -48,11 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.set({ searchEngine: engineKey });
   }
 
-  // Load saved engine
+  // Load saved engine (sets initial state)
   chrome.storage.local.get(['searchEngine'], (result) => {
-    if (result.searchEngine && engines[result.searchEngine]) {
-      setEngine(result.searchEngine);
-    }
+    const savedEngine = result.searchEngine && engines[result.searchEngine] ? result.searchEngine : 'google';
+    setEngine(savedEngine);
   });
 
   engineSelector.addEventListener('click', (e) => {
