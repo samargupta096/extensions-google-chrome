@@ -169,6 +169,17 @@ body.theme-dark {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+}
+
+.search-engine-logo span {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s;
+}
+
+.search-engine-logo:hover span {
+  color: #fff;
 }
 .search-engine-dropdown {
   position: absolute;
@@ -194,20 +205,28 @@ body.theme-dark {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  color: var(--text-dim);
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  color: var(--text-main);
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
+
 .engine-option:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
 }
+
 .engine-option.selected {
   color: #4facfe;
-  background: rgba(79, 172, 254, 0.1);
+  background: rgba(79, 172, 254, 0.15);
+}
+
+.engine-option svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 .search-input {
   width: 100%;

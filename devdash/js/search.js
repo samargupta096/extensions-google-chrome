@@ -38,7 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.placeholder = `Search ${engine.name} or type a URL...`;
     
     engineOptions.forEach(opt => {
-      if (opt.dataset.engine === engineKey) {
+      const key = opt.dataset.engine;
+      // Inject icon if not present
+      if (!opt.querySelector('svg')) {
+        const iconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${engines[key].icon}</svg>`;
+        opt.innerHTML = `${iconSvg} ${engines[key].name}`;
+      }
+
+      if (key === engineKey) {
         opt.classList.add('selected');
       } else {
         opt.classList.remove('selected');
@@ -48,11 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.set({ searchEngine: engineKey });
   }
 
-  // Load saved engine
+  // Load saved engine (sets initial state)
   chrome.storage.local.get(['searchEngine'], (result) => {
-    if (result.searchEngine && engines[result.searchEngine]) {
-      setEngine(result.searchEngine);
-    }
+    const savedEngine = result.searchEngine && engines[result.searchEngine] ? result.searchEngine : 'google';
+    setEngine(savedEngine);
   });
 
   engineSelector.addEventListener('click', (e) => {
