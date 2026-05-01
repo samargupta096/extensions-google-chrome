@@ -6,7 +6,7 @@
   --widget-tint: rgba(255, 255, 255, 1);
   --text-main: #ffffff;
   --text-dim: rgba(255, 255, 255, 0.7);
-  --clock-size: 8rem;
+  --clock-size: 2.5rem;
   --hero-align: center;
   --font-main: 'Inter', -apple-system, sans-serif;
 }
@@ -83,27 +83,34 @@ body.theme-dark {
   justify-content: center;
 }
 
-/* Hero Layout */
 .hero-section {
-  grid-column: span 1; /* Default to 1 col for safety */
+  grid-column: span 2 !important;
   display: flex;
   flex-direction: column;
   align-items: var(--hero-align);
   justify-content: center;
   transition: all 0.4s ease;
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.02);
+  padding: 1.25rem 1.5rem;
+  background: var(--widget-bg);
   border-radius: var(--widget-radius);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--widget-border);
+  backdrop-filter: blur(var(--widget-blur));
+  width: 100%;
+  max-width: 704px;
   min-height: 300px;
+  height: auto;
+  box-sizing: border-box;
+  gap: 0.25rem;
 }
 
-@media (min-width: 1200px) {
+@media (max-width: 1024px) {
   .hero-section {
-    grid-column: span 2;
+    grid-column: span 1 !important;
+    max-width: 340px;
   }
 }
+
+
 
 .hero-section[data-align="left"] { --hero-align: flex-start; text-align: left; }
 .hero-section[data-align="center"] { --hero-align: center; text-align: center; }
@@ -118,24 +125,24 @@ body.theme-dark {
 }
 .clock-display {
   font-size: var(--clock-size);
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -2px;
   margin: 0;
-  color: var(--text-main);
-  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  line-height: 1;
   transition: font-size 0.3s ease;
 }
 .date-display {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: var(--text-dim);
-  margin-top: -0.5rem;
+  margin: 0 0 0.25rem 0;
   font-weight: 300;
 }
 
 /* Search Bar */
 .search-container {
   width: 100%;
-  max-width: 600px;
-  margin-bottom: 2rem;
+  max-width: 550px;
+  margin: 0 auto 0.5rem auto;
 }
 .search-form {
   display: flex;
@@ -153,7 +160,55 @@ body.theme-dark {
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-engine-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(15, 15, 26, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+  backdrop-filter: blur(10px);
+  gap: 0.25rem;
+  z-index: 100;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+  animation: modalScaleIn 0.2s ease-out;
+}
+.search-engine-dropdown.active {
+  display: flex;
+}
+.engine-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.engine-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+}
+.engine-option.selected {
+  color: #4facfe;
+  background: rgba(79, 172, 254, 0.1);
 }
 .search-input {
   width: 100%;
@@ -175,9 +230,9 @@ body.theme-dark {
 /* Template Tray */
 .template-tray {
   display: flex;
-  gap: 0.75rem;
-  margin-top: -0.5rem;
-  padding: 0.5rem;
+  gap: 0.5rem;
+  margin-top: 0;
+  padding: 0.4rem;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
   border-radius: 50px;
@@ -233,7 +288,7 @@ body.theme-dark {
   border-radius: var(--widget-radius);
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 340px;
   max-width: 100%;
   min-height: 300px;
   height: 300px;
@@ -439,9 +494,9 @@ button {
 
 .timer-circle-container {
   position: relative;
-  width: 160px;
-  height: 160px;
-  margin: 1rem auto;
+  width: 130px;
+  height: 130px;
+  margin: 0.5rem auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -474,7 +529,7 @@ button {
 }
 
 .timer-display {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--text-main);
   z-index: 1;
@@ -501,8 +556,8 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
-  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -547,6 +602,19 @@ button {
 }
 @keyframes slideUp {
   to { opacity: 1; transform: translateY(0); }
+}
+@keyframes modalScaleIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Specific fix for cron modal which has translate(-50%, -50%) */
+.cron-mini-modal {
+  animation: modalScaleInCenter 0.3s ease-out;
+}
+@keyframes modalScaleInCenter {
+  from { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 @media (max-width: 1024px) {
@@ -639,19 +707,19 @@ button {
   max-width: calc(100vw - 40px);
   padding: 1.5rem;
   border-radius: 16px;
-  background: rgba(15, 15, 26, 0.95);
+  background: rgba(15, 15, 26, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(25px);
   display: none;
   flex-direction: column;
   gap: 1.2rem;
   z-index: 300;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.05);
   box-sizing: border-box;
 }
 .wallpaper-modal.active {
   display: flex;
-  animation: slideUp 0.3s ease;
+  animation: modalScaleIn 0.3s ease-out;
 }
 .wallpaper-modal h3 {
   margin: 0;
@@ -703,6 +771,33 @@ button {
   padding: 0.2rem;
   line-height: 1;
   z-index: 10;
+}
+.widget-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 30;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+.widget:hover .widget-delete-btn {
+  opacity: 1;
+}
+.widget-delete-btn:hover {
+  background: #ff6b6b;
+  color: white;
+  transform: scale(1.1);
 }
 .drag-handle:active {
   cursor: grabbing;
@@ -773,17 +868,14 @@ button {
   max-width: 95vw;
   max-height: 80vh;
   padding: 1.5rem;
-  border-radius: 24px;
-  background: rgba(10, 10, 18, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(30px) saturate(180%);
+  border-radius: 20px;
+  background: rgba(15, 15, 26, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px) saturate(160%);
   display: none;
   flex-direction: column;
   z-index: 500;
-  box-shadow: 
-    0 15px 35px rgba(0,0,0,0.5),
-    0 5px 15px rgba(0,0,0,0.3),
-    inset 0 0 0 1px rgba(255,255,255,0.05);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.05);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
@@ -795,7 +887,7 @@ button {
 
 .theme-panel.active {
   display: flex;
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes popIn {
@@ -898,18 +990,18 @@ button {
   width: 260px;
   padding: 1.5rem;
   border-radius: 16px;
-  background: rgba(15, 15, 26, 0.95);
+  background: rgba(15, 15, 26, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(25px);
   display: none;
   flex-direction: column;
   gap: 1rem;
   z-index: 300;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.05);
 }
 .visibility-panel.active {
   display: flex;
-  animation: slideUp 0.3s ease;
+  animation: modalScaleIn 0.3s ease-out;
 }
 .visibility-panel h3 {
   margin: 0;
@@ -966,6 +1058,7 @@ button {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
   gap: 0.5rem;
+  min-width: 0; /* Allow row to shrink */
 }
 .widget-header-row h2 {
   margin: 0;
@@ -973,13 +1066,18 @@ button {
   padding-bottom: 0;
   font-size: 1.1rem;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
 }
 .widget-header-controls {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   flex-shrink: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .widget-status-text {
   font-size: 0.75rem;
@@ -1653,7 +1751,7 @@ button {
   display: inline-block;
 }
 .ollama-status-dot.connected {
-  background: #4facfe;
+  background: #4ade80;
 }
 .ollama-status-dot.disconnected {
   background: #ff6b6b;
@@ -2076,12 +2174,17 @@ button {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
-  padding: 1rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
   z-index: 100;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  background: rgba(15, 15, 26, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  animation: modalScaleIn 0.3s ease-out;
 }
 
 .modal-btns {
@@ -2576,4 +2679,409 @@ button {
 .mat-swatch:hover {
   transform: scale(1.3);
   z-index: 2;
+}
+
+/* ====================================================
+   Lock / Freeze Dashboard
+   ==================================================== */
+.tray-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 0.5rem;
+}
+
+.lock-btn-tray {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-main);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+.lock-btn-tray:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.lock-btn-tray.lock-btn-active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.lock-btn {
+  bottom: 80px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.lock-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.lock-btn.lock-btn-active {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
+  color: white;
+  border-color: rgba(238, 82, 83, 0.5);
+  box-shadow: 0 4px 15px rgba(238, 82, 83, 0.3);
+}
+
+.lock-btn.lock-btn-active:hover {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 8px 25px rgba(238, 82, 83, 0.5);
+}
+
+.lock-icon-flip {
+  display: inline-block;
+  animation: flipIcon 0.4s ease-out;
+}
+
+@keyframes flipIcon {
+  0%   { transform: scale(1) rotateY(0); }
+  50%  { transform: scale(1.2) rotateY(90deg); }
+  100% { transform: scale(1) rotateY(0); }
+}
+
+/* Banner */
+.lock-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(238, 82, 83, 0.9);
+  color: white;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.lock-banner-visible {
+  transform: translateY(0);
+}
+
+.lock-banner-icon {
+  font-size: 1.1rem;
+}
+
+.lock-banner-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.lock-banner-btn:hover {
+  background: white;
+  color: #ee5253;
+}
+
+/* Toast */
+.lock-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(15, 15, 26, 0.95);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lock-toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.lock-toast-hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
+
+/* ====================================================
+   Env Vault Modal
+   ==================================================== */
+.env-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ====================================================
+   GitHub Stats Enhancements
+   ==================================================== */
+.github-stats-card, 
+.github-graph-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.github-stats-card img, 
+.github-graph-container img {
+  width: 100% !important;
+  height: auto;
+  transition: transform 0.3s ease;
+  transform: scale(1.0);
+}
+
+.github-stats-card:hover img,
+.github-graph-container:hover img {
+  transform: scale(1.05);
+}
+
+/* ====================================================
+   System Monitor Enhancements
+   ==================================================== */
+.sysmonitor-widget {
+  height: auto !important;
+  min-height: 300px;
+}
+
+.sysmonitor-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sysmonitor-row {
+  margin-bottom: 0.25rem;
+}
+
+.sysmonitor-detail {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+}
+
+/* Toast Overrides for NewTab */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  z-index: 10000;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: toastIn 0.3s ease forwards, toastOut 0.3s ease 2.2s forwards;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.toast.success {
+  background: linear-gradient(135deg, rgba(0, 184, 148, 0.9), rgba(0, 206, 201, 0.9));
+  color: white;
+}
+
+/* ====================================================
+   List Item Drag and Drop Styles
+   ==================================================== */
+.list-item-handle {
+  cursor: grab;
+  color: rgba(255, 255, 255, 0.2);
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.list-item-handle:hover {
+  color: #4facfe;
+}
+
+.list-item-handle:active {
+  cursor: grabbing;
+}
+
+.dragging-item {
+  background: rgba(79, 172, 254, 0.1);
+  border-radius: 8px;
+}
+
+.drag-over-item {
+  border-top: 2px solid #4facfe !important;
+  background: rgba(79, 172, 254, 0.05);
+}
+
+/* ====================================================
+   Custom Dropdown Styles (World Clock)
+   ==================================================== */
+.glass-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 180px; /* Medium height */
+  background: rgba(15, 15, 26, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.glass-dropdown.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: rgba(79, 172, 254, 0.15);
+  color: #4facfe;
+  padding-left: 1.2rem;
+}
+
+/* Custom Scrollbar for Dropdown */
+.glass-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.glass-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.glass-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.glass-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 172, 254, 0.4);
+}
+
+/* ====================================================
+   Dropdown Manager Component Styles
+   ==================================================== */
+.glass-select-wrapper {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.glass-select-trigger {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: var(--widget-bg);
+  backdrop-filter: blur(var(--widget-blur));
+  border: 1px solid var(--widget-border);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.glass-select-trigger::after {
+  content: "▼";
+  font-size: 0.6rem;
+  opacity: 0.5;
+  margin-left: 8px;
+}
+
+.glass-select-trigger:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(79, 172, 254, 0.4);
+}
+
+/* Ensure dropdowns appear ABOVE or BELOW depending on space */
+.glass-select-wrapper .glass-dropdown {
+  top: 100%;
+  bottom: auto;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+/* Scrollbar styling for any scrollable container */
+.glass-dropdown, 
+.scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* Chrome/Safari scrollbar styling */
+.glass-dropdown::-webkit-scrollbar,
+.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.glass-dropdown::-webkit-scrollbar-track,
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.glass-dropdown::-webkit-scrollbar-thumb,
+.scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.glass-dropdown::-webkit-scrollbar-thumb:hover,
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 172, 254, 0.4);
 }

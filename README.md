@@ -369,6 +369,18 @@
   </tr>
 </table>
 
+<details>
+<summary><strong>View all 36+ DevDash Widgets</strong></summary>
+
+- **Productivity & Focus**: Quote, Active Goals, Focus Timer, Today's Tasks, Quick Links, Scratchpad
+- **Information Hub**: World Clock, Weather, Tech News
+- **Developer Utilities**: Regex Tester, Epoch Time, NPM Tracker, Bundle Size, JSON Formatter, JWT Decoder, Base64, UUID Generator, ColorBox (colorutility), API PingBox (apitester), Cmd CheatSheet, HTTP Codes (httpref), DP/PX/SP Converter
+- **Advanced Tools & DevOps**: GitHub Graph, GitHub Stats, PR Monitor (ghmonitor), Stack Overflow, Cron Sentinel, Region Compass, Env Vault, Intent Builder, Docker Monitor, IAM Decoder, Material Palette, OTel TraceBox (traceviewer)
+- **System & AI Integration**: System Monitor (CPU/RAM), AI Chat (Ollama)
+
+[See the DevDash README for more details](./devdash/README.md).
+</details>
+
 ---
 
 ## ⚙️ How It Works — Technical Deep Dive

@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
       statusDot.className = `ollama-status-dot ${connected ? 'connected' : 'disconnected'}`;
     }
     if (statusText) {
-      statusText.textContent = connected ? 'Connected' : 'Ollama not running';
+      // Only show text if disconnected
+      statusText.textContent = connected ? '' : 'Ollama offline';
     }
   }
 
@@ -131,22 +132,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const lines = buffer.split('\n');
         buffer = lines.pop(); // Keep the partial line in the buffer
 
-        for (const line of lines) {
-          if (!line.trim()) continue;
-          try {
-            const json = JSON.parse(line);
-            if (json.message?.content) {
-              fullResponse += json.message.content;
-              contentSpan.innerHTML = escapeHtml(fullResponse) + '▋';
-              chatMessages.scrollTop = chatMessages.scrollHeight;
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            try {
+              const json = JSON.parse(line);
+              if (json.message && json.message.content) {
+                fullResponse += json.message.content;
+                contentSpan.innerHTML = escapeHtml(fullResponse) + '▋';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+              }
+              if (json.done) {
+                contentSpan.innerHTML = escapeHtml(fullResponse);
+              }
+            } catch (err) {
+              console.error('Error parsing JSON line:', line, err);
             }
-            if (json.done) {
-              contentSpan.innerHTML = escapeHtml(fullResponse);
-            }
-          } catch (err) {
-            console.error('Error parsing JSON line:', line, err);
           }
-        }
       }
 
       conversationHistory.push({ role: 'assistant', content: fullResponse });

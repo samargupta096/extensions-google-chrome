@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const defaultVisible = ['quote', 'goals', 'timer', 'todo', 'links', 'github', 'githubstats', 'news', 'ghmonitor', 'scratchpad', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'weather', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'];
+  const defaultVisible = ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad'];
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
-    all: defaultVisible,
+    all: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'github', 'githubstats', 'news', 'ghmonitor', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'],
     dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'],
-    productivity: ['quote', 'goals', 'timer', 'todo', 'links', 'scratchpad', 'weather'],
-    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats']
+    productivity: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad'],
+    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats'],
+    custom: [] // Customized/Personalized
   };
 
   // UI Setup
@@ -24,9 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
           <option value="dev">Developer Suite</option>
           <option value="productivity">Daily Focus</option>
           <option value="info">Information Hub</option>
-          <option value="custom">Custom (Current)</option>
+          <option value="custom">Customized / Personalized</option>
         </select>
       </div>
+
+      <button id="reset-layout-btn" class="glass-btn btn-danger" style="width: 100%; margin-bottom: 1rem;">Reset Arrangement</button>
 
       <div class="visibility-list">
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="quote" checked> Quote</label>
@@ -75,6 +78,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
   const templateSelect = document.getElementById('widget-template-select');
   const trayButtons = document.querySelectorAll('.tray-btn');
+  const resetLayoutBtn = document.getElementById('reset-layout-btn');
+
+  // Widget Delete Logic
+  function setupDeleteButtons() {
+    document.querySelectorAll('.widget').forEach(widget => {
+      if (!widget.querySelector('.widget-delete-btn')) {
+        const deleteBtn = document.createElement('div');
+        deleteBtn.className = 'widget-delete-btn';
+        deleteBtn.innerHTML = '✕';
+        deleteBtn.title = 'Remove widget';
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = widget.dataset.widgetId;
+          visibleWidgets = visibleWidgets.filter(w => w !== id);
+          applyVisibility();
+          chrome.storage.local.set({ 
+            visibleWidgets, 
+            activeTemplate: 'custom',
+            customWidgets: visibleWidgets
+          });
+          if (templateSelect) templateSelect.value = 'custom';
+          updateTrayActive('custom');
+        });
+        widget.appendChild(deleteBtn);
+      }
+    });
+  }
+  setupDeleteButtons();
+
+  // Reset Layout Logic
+  resetLayoutBtn.addEventListener('click', () => {
+    if (confirm('Reset widget arrangement and visibility to default?')) {
+      chrome.storage.local.remove(['widgetOrder', 'visibleWidgets', 'activeTemplate', 'customWidgets'], () => {
+        window.location.reload();
+      });
+    }
+  });
 
   function updateTrayActive(templateKey) {
     trayButtons.forEach(btn => {
@@ -90,12 +130,26 @@ document.addEventListener('DOMContentLoaded', () => {
   trayButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const templateKey = btn.dataset.template;
-      if (templates[templateKey]) {
+      if (templateKey === 'custom') {
+        chrome.storage.local.get(['customWidgets', 'widgetOrder'], (res) => {
+          visibleWidgets = res.customWidgets || [...templates.productivity];
+          applyVisibility();
+          if (res.widgetOrder) applyOrder(res.widgetOrder);
+          updateTrayActive('custom');
+          if (templateSelect) templateSelect.value = 'custom';
+          chrome.storage.local.set({ visibleWidgets, activeTemplate: 'custom' });
+        });
+      } else if (templates[templateKey]) {
         visibleWidgets = [...templates[templateKey]];
         applyVisibility();
+        applyOrder(visibleWidgets);
         updateTrayActive(templateKey);
         if (templateSelect) templateSelect.value = templateKey;
-        chrome.storage.local.set({ visibleWidgets, activeTemplate: templateKey });
+        chrome.storage.local.set({ 
+          visibleWidgets, 
+          activeTemplate: templateKey,
+          widgetOrder: visibleWidgets
+        });
       }
     });
   });
@@ -103,11 +157,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Template Selection Logic (Panel)
   templateSelect.addEventListener('change', (e) => {
     const templateKey = e.target.value;
-    if (templates[templateKey]) {
+    if (templateKey === 'custom') {
+      chrome.storage.local.get(['customWidgets', 'widgetOrder'], (res) => {
+        visibleWidgets = res.customWidgets || [...templates.productivity];
+        applyVisibility();
+        if (res.widgetOrder) applyOrder(res.widgetOrder);
+        updateTrayActive('custom');
+        chrome.storage.local.set({ visibleWidgets, activeTemplate: 'custom' });
+      });
+    } else if (templates[templateKey]) {
       visibleWidgets = [...templates[templateKey]];
       applyVisibility();
+      applyOrder(visibleWidgets);
       updateTrayActive(templateKey);
-      chrome.storage.local.set({ visibleWidgets, activeTemplate: templateKey });
+      chrome.storage.local.set({ 
+        visibleWidgets, 
+        activeTemplate: templateKey,
+        widgetOrder: visibleWidgets
+      });
     }
   });
 
@@ -151,6 +218,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function applyOrder(order) {
+    const grid = document.querySelector('.widgets-grid');
+    if (grid && order && Array.isArray(order)) {
+      order.forEach(id => {
+        const widget = grid.querySelector(`[data-widget-id="${id}"]`);
+        if (widget) {
+          grid.appendChild(widget);
+        }
+      });
+      
+      // Also reorder the labels in the visibility panel to match
+      const listContainer = panel.querySelector('.visibility-list');
+      if (listContainer) {
+        order.forEach(id => {
+          const labelInput = listContainer.querySelector(`input[value="${id}"]`);
+          if (labelInput && labelInput.parentElement) {
+            listContainer.appendChild(labelInput.parentElement);
+          }
+        });
+      }
+    }
+  }
+
   // Handle Checkbox changes
   checkboxes.forEach(cb => {
     cb.addEventListener('change', (e) => {
@@ -166,7 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
       updateTrayActive('custom');
       
       applyVisibility();
-      chrome.storage.local.set({ visibleWidgets, activeTemplate: 'custom' });
+      chrome.storage.local.set({ 
+        visibleWidgets, 
+        activeTemplate: 'custom',
+        customWidgets: visibleWidgets 
+      });
     });
   });
 
@@ -175,16 +269,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (result.visibleWidgets) {
       visibleWidgets = result.visibleWidgets;
     } else {
-      visibleWidgets = [...defaultVisible];
+      visibleWidgets = [...templates.productivity];
+      chrome.storage.local.set({ visibleWidgets, activeTemplate: 'productivity' });
     }
     
-    if (result.activeTemplate) {
-      updateTrayActive(result.activeTemplate);
-      if (templateSelect) templateSelect.value = result.activeTemplate;
-    }
+    const activeTemplate = result.activeTemplate || 'productivity';
+    updateTrayActive(activeTemplate);
+    if (templateSelect) templateSelect.value = activeTemplate;
 
-    // We need a slight delay or to ensure other scripts have initialized their data-widget-ids
-    setTimeout(applyVisibility, 50); 
+    // Load saved order
+    chrome.storage.local.get(['widgetOrder'], (orderRes) => {
+      if (orderRes.widgetOrder) {
+        applyOrder(orderRes.widgetOrder);
+      }
+      setTimeout(applyVisibility, 50); 
+    });
   });
 
   // Reorder Logic for Visibility Panel
@@ -240,27 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.set({ widgetOrder: newOrder });
 
     // Physically reorder DOM elements immediately
-    const grid = document.querySelector('.widgets-grid');
-    if (grid) {
-      newOrder.forEach(id => {
-        const widget = grid.querySelector(`[data-widget-id="${id}"]`);
-        if (widget) {
-          grid.appendChild(widget);
-        }
-      });
-    }
+    applyOrder(newOrder);
   }
 
-  // Restore label order based on saved widgetOrder
-  chrome.storage.local.get(['widgetOrder'], (result) => {
-    if (result.widgetOrder && Array.isArray(result.widgetOrder)) {
-      result.widgetOrder.forEach(id => {
-        const labelInput = listContainer.querySelector(`input[value="${id}"]`);
-        if (labelInput && labelInput.parentElement) {
-          listContainer.appendChild(labelInput.parentElement);
-        }
-      });
-    }
-  });
 
 });
