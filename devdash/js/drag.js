@@ -17,19 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dragHandle = document.createElement('div');
     dragHandle.className = 'drag-handle';
     dragHandle.innerHTML = '⠿';
-    
-    let controls = widget.querySelector('.widget-header-controls');
-    if (controls) {
-      dragHandle.style.position = 'static';
-      dragHandle.style.padding = '0';
-      dragHandle.style.marginRight = '8px';
-      dragHandle.style.display = 'flex';
-      dragHandle.style.alignItems = 'center';
-      controls.insertBefore(dragHandle, controls.firstChild);
-    } else {
-      widget.style.position = 'relative';
-      widget.appendChild(dragHandle);
-    }
+    widget.appendChild(dragHandle);
     
     // Make widget draggable ONLY from the header/drag-handle
     widget.setAttribute('draggable', 'true');

@@ -47,9 +47,9 @@ body.theme-dark {
   display: none;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   flex-grow: 1;
-  text-align: center;
+  text-align: left;
 }
 
 .quote-view.active {
@@ -130,6 +130,7 @@ body.theme-dark {
   margin: 0;
   line-height: 1;
   transition: font-size 0.3s ease;
+  cursor: pointer;
 }
 .date-display {
   font-size: 1.1rem;
@@ -180,11 +181,9 @@ body.theme-dark {
   padding: 0.5rem;
   display: none;
   flex-direction: column;
-  z-index: 9999;
-  backdrop-filter: blur(10px);
-  gap: 0.25rem;
-  z-index: 100;
+  z-index: 1000;
   backdrop-filter: blur(25px);
+  gap: 0.25rem;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
   animation: modalScaleIn 0.2s ease-out;
 }
@@ -308,6 +307,9 @@ body.theme-dark {
   color: var(--text-main);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
+  padding-right: 60px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Input group */
@@ -494,9 +496,9 @@ button {
 
 .timer-circle-container {
   position: relative;
-  width: 130px;
-  height: 130px;
-  margin: 0.5rem auto;
+  width: 100px;
+  height: 100px;
+  margin: 0.25rem auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -529,7 +531,7 @@ button {
 }
 
 .timer-display {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-main);
   z-index: 1;
@@ -570,9 +572,43 @@ button {
 
 .timer-modes {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   font-size: 0.8rem;
   color: var(--text-dim);
+}
+
+/* Segmented Control Styling */
+.segment-control {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.segment-item {
+  cursor: pointer;
+  position: relative;
+}
+
+.segment-item input {
+  display: none;
+}
+
+.segment-label {
+  padding: 0.3rem 0.75rem;
+  display: inline-block;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.segment-item input:checked + .segment-label {
+  background: var(--accent-main, #4facfe);
+  color: white;
+  box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
+}
+
+.segment-item:hover .segment-label:not(input:checked + .segment-label) {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .text-btn {
@@ -763,8 +799,8 @@ button {
 /* Drag and Drop */
 .drag-handle {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 12px;
+  right: 40px;
   cursor: grab;
   color: rgba(255, 255, 255, 0.4);
   font-size: 1.2rem;
@@ -774,8 +810,8 @@ button {
 }
 .widget-delete-btn {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 12px;
+  right: 12px;
   width: 24px;
   height: 24px;
   background: rgba(255, 107, 107, 0.2);
@@ -1057,8 +1093,11 @@ button {
   margin-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
+  padding-right: 60px;
   gap: 0.5rem;
   min-width: 0; /* Allow row to shrink */
+  width: 100%;
+  box-sizing: border-box;
 }
 .widget-header-row h2 {
   margin: 0;
@@ -1256,6 +1295,41 @@ button {
 .weather-city-name {
   font-size: 0.8rem;
   color: var(--text-dim);
+}
+
+.weather-hourly {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.75rem 0;
+  margin: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  scrollbar-width: none;
+}
+.weather-hourly::-webkit-scrollbar {
+  display: none;
+}
+.hourly-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 42px;
+  gap: 0.2rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.4rem 0.2rem;
+  border-radius: 8px;
+}
+.hourly-time {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+.hourly-icon {
+  font-size: 1rem;
+}
+.hourly-temp {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
 /* ====================================================
@@ -1744,14 +1818,23 @@ button {
   color: #ff6b6b;
 }
 .ollama-status-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   margin-right: 0.3rem;
   display: inline-block;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 .ollama-status-dot.connected {
   background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+  animation: ollamaPulse 2s infinite;
+}
+@keyframes ollamaPulse {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
 }
 .ollama-status-dot.disconnected {
   background: #ff6b6b;
@@ -2695,10 +2778,9 @@ button {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--text-main);
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.8rem;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
   font-weight: 600;
 }
 

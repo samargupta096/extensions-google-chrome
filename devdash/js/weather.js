@@ -1,139 +1,131 @@
 // Weather / Temperature Widget using Open-Meteo API
 document.addEventListener('DOMContentLoaded', () => {
-  const cityInput = document.getElementById('weather-city-input');
-  const addBtn = document.getElementById('weather-add-btn');
+  const locateBtn = document.getElementById('weather-locate-btn');
   const weatherIcon = document.getElementById('weather-icon');
   const tempDisplay = document.getElementById('weather-temp');
   const cityDisplay = document.getElementById('weather-city-name');
   const descDisplay = document.getElementById('weather-desc');
+  const hourlyContainer = document.getElementById('weather-hourly');
 
   if (!tempDisplay) return;
 
-  let currentCity = 'New York';
-  
-  chrome.storage.local.get(['weatherCity'], (result) => {
-    if (result.weatherCity) currentCity = result.weatherCity;
-    fetchWeather(currentCity);
+  // Initial load
+  chrome.storage.local.get(['weatherCoords'], (result) => {
+    if (result.weatherCoords) {
+      fetchWeatherByCoords(result.weatherCoords.lat, result.weatherCoords.lon, result.weatherCoords.name);
+    } else {
+      // Auto-locate on first load if no saved coordinates
+      autoLocate();
+    }
   });
 
-  function updateCity(city) {
-    city = city.trim();
-    if (!city) return;
-    currentCity = city;
-    chrome.storage.local.set({ weatherCity: city });
-    fetchWeather(currentCity);
+  function autoLocate() {
+    if (navigator.geolocation) {
+      if (locateBtn) locateBtn.textContent = '⌛';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          fetchWeatherByCoords(lat, lon, 'Current Location');
+          if (locateBtn) locateBtn.textContent = '📍';
+        },
+        (err) => {
+          console.error('Geolocation error:', err);
+          if (locateBtn) {
+            locateBtn.textContent = '❌';
+            setTimeout(() => locateBtn.textContent = '📍', 2000);
+          }
+          // Fallback to a default if user denies geolocation and nothing is stored
+          fetchWeatherByCoords(40.71, -74.01, 'New York');
+        }
+      );
+    }
   }
 
-  addBtn && addBtn.addEventListener('click', () => {
-    updateCity(cityInput.value);
-    cityInput.value = '';
-  });
-
-  const presetTrigger = document.getElementById('weather-preset-trigger');
-  const dropdown = document.getElementById('weather-dropdown');
-
-  const PRESET_CITIES = [
-    "London", "New York", "Tokyo", "San Francisco", "Mumbai", "Paris", "Berlin", "Sydney",
-    "Dubai", "Singapore", "Moscow", "Hong Kong", "Toronto", "Chicago", "Los Angeles", 
-    "Seoul", "Shanghai", "Sao Paulo", "Mexico City", "Cairo", "Lagos", "Istanbul", 
-    "Bangkok", "Jakarta", "Delhi", "Beijing", "Madrid", "Rome", "Amsterdam", "Stockholm"
-  ];
-
-  if (dropdown) {
-    dropdown.innerHTML = PRESET_CITIES.map(city => `<div class="dropdown-item">${city}</div>`).join('');
-    
-    presetTrigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle('show');
-    });
-
-    dropdown.querySelectorAll('.dropdown-item').forEach(item => {
-      item.addEventListener('click', () => {
-        updateCity(item.textContent);
-        dropdown.classList.remove('show');
-      });
-    });
-
-    document.addEventListener('click', () => {
-      dropdown.classList.remove('show');
-    });
-  }
-
-  cityInput && cityInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') addBtn.click();
-  });
+  locateBtn && locateBtn.addEventListener('click', autoLocate);
 
   const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in ms
 
-  async function fetchWeather(city) {
+  async function fetchWeatherByCoords(lat, lon, label) {
     try {
-      const cacheKey = `weatherCache_${city.toLowerCase()}`;
+      const cacheKey = `weatherCache_coords_${lat.toFixed(2)}_${lon.toFixed(2)}`;
       
-      // Check cache first
       const cachedData = await new Promise(resolve => {
         chrome.storage.local.get([cacheKey], res => resolve(res[cacheKey]));
       });
 
       if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION)) {
-        tempDisplay.textContent = cachedData.temp;
-        cityDisplay.textContent = cachedData.name;
-        weatherIcon.textContent = cachedData.icon;
-        descDisplay.textContent = cachedData.desc;
-        return; // Return early, use cached data
-      }
-
-      tempDisplay.textContent = '...';
-      cityDisplay.textContent = city;
-      
-      // 1. Get coordinates
-      const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
-      if (!geoRes.ok) throw new Error('Geocoding failed');
-      const geoData = await geoRes.json();
-      
-      if (!geoData.results || geoData.results.length === 0) {
-        tempDisplay.textContent = '--°';
-        descDisplay.textContent = 'City not found';
+        renderWeather(cachedData);
         return;
       }
-      
-      const { latitude, longitude, name } = geoData.results[0];
-      cityDisplay.textContent = name; // update with formatted name
 
-      // 2. Get weather
-      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code`);
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&forecast_days=1`);
       if (!weatherRes.ok) throw new Error('Weather failed');
       const weatherData = await weatherRes.json();
       
-      const temp = Math.round(weatherData.current.temperature_2m);
-      const code = weatherData.current.weather_code;
+      const current = weatherData.current;
+      const hourly = weatherData.hourly;
       
-      const tempString = `${temp}°C`;
-      tempDisplay.textContent = tempString;
+      const weatherInfo = getWeatherInfo(current.weather_code);
       
-      // Map WMO weather codes to emojis and descriptions
-      const weatherInfo = getWeatherInfo(code);
-      weatherIcon.textContent = weatherInfo.icon;
-      descDisplay.textContent = weatherInfo.desc;
-
-      // Save to cache
-      chrome.storage.local.set({
-        [cacheKey]: {
-          timestamp: Date.now(),
-          temp: tempString,
-          name: name,
-          icon: weatherInfo.icon,
-          desc: weatherInfo.desc
+      let locationName = label;
+      if (label === 'Current Location') {
+        try {
+          const revGeoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+          if (revGeoRes.ok) {
+            const revGeoData = await revGeoRes.json();
+            locationName = revGeoData.city || revGeoData.locality || revGeoData.principalSubdivision || 'My Location';
+          }
+        } catch (e) {
+          console.error("Reverse geocoding failed", e);
         }
+      }
+
+      const dataToCache = {
+        timestamp: Date.now(),
+        temp: Math.round(current.temperature_2m),
+        name: locationName,
+        icon: weatherInfo.icon,
+        desc: weatherInfo.desc,
+        hourly: hourly.time.map((t, i) => ({
+          time: new Date(t).getHours(),
+          temp: Math.round(hourly.temperature_2m[i]),
+          icon: getWeatherInfo(hourly.weather_code[i]).icon
+        })).filter((_, i) => i % 3 === 0) // Every 3 hours
+      };
+
+      chrome.storage.local.set({ 
+        [cacheKey]: dataToCache,
+        weatherCoords: { lat, lon, name: dataToCache.name }
       });
       
+      renderWeather(dataToCache);
+      
     } catch (err) {
+      console.error(err);
       tempDisplay.textContent = '--°';
-      descDisplay.textContent = 'Error loading';
+      descDisplay.textContent = 'Error';
+    }
+  }
+
+  function renderWeather(data) {
+    tempDisplay.textContent = `${data.temp}°C`;
+    cityDisplay.textContent = data.name;
+    weatherIcon.textContent = data.icon;
+    descDisplay.textContent = data.desc;
+    
+    if (hourlyContainer && data.hourly) {
+      hourlyContainer.innerHTML = data.hourly.map(h => `
+        <div class="hourly-item">
+          <span class="hourly-time">${h.time}:00</span>
+          <span class="hourly-icon">${h.icon}</span>
+          <span class="hourly-temp">${h.temp}°</span>
+        </div>
+      `).join('');
     }
   }
 
   function getWeatherInfo(code) {
-    // WMO Weather interpretation codes
     if (code === 0) return { icon: '☀️', desc: 'Clear sky' };
     if (code === 1 || code === 2 || code === 3) return { icon: '⛅', desc: 'Partly cloudy' };
     if (code === 45 || code === 48) return { icon: '🌫️', desc: 'Fog' };

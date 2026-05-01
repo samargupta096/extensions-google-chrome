@@ -119,6 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       });
 
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server returned ${res.status}`);
+      }
+
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       contentSpan.textContent = '';
@@ -126,11 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
         
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop(); // Keep the partial line in the buffer
+        if (value) {
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || ''; // Keep the partial line in the buffer
 
           for (const line of lines) {
             if (!line.trim()) continue;
@@ -145,9 +150,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 contentSpan.innerHTML = escapeHtml(fullResponse);
               }
             } catch (err) {
-              console.error('Error parsing JSON line:', line, err);
+              console.warn('Error parsing JSON line:', err, line);
             }
           }
+        }
+
+        if (done) {
+          // Process remaining buffer if it contains a complete JSON
+          if (buffer.trim()) {
+            try {
+              const json = JSON.parse(buffer);
+              if (json.message && json.message.content) {
+                fullResponse += json.message.content;
+                contentSpan.innerHTML = escapeHtml(fullResponse);
+              }
+            } catch (err) {
+              // Not a complete JSON, ignore
+            }
+          }
+          break;
+        }
       }
 
       conversationHistory.push({ role: 'assistant', content: fullResponse });
@@ -157,12 +179,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.message.includes('Failed to fetch')) {
         errorMsg = '⚠️ Connection failed. Ensure Ollama is running and OLLAMA_ORIGINS is set correctly.';
       }
-      contentSpan.innerHTML = `<span style="color: #ff4b2b;">${errorMsg}</span>`;
+      contentSpan.innerHTML = `<span style="color: #ff6b6b;">${errorMsg}</span>`;
     } finally {
       isStreaming = false;
       sendBtn.disabled = false;
       sendBtn.textContent = '➤';
-      assistantDiv.removeAttribute('id');
+      if (assistantDiv.id === 'ollama-streaming-msg') {
+        assistantDiv.removeAttribute('id');
+      }
     }
   }
 

@@ -15,15 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
   visibilityContainer.innerHTML = `
     <button id="visibility-toggle-btn" class="fab-btn visibility-btn" title="Manage Widgets">🧩</button>
     <div id="visibility-panel" class="visibility-panel">
-      <h3>Manage Widgets</h3>
+      <h3>🧩 Manage Widgets</h3>
       
       <div class="template-section" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
         <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 0.5rem;">Select Template</label>
         <select id="widget-template-select" class="glass-select" style="width: 100%;">
           <option value="" disabled selected>Choose a Preset...</option>
           <option value="all">Full Dashboard (All)</option>
-          <option value="dev">Developer Suite</option>
           <option value="productivity">Daily Focus</option>
+          <option value="dev">Developer Suite</option>
           <option value="info">Information Hub</option>
           <option value="custom">Customized / Personalized</option>
         </select>
