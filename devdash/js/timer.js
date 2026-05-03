@@ -53,6 +53,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const progress = Math.min(1, Math.max(0, timeRemaining / totalTime));
     const offset = CIRCUMFERENCE - (progress * CIRCUMFERENCE);
     if (progressCircle) progressCircle.style.strokeDashoffset = offset;
+
+    // Update stats
+    if (state.stats) {
+      const sessionsEl = document.getElementById('today-sessions');
+      const timeEl = document.getElementById('today-time');
+      const focusEl = document.getElementById('today-focus');
+      
+      if (sessionsEl) sessionsEl.textContent = state.stats.sessions;
+      if (timeEl) {
+        const mins = state.stats.minutes;
+        timeEl.textContent = mins >= 60 ? `${(mins / 60).toFixed(1)}h` : `${mins}m`;
+      }
+      if (focusEl) focusEl.textContent = `${state.stats.score}%`;
+    }
   }
 
   function fetchState() {
@@ -81,4 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setInterval(fetchState, 1000);
   fetchState();
+
+  // Dashboard & Settings Buttons
+  const dashboardBtn = document.getElementById('timer-dashboard-btn');
+  const settingsBtn = document.getElementById('timer-settings-btn');
+  if (dashboardBtn) {
+    dashboardBtn.addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('focus-dashboard/dashboard.html') });
+    });
+  }
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('focus-dashboard/dashboard.html?tab=settings') });
+    });
+  }
 });

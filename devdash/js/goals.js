@@ -31,7 +31,40 @@ document.addEventListener('DOMContentLoaded', () => {
       textSpan.addEventListener('click', () => {
         goals[index].completed = !goals[index].completed;
         saveGoals();
-        renderGoals();
+        if (goals[index].completed) {
+          li.classList.add('completed');
+        } else {
+          li.classList.remove('completed');
+        }
+      });
+
+      // Inline editing
+      textSpan.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'glass-input inline-edit-input';
+        input.value = goal.text;
+        input.style.width = '100%';
+        
+        const saveEdit = () => {
+          const newText = input.value.trim();
+          if (newText && newText !== goal.text) {
+            goals[index].text = newText;
+            saveGoals();
+          }
+          renderGoals();
+        };
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') saveEdit();
+          if (e.key === 'Escape') renderGoals();
+        });
+
+        input.addEventListener('blur', saveEdit);
+
+        textSpan.replaceWith(input);
+        input.focus();
       });
 
       const deleteBtn = document.createElement('button');

@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
-    all: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'github', 'githubstats', 'news', 'ghmonitor', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'],
+    all: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'github', 'githubstats', 'news', 'ghmonitor', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday'],
     dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'],
-    productivity: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad'],
+    productivity: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday'],
     info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats'],
+    creator: ['postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'quote', 'timer', 'ollama'],
     custom: [] // Customized/Personalized
   };
 
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <option value="productivity">Daily Focus</option>
           <option value="dev">Developer Suite</option>
           <option value="info">Information Hub</option>
+          <option value="creator">Creator Mode</option>
           <option value="custom">Customized / Personalized</option>
         </select>
       </div>
@@ -68,6 +70,22 @@ document.addEventListener('DOMContentLoaded', () => {
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="dockermon" checked> Docker Monitor</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="iamdecoder" checked> IAM Decoder</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="materialpalette" checked> Material Palette</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="postprompt" checked> What to Post</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="ideabacklog" checked> Idea Backlog</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="contentcal" checked> Content Calendar</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="hooklab" checked> Hook Lab</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="energymeter" checked> Creator Energy</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="monetracker" checked> Monetization</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="exptracker" checked> Experiments</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="thumbcheck" checked> Thumbnail Check</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="sponsorcrm" checked> Sponsor CRM</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="platformradar" checked> Platform Radar</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="backupcheck" checked> Security Backup</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="habitchain" checked> Habit Chains</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="timeblocks" checked> Time Blocks</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="deepworksession" checked> Deep Work</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="momentumqueue" checked> Momentum</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="nozeroday" checked> No Zero Days</label>
       </div>
     </div>
   `;

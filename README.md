@@ -1,6 +1,6 @@
 # 🚀 Chrome Extensions Suite
 
-> **15 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
+> **16 Privacy-First, AI-Powered Chrome Extensions** — All data stays local. Zero cloud dependency. Powered by [Ollama](https://ollama.ai).
 
 ---
 
@@ -369,10 +369,35 @@
   </tr>
 </table>
 
-<details>
-<summary><strong>View all 36+ DevDash Widgets</strong></summary>
+### 16) FlowForge — 5 Productivity Systems
 
-- **Productivity & Focus**: Quote, Active Goals, Focus Timer, Today's Tasks, Quick Links, Scratchpad
+<table width="100%">
+  <tr>
+    <td width="15%" align="center" valign="top">
+      <img src="./flowforge/icons/icon128.png" width="80" alt="FlowForge Icon">
+    </td>
+    <td width="45%" valign="top">
+      <p><strong>Purpose:</strong> Unified productivity engine integrating five core systems.</p>
+      <ul>
+        <li>⚡ **Trigger System**: Habit stacking & chaining</li>
+        <li>📅 **Time Blocks**: Visual schedule planning</li>
+        <li>🔥 **Deep Work**: Focused sessions with site blocking</li>
+        <li>🚀 **Momentum**: AI-generated post-session "quick win" tasks</li>
+        <li>🔴 **No Zero Days**: Daily streak & goal tracking</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <a href=".github/screenshots/flowforge_screenshot.png"><img src=".github/screenshots/flowforge_screenshot.png" width="220" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="FlowForge Screenshot" /></a>
+    </td>
+  </tr>
+</table>
+
+---
+
+<details>
+<summary><strong>View all 41+ DevDash Widgets</strong></summary>
+
+- **Productivity & Focus**: Quote, Active Goals, Focus Timer, Today's Tasks, Quick Links, Scratchpad, **Habit Chains, Time Blocks, Deep Work, Momentum, No Zero Days**
 - **Information Hub**: World Clock, Weather, Tech News
 - **Developer Utilities**: Regex Tester, Epoch Time, NPM Tracker, Bundle Size, JSON Formatter, JWT Decoder, Base64, UUID Generator, ColorBox (colorutility), API PingBox (apitester), Cmd CheatSheet, HTTP Codes (httpref), DP/PX/SP Converter
 - **Advanced Tools & DevOps**: GitHub Graph, GitHub Stats, PR Monitor (ghmonitor), Stack Overflow, Cron Sentinel, Region Compass, Env Vault, Intent Builder, Docker Monitor, IAM Decoder, Material Palette, OTel TraceBox (traceviewer)
@@ -716,7 +741,8 @@ extensions-google-chrome/
 ├── standupscribe/           # 📝 Auto-Standup Generator
 ├── tabhandoff/              # 🤝 Device Tab Sharing
 ├── tabvault/                # 💾 Tab Session Manager
-└── devdash/                 # 🚀 Developer New Tab Dashboard
+├── devdash/                 # 🚀 Developer New Tab Dashboard
+└── flowforge/               # ⚡ 5 Productivity Systems Engine
 ```
 
 ---

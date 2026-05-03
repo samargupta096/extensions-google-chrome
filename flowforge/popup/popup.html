@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowForge</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container" id="app">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-top">
+        <div class="header-title">
+          <span style="font-size: 22px;">🔥</span>
+          <h1>FlowForge</h1>
+        </div>
+        <div class="header-utils">
+          <div class="streak-badge" id="globalStreak" title="Overall daily streak">
+            <span class="streak-flame">🔥</span>
+            <span id="globalStreakCount">0</span>
+          </div>
+          <button id="expandBtn" class="expand-btn" title="Open in full tab">⛶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="trigger">⚡ Trigger</button>
+      <button class="tab" data-tab="timeblock">📅 Blocks</button>
+      <button class="tab" data-tab="deepwork">🔥 Deep</button>
+      <button class="tab" data-tab="momentum">🚀 Momentum</button>
+      <button class="tab" data-tab="nozero">🔴 No Zero</button>
+    </div>
+
+    <!-- ===== TAB 1: TRIGGER SYSTEM (Habit Stacking) ===== -->
+    <div class="tab-content active" id="tab-trigger">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">⚡ Habit Chains</span>
+          <button class="btn btn-primary btn-sm" id="addChainBtn">+ Chain</button>
+        </div>
+        <p class="hint-text">Link habits together. When you complete the trigger, do the next one immediately.</p>
+      </div>
+
+      <!-- Add Chain Form (hidden by default) -->
+      <div class="card chain-form" id="chainForm" style="display:none; margin-bottom: 12px;">
+        <input type="text" class="input" id="chainNameInput" placeholder="Chain name (e.g. Morning Power)">
+        <div class="chain-steps" id="chainStepsEditor">
+          <div class="chain-step-row">
+            <span class="step-number">1</span>
+            <input type="text" class="input" placeholder="Trigger habit (e.g. Bathed)" data-step="0">
+          </div>
+          <div class="chain-step-row">
+            <span class="step-number">2</span>
+            <input type="text" class="input" placeholder="Then do... (e.g. 20 push-ups)" data-step="1">
+          </div>
+        </div>
+        <div class="chain-form-actions">
+          <button class="btn btn-ghost btn-sm" id="addStepBtn">+ Step</button>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-sm" id="cancelChainBtn">Cancel</button>
+            <button class="btn btn-primary btn-sm" id="saveChainBtn">Save Chain</button>
+          </div>
+        </div>
+        <div class="chain-schedule-row">
+          <label class="chain-time-label">⏰ Anchor Time</label>
+          <select class="input" id="chainTimeSelect" style="width: auto; flex:1;">
+            <option value="morning">🌅 Morning</option>
+            <option value="afternoon">☀️ Afternoon</option>
+            <option value="evening">🌙 Evening</option>
+            <option value="custom">⏰ Custom</option>
+          </select>
+          <input type="time" class="input" id="chainCustomTime" style="display:none; width:120px;">
+        </div>
+      </div>
+
+      <!-- Chain List -->
+      <div id="chainList" class="chain-list"></div>
+
+      <!-- Today's Summary -->
+      <div class="card chain-summary-card" id="chainSummary" style="margin-top: 12px;">
+        <div class="grid grid-3">
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="chainsCompleted">0</div>
+            <div class="mini-stat-label">Done</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="chainsTotal">0</div>
+            <div class="mini-stat-label">Chains</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="chainsBestStreak">0</div>
+            <div class="mini-stat-label">Best 🔥</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 2: TIME BLOCK SYSTEM ===== -->
+    <div class="tab-content" id="tab-timeblock" style="display:none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">📅 Today's Schedule</span>
+          <div style="display:flex; gap:4px;">
+            <button class="btn btn-sm" id="tbTemplateBtn" title="Templates">📋</button>
+            <button class="btn btn-primary btn-sm" id="addBlockBtn">+ Block</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Block Form -->
+      <div class="card block-form" id="blockForm" style="display:none; margin-bottom: 12px;">
+        <input type="text" class="input" id="blockLabel" placeholder="Block label (e.g. Deep Work on API)">
+        <div class="block-time-row">
+          <input type="time" class="input" id="blockStart" value="09:00">
+          <span class="time-separator">→</span>
+          <input type="time" class="input" id="blockEnd" value="11:00">
+        </div>
+        <div class="block-category-row">
+          <button class="cat-btn active" data-cat="deepwork" style="--cat-color: var(--accent-purple);">🧠 Deep Work</button>
+          <button class="cat-btn" data-cat="admin" style="--cat-color: var(--accent-cyan);">📋 Admin</button>
+          <button class="cat-btn" data-cat="learning" style="--cat-color: var(--accent-green);">📚 Learn</button>
+          <button class="cat-btn" data-cat="health" style="--cat-color: var(--accent-orange);">💪 Health</button>
+          <button class="cat-btn" data-cat="creative" style="--cat-color: var(--accent-pink);">🎨 Create</button>
+        </div>
+        <div style="display:flex; gap:6px; justify-content:flex-end; margin-top:10px;">
+          <button class="btn btn-sm" id="cancelBlockBtn">Cancel</button>
+          <button class="btn btn-primary btn-sm" id="saveBlockBtn">Save Block</button>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="timeline-container" id="timelineContainer">
+        <div class="timeline-now-indicator" id="nowIndicator"></div>
+        <div class="timeline-slots" id="timelineSlots"></div>
+      </div>
+
+      <!-- Adherence Score -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="grid grid-3">
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="tbBlocksToday">0</div>
+            <div class="mini-stat-label">Blocks</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="tbHoursPlanned">0h</div>
+            <div class="mini-stat-label">Planned</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="tbAdherence">--%</div>
+            <div class="mini-stat-label">Adherence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 3: DEEP WORK SYSTEM ===== -->
+    <div class="tab-content" id="tab-deepwork" style="display:none;">
+      <!-- Timer -->
+      <div class="card dw-timer-card" id="dwTimerCard">
+        <div class="dw-timer-ring-wrap">
+          <svg class="dw-timer-svg" viewBox="0 0 200 200">
+            <circle class="dw-timer-bg" cx="100" cy="100" r="88"/>
+            <circle class="dw-timer-progress" cx="100" cy="100" r="88" id="dwTimerCircle"/>
+          </svg>
+          <div class="dw-timer-inner">
+            <div class="dw-timer-time" id="dwTimerTime">01:30:00</div>
+            <div class="dw-timer-label" id="dwTimerLabel">Ready for Deep Work</div>
+          </div>
+        </div>
+
+        <!-- Duration Presets -->
+        <div class="dw-presets" id="dwPresets">
+          <button class="dur-btn active" data-mins="60">60m</button>
+          <button class="dur-btn" data-mins="90">90m</button>
+          <button class="dur-btn" data-mins="120">120m</button>
+          <button class="dur-btn" data-mins="custom">Custom</button>
+        </div>
+        <div id="dwCustomRow" style="display:none; margin-top: 8px;">
+          <input type="number" class="input" id="dwCustomMin" placeholder="Minutes (1-480)" min="1" max="480">
+        </div>
+
+        <!-- Tag -->
+        <div class="dw-tag-row" id="dwTagRow">
+          <input type="text" class="input" id="dwTagInput" placeholder="Tag this session (e.g. API refactor)">
+        </div>
+
+        <!-- Start Button -->
+        <button class="btn btn-primary btn-lg dw-start-btn" id="dwStartBtn" style="width:100%; margin-top: 12px;">
+          🔥 Start Deep Work
+        </button>
+        <button class="btn btn-danger btn-lg dw-end-btn" id="dwEndBtn" style="width:100%; margin-top: 12px; display:none;">
+          ⏹ End Session
+        </button>
+
+        <!-- Phone Reminder -->
+        <div class="dw-phone-remind" id="dwPhoneRemind" style="display:none;">
+          📵 Phone away? Put it in another room for maximum focus.
+        </div>
+      </div>
+
+      <!-- Deep Work Stats -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="card-header">
+          <span class="card-title">📊 Today</span>
+        </div>
+        <div class="grid grid-3">
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="dwTotalTime">0h</div>
+            <div class="mini-stat-label">Deep Work</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="dwSessionCount">0</div>
+            <div class="mini-stat-label">Sessions</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="dwAvgQuality">--</div>
+            <div class="mini-stat-label">Avg Quality</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Distraction Blocklist -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="card-header">
+          <span class="card-title">🛡️ Block During Sessions</span>
+        </div>
+        <div id="dwBlockList" class="dw-blocklist"></div>
+        <div class="input-group" style="margin-top: 8px;">
+          <input type="text" class="input" id="dwBlockInput" placeholder="Add domain to block...">
+          <button class="btn btn-primary btn-sm" id="dwAddBlockBtn">+</button>
+        </div>
+      </div>
+
+      <!-- Session History -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="card-header">
+          <span class="card-title">📋 Recent Sessions</span>
+        </div>
+        <div id="dwSessionHistory" class="dw-session-history scrollable"></div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 4: MOMENTUM SYSTEM ===== -->
+    <div class="tab-content" id="tab-momentum" style="display:none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">🚀 Momentum Queue</span>
+          <button class="btn btn-primary btn-sm" id="addMomentumBtn">+ Task</button>
+        </div>
+        <p class="hint-text">Quick 5-10 min tasks to tackle right after a deep work session. Capitalize on momentum!</p>
+      </div>
+
+      <!-- Add Momentum Task -->
+      <div class="card" id="momentumForm" style="display:none; margin-bottom: 12px;">
+        <input type="text" class="input" id="momentumTaskInput" placeholder="Quick task (e.g. Reply to PR comments)">
+        <div class="momentum-cat-row">
+          <button class="mcat-btn active" data-cat="email">📧</button>
+          <button class="mcat-btn" data-cat="chat">💬</button>
+          <button class="mcat-btn" data-cat="admin">📋</button>
+          <button class="mcat-btn" data-cat="review">🔍</button>
+          <button class="mcat-btn" data-cat="cleanup">🧹</button>
+          <button class="mcat-btn" data-cat="other">⚡</button>
+        </div>
+        <div style="display:flex; gap:6px; justify-content:flex-end; margin-top:10px;">
+          <button class="btn btn-sm" id="cancelMomentumBtn">Cancel</button>
+          <button class="btn btn-primary btn-sm" id="saveMomentumBtn">Add</button>
+        </div>
+      </div>
+
+      <!-- Momentum Task List -->
+      <div id="momentumList" class="momentum-list"></div>
+
+      <!-- Momentum Stats -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="grid grid-3">
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="momCompleted">0</div>
+            <div class="mini-stat-label">Done Today</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="momPending">0</div>
+            <div class="mini-stat-label">In Queue</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="momScore">0</div>
+            <div class="mini-stat-label">Score 🚀</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 5: NO ZERO DAYS ===== -->
+    <div class="tab-content" id="tab-nozero" style="display:none;">
+      <div class="card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <span class="card-title">🔴 No Zero Days</span>
+          <button class="btn btn-primary btn-sm" id="addGoalBtn">+ Goal</button>
+        </div>
+        <p class="hint-text">Do at least ONE small thing toward each goal every single day. No exceptions.</p>
+      </div>
+
+      <!-- Add Goal Form -->
+      <div class="card" id="nzdGoalForm" style="display:none; margin-bottom: 12px;">
+        <input type="text" class="input" id="nzdGoalName" placeholder="Goal name (e.g. Learn Rust)">
+        <input type="text" class="input" id="nzdGoalMin" placeholder="Minimum action (e.g. Read 1 page)" style="margin-top: 8px;">
+        <div style="display:flex; gap:6px; justify-content:flex-end; margin-top:10px;">
+          <button class="btn btn-sm" id="cancelGoalNzd">Cancel</button>
+          <button class="btn btn-primary btn-sm" id="saveGoalNzd">Add Goal</button>
+        </div>
+      </div>
+
+      <!-- Goal Cards -->
+      <div id="nzdGoalList" class="nzd-goal-list"></div>
+
+      <!-- Weekly Heatmap -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="card-header">
+          <span class="card-title">📊 Last 30 Days</span>
+        </div>
+        <canvas id="nzdHeatmap" class="nzd-heatmap" width="340" height="80"></canvas>
+      </div>
+
+      <!-- Stats -->
+      <div class="card" style="margin-top: 12px;">
+        <div class="grid grid-3">
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="nzdCurrentStreak">0</div>
+            <div class="mini-stat-label">Streak 🔥</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="nzdLongestStreak">0</div>
+            <div class="mini-stat-label">Best</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-value" id="nzdTodayPct">0%</div>
+            <div class="mini-stat-label">Today</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../shared/ollama-client.js"></script>
+  <script src="trigger.js"></script>
+  <script src="timeblock.js"></script>
+  <script src="deepwork.js"></script>
+  <script src="momentum.js"></script>
+  <script src="nozeroday.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
