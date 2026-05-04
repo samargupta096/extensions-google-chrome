@@ -3,11 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
-    all: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'github', 'githubstats', 'news', 'ghmonitor', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday'],
-    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette'],
-    productivity: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday'],
-    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats'],
-    creator: ['postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'quote', 'timer', 'ollama'],
+    all: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'github', 'githubstats', 'news', 'ghmonitor', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday', 'clipboard'],
+    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'clipboard'],
+    productivity: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday', 'clipboard'],
+    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats', 'clipboard'],
+    creator: ['postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'quote', 'timer', 'ollama', 'clipboard'],
     custom: [] // Customized/Personalized
   };
 
@@ -31,9 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
         </select>
       </div>
 
+      <div class="input-group" style="margin-bottom: 1rem;">
+        <input type="text" id="widget-search-input" placeholder="Search widgets..." class="glass-input" style="width: 100%;">
+      </div>
+
       <button id="reset-layout-btn" class="glass-btn btn-danger" style="width: 100%; margin-bottom: 1rem;">Reset Arrangement</button>
 
       <div class="visibility-list">
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="clipboard" checked> Clipboard History</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="quote" checked> Quote</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="goals" checked> Active Goals</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="timer" checked> Focus Timer</label>
@@ -97,6 +102,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const templateSelect = document.getElementById('widget-template-select');
   const trayButtons = document.querySelectorAll('.tray-btn');
   const resetLayoutBtn = document.getElementById('reset-layout-btn');
+  const widgetSearchInput = document.getElementById('widget-search-input');
+
+  // Widget Search Logic
+  if (widgetSearchInput) {
+    widgetSearchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const labels = panel.querySelectorAll('.visibility-list label');
+      labels.forEach(label => {
+        if (label.textContent.toLowerCase().includes(term)) {
+          label.style.display = 'flex';
+        } else {
+          label.style.display = 'none';
+        }
+      });
+    });
+  }
 
   // Widget Delete Logic
   function setupDeleteButtons() {
@@ -283,12 +304,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Load Saved Visibility
-  chrome.storage.local.get(['visibleWidgets', 'activeTemplate'], (result) => {
+  chrome.storage.local.get(['visibleWidgets', 'activeTemplate', 'migratedClipboard'], (result) => {
     if (result.visibleWidgets) {
       visibleWidgets = result.visibleWidgets;
     } else {
       visibleWidgets = [...templates.productivity];
       chrome.storage.local.set({ visibleWidgets, activeTemplate: 'productivity' });
+    }
+
+    // Migration: force add clipboard if it's the first time running this version
+    if (!result.migratedClipboard) {
+      if (!visibleWidgets.includes('clipboard')) {
+        visibleWidgets.push('clipboard');
+      }
+      chrome.storage.local.set({ migratedClipboard: true, visibleWidgets });
     }
     
     const activeTemplate = result.activeTemplate || 'productivity';
@@ -297,8 +326,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load saved order
     chrome.storage.local.get(['widgetOrder'], (orderRes) => {
-      if (orderRes.widgetOrder) {
-        applyOrder(orderRes.widgetOrder);
+      let order = orderRes.widgetOrder;
+      if (order) {
+        if (!result.migratedClipboard && !order.includes('clipboard')) {
+           order.unshift('clipboard'); // Put it at the top!
+           chrome.storage.local.set({ widgetOrder: order });
+        }
+        applyOrder(order);
+      } else if (!result.migratedClipboard) {
+        // If no order but migrating, ensure it's at the top
+        const defaultOrder = [...visibleWidgets];
+        const clipIdx = defaultOrder.indexOf('clipboard');
+        if (clipIdx > -1) {
+            defaultOrder.splice(clipIdx, 1);
+            defaultOrder.unshift('clipboard');
+            chrome.storage.local.set({ widgetOrder: defaultOrder });
+            applyOrder(defaultOrder);
+        }
       }
       setTimeout(applyVisibility, 50); 
     });

@@ -107,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isConnected = false;
         setStatus();
         modelSelect.innerHTML = '<option value="">Ollama Offline</option>';
-        modelSelect.style.display = 'block';
       }
     } else {
       // OpenRouter selected
@@ -128,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
         populateModels(cachedOrModels, 'openrouter');
       } else {
         modelSelect.innerHTML = '<option value="">Missing API Key</option>';
-        modelSelect.style.display = 'block';
       }
     }
   }
@@ -150,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function populateModels(models, provider) {
     if (!modelSelect) return;
-    modelSelect.style.display = 'block';
     modelSelect.innerHTML = '';
     
     if (models.length === 0) {

@@ -294,7 +294,7 @@ body.theme-dark {
 .widgets-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   align-content: flex-start;
   gap: 1.5rem;

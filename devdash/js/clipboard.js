@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.runtime.sendMessage({ type: 'GET_CLIPBOARD' }, (response) => {
       if (response && response.history) {
         renderClipboard(response.history);
+      } else {
+        renderClipboard([]);
       }
     });
   }
