@@ -6,13 +6,13 @@
 
 <p align="center">
   <strong>The Ultimate Developer Productivity Dashboard for Your New Tab</strong><br>
-  <em>36+ widgets · Fully customizable · 100% local & private · Zero cloud dependency</em>
+  <em>41+ widgets · Fully customizable · 100% local & private · Zero cloud dependency</em>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Chrome-Extension-blue?logo=googlechrome&logoColor=white" alt="Chrome Extension">
   <img src="https://img.shields.io/badge/Manifest-V3-green" alt="Manifest V3">
-  <img src="https://img.shields.io/badge/Widgets-36+-purple" alt="36+ Widgets">
+  <img src="https://img.shields.io/badge/Widgets-41+-purple" alt="41+ Widgets">
   <img src="https://img.shields.io/badge/Privacy-100%25%20Local-brightgreen" alt="Privacy">
   <img src="https://img.shields.io/badge/AI-Ollama%20Powered-orange" alt="Ollama AI">
 </p>
@@ -48,7 +48,7 @@
 
 Every time you open a new tab, you see a **beautiful, productive workspace** instead of a blank page. DevDash is purpose-built for software engineers, offering:
 
-- 🧰 **36+ widgets** covering productivity, dev utilities, system monitoring, and AI chat
+- 🧰 **41+ widgets** covering productivity, dev utilities, system monitoring, and AI chat
 - 🎨 **20 background themes** + glassmorphism widget styles with full personalization
 - 🖼️ **Custom wallpaper** support (URL or local upload)
 - 🔀 **Drag & drop** grid layout with resize handles
@@ -60,7 +60,7 @@ Every time you open a new tab, you see a **beautiful, productive workspace** ins
 
 ---
 
-## 🧩 Complete Widget Reference (36+ Widgets)
+## 🧩 Complete Widget Reference (41+ Widgets)
 
 ### ⏱️ Productivity & Focus
 
@@ -116,6 +116,16 @@ Every time you open a new tab, you see a **beautiful, productive workspace** ins
 | **🎨 Material Palette** | Material Design color picker | Full Material color grid · All shade variations · Click swatch to copy HEX · Color name labels |
 | **📊 OTel TraceBox** | OpenTelemetry trace visualizer | Paste trace JSON · Visualize button · Waterfall timeline view · Span details · 🗑️ Clear |
 
+### ⚡ FlowForge Productivity (Synced)
+
+| Widget | Description | Key Actions |
+|--------|-------------|-------------|
+| **⚡ Habit Chains** | Habit stacking & chaining system | ➕ Add habit chain · ✅ Check off steps · 🔥 Track streaks · Synced with FlowForge |
+| **📅 Time Blocks** | Visual daily schedule planner | 📅 View today's blocks · ⏱️ Live progress tracking · Synced with FlowForge |
+| **🔥 Deep Work** | Deep work session statistics | 📊 View session count, total hours, and quality score · 📝 Recent session list · Synced with FlowForge |
+| **🚀 Momentum** | Post-session task queue | ➕ Add tasks · ✅ Complete tasks · 🤖 AI-generated suggestions after deep work · Synced with FlowForge |
+| **🔴 No Zero Days** | Daily goal & streak tracker | ➕ Add daily goals · ✅ Toggle completion · 🔥 Max streak tracking · Synced with FlowForge |
+
 ### 🖥️ System & AI Integration
 
 | Widget | Description | Key Actions |
@@ -146,8 +156,8 @@ Switch your entire dashboard layout with one click:
 
 | Template | Widgets Shown |
 |----------|---------------|
-| **Full** | All 36+ widgets enabled |
-| **Daily Focus** | Quote, Weather, Goals, Tasks, Links, Timer, Scratchpad |
+| **Full** | All 41+ widgets enabled |
+| **Daily Focus** | Quote, Weather, Goals, Tasks, Links, Timer, Scratchpad, **Habit Chains, Time Blocks, Deep Work, Momentum, No Zero Days** |
 | **Developer** | GitHub, System Monitor, Regex, Epoch, NPM, JSON, JWT, Base64, UUID, Stack Overflow, AI Chat, and all dev tools |
 | **Information** | News, Stack Overflow, World Clock, Weather, GitHub |
 | **Customized** | Your personal selection — auto-saved when you manually toggle widgets |
@@ -341,6 +351,12 @@ devdash/
 │   ├── iamdecoder.js      # IAM error decoder
 │   ├── materialpalette.js # Material Design colors
 │   ├── traceviewer.js     # OTel trace visualizer
+│   ├── flowforge-sync.js  # Cross-extension sync utility
+│   ├── habitchain.js      # Habit chains widget
+│   ├── timeblocks.js      # Time blocks widget
+│   ├── deepworksession.js # Deep work session stats
+│   ├── momentumqueue.js   # Momentum task queue
+│   ├── nozeroday.js       # No Zero Days tracker
 │   └── bookmarks.js       # Bookmarks & extensions viewer
 ├── shared/
 │   ├── ui-components.css  # Shared design system

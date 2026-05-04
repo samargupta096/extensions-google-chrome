@@ -35,7 +35,38 @@ document.addEventListener('DOMContentLoaded', () => {
       const a = document.createElement('a');
       a.className = 'link-item';
       a.href = link.url;
+      a.target = '_blank';
       a.textContent = link.name;
+      
+      // Inline editing for name
+      a.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'glass-input inline-edit-input';
+        input.value = link.name;
+        input.style.width = '100%';
+        
+        const saveEdit = () => {
+          const newName = input.value.trim();
+          if (newName && newName !== link.name) {
+            quickLinks[index].name = newName;
+            saveLinks();
+          }
+          renderLinks();
+        };
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') saveEdit();
+          if (e.key === 'Escape') renderLinks();
+        });
+
+        input.addEventListener('blur', saveEdit);
+
+        a.replaceWith(input);
+        input.focus();
+      });
       
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'delete-btn';

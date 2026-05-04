@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusLock — Intelligence Dashboard</title>
+  <link rel="stylesheet" href="../shared/ui-components.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-icon">🔒</span>
+        <span class="logo-text">FocusLock</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="overview">
+          <span class="nav-icon">🏠</span> Overview
+        </button>
+        <button class="nav-item" data-tab="analytics">
+          <span class="nav-icon">📊</span> Analytics
+        </button>
+        <button class="nav-item" data-tab="history">
+          <span class="nav-icon">📜</span> History
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span> Settings
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="streak-mini">
+          <span class="streak-fire">🔥</span>
+          <div class="streak-info">
+            <div class="streak-val" id="sidebar-streak">0</div>
+            <div class="streak-lab">Day Streak</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-header">
+        <div class="header-status">
+          <div class="status-dot" id="global-status-dot"></div>
+          <span id="global-status-text">Ready to Focus</span>
+        </div>
+        <div class="header-actions">
+          <div id="active-timer-display" class="active-timer" style="display:none;">
+            <span id="header-timer">25:00</span>
+          </div>
+          <button class="btn btn-primary btn-sm" id="header-start-btn">🔒 Start Session</button>
+        </div>
+      </header>
+
+      <!-- Overview Tab -->
+      <section class="tab-pane active" id="pane-overview">
+        <div class="hero-section">
+          <div class="hero-main">
+            <h1>Welcome back, <span class="text-gradient">Focus Architect</span></h1>
+            <p>You've completed <span id="hero-sessions">0</span> sessions this week. Keep the momentum!</p>
+            
+            <div class="hero-stats">
+              <div class="h-stat">
+                <div class="h-stat-val" id="hero-total-time">0h</div>
+                <div class="h-stat-lab">Total Focus</div>
+              </div>
+              <div class="h-stat">
+                <div class="h-stat-val" id="hero-avg-flow">--</div>
+                <div class="h-stat-lab">Avg Flow</div>
+              </div>
+              <div class="h-stat">
+                <div class="h-stat-val" id="hero-longest-streak">0</div>
+                <div class="h-stat-lab">Best Streak</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="flow-gauge">
+              <svg viewBox="0 0 100 100">
+                <circle class="gauge-bg" cx="50" cy="50" r="45"/>
+                <circle class="gauge-fg" id="overview-flow-gauge" cx="50" cy="50" r="45" style="--pct: 0"/>
+              </svg>
+              <div class="gauge-inner">
+                <div class="gauge-val" id="overview-flow-val">0</div>
+                <div class="gauge-lab">Current Flow</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card chart-card span-2">
+            <div class="card-header">
+              <h3>Weekly Distribution</h3>
+              <select class="glass-select btn-sm" id="chart-range">
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+              </select>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="main-focus-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="card stat-widget">
+            <h3>Today's Progress</h3>
+            <div class="mini-progress-list" id="today-progress-list">
+              <!-- JS Injected -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics Tab -->
+      <section class="tab-pane" id="pane-analytics" style="display:none;">
+        <div class="analytics-header">
+          <h2>In-depth Performance</h2>
+        </div>
+        <div class="analytics-grid">
+          <div class="card">
+            <h3>Focus Depth Trend</h3>
+            <div class="chart-wrap">
+              <canvas id="flow-trend-chart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Distraction Hotspots</h3>
+            <div id="distraction-list" class="distraction-list">
+              <!-- Top distracting domains -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Tab -->
+      <section class="tab-pane" id="pane-history" style="display:none;">
+        <div class="card history-card">
+          <div class="card-header">
+            <h2>Session History</h2>
+            <button class="btn btn-ghost btn-sm" id="export-data">Export CSV</button>
+          </div>
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Duration</th>
+                  <th>Result</th>
+                  <th>Distractions</th>
+                  <th>Flow</th>
+                </tr>
+              </thead>
+              <tbody id="history-table-body">
+                <!-- JS Injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section class="tab-pane" id="pane-settings" style="display:none;">
+        <div class="settings-grid">
+          <div class="card">
+            <h3>Focus Configuration</h3>
+            <div class="setting-group">
+              <label>Default Session Length</label>
+              <div class="duration-options">
+                <button class="glass-btn btn-sm" data-mins="25">25m</button>
+                <button class="glass-btn btn-sm" data-mins="50">50m</button>
+                <button class="glass-btn btn-sm" data-mins="90">90m</button>
+              </div>
+            </div>
+            <div class="setting-group">
+              <div class="setting-row">
+                <span>Hard Block Mode</span>
+                <label class="toggle">
+                  <input type="checkbox" id="setting-hard-block">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <p class="hint">Hard block completely prevents access to distracting sites. Gentle mode only shows a nudge.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Managed Blocklist</h3>
+            <div class="blocklist-editor">
+              <div class="add-row">
+                <input type="text" id="new-block-domain" class="glass-input" placeholder="e.g. reddit.com">
+                <button class="btn btn-primary btn-sm" id="add-domain-btn">Add</button>
+              </div>
+              <div id="dashboard-block-list" class="domain-list scrollable">
+                <!-- JS Injected -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../shared/chart-utils.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

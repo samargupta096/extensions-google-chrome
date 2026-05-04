@@ -55,6 +55,7 @@
           <button class="tray-btn active" data-template="productivity">Daily Focus</button>
           <button class="tray-btn" data-template="dev">Developer</button>
           <button class="tray-btn" data-template="info">Information</button>
+          <button class="tray-btn" data-template="creator">Creator</button>
           <button class="tray-btn" data-template="custom">Customized</button>
           <div class="tray-divider"></div>
           <button id="lock-toggle-btn" class="tray-btn lock-btn-tray" title="Lock Dashboard (freeze layout)" aria-pressed="false">
@@ -123,6 +124,10 @@
       <div class="widget glass-card timer-widget slide-up" data-widget-id="timer" style="animation-delay: 0.2s;">
         <div class="widget-header-row">
           <h2>🍅 Focus Timer</h2>
+          <div class="widget-header-controls timer-modes">
+            <button id="timer-dashboard-btn" class="glass-btn btn-small btn-icon" title="Intelligence Dashboard">📊</button>
+            <button id="timer-settings-btn" class="glass-btn btn-small btn-icon" title="Focus Settings">⚙️</button>
+          </div>
         </div>
         
         <!-- Main Timer View -->
@@ -154,6 +159,25 @@
               </label>
             </div>
             <button id="reset-timer-btn" class="text-btn">Reset</button>
+          </div>
+
+          <!-- Today's Overview section -->
+          <div class="timer-stats-overview" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.05); width: 100%;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; text-align: center;">Today's Overview</div>
+            <div style="display: flex; gap: 0.5rem; justify-content: space-between;">
+              <div class="timer-stat-box" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 0.5rem; border-radius: 8px;">
+                <div id="today-sessions" style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">0</div>
+                <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Sessions</div>
+              </div>
+              <div class="timer-stat-box" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 0.5rem; border-radius: 8px;">
+                <div id="today-time" style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">0m</div>
+                <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Time</div>
+              </div>
+              <div class="timer-stat-box" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 0.5rem; border-radius: 8px;">
+                <div id="today-focus" style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">0%</div>
+                <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Focus</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -302,10 +326,11 @@
               <option value="">Loading...</option>
             </select>
             <button id="ollama-clear-btn" class="glass-btn" title="Clear chat">🗑️</button>
+            <button id="ai-settings-btn" class="glass-btn" title="AI Settings">⚙️</button>
           </div>
         </div>
         <div id="ollama-messages" class="ollama-messages">
-          <div class="ollama-welcome">Ask me anything... 💡<br><small>Requires Ollama running locally on port 11434</small></div>
+          <div class="ollama-welcome">Ask me anything... 💡<br><small>Local Ollama or OpenRouter</small></div>
         </div>
         <div class="ollama-input-row">
           <textarea
@@ -745,6 +770,293 @@
         <ul id="uuid-list" class="uuid-list"></ul>
       </div>
 
+      <!-- ===== CREATOR MODE WIDGETS ===== -->
+
+      <!-- What to Post Today Widget -->
+      <div class="widget glass-card creator-widget-glow postprompt-widget slide-up" data-widget-id="postprompt" style="animation-delay: 3.4s;">
+        <div class="widget-header-row">
+          <h2>🎯 What to Post</h2>
+          <div class="widget-header-controls">
+            <button id="postprompt-settings-btn" class="glass-btn btn-small" title="Edit Pillars">⚙️</button>
+            <button id="postprompt-refresh-btn" class="glass-btn btn-small" title="Refresh Prompts">↻</button>
+          </div>
+        </div>
+        <div id="postprompt-list" class="postprompt-list scrollable"></div>
+      </div>
+
+      <!-- Idea Backlog Widget -->
+      <div class="widget glass-card creator-widget-glow ideabacklog-widget slide-up" data-widget-id="ideabacklog" style="animation-delay: 3.5s;">
+        <div class="widget-header-row">
+          <h2>💡 Idea Backlog</h2>
+          <div class="widget-header-controls">
+            <select id="idea-filter" class="glass-select">
+              <option value="all">All</option>
+              <option value="new">💡 New</option>
+              <option value="inprogress">🔄 In Progress</option>
+              <option value="used">✅ Used</option>
+            </select>
+            <button id="idea-add-btn" class="glass-btn btn-primary btn-small">+</button>
+          </div>
+        </div>
+        <div id="idea-list" class="idea-list scrollable"></div>
+      </div>
+
+      <!-- Content Calendar Widget -->
+      <div class="widget glass-card creator-widget-glow contentcal-widget slide-up" data-widget-id="contentcal" style="animation-delay: 3.6s;">
+        <div class="widget-header-row">
+          <h2>📅 Content Calendar</h2>
+          <div class="widget-header-controls">
+            <button id="contentcal-prev" class="glass-btn btn-small">◀</button>
+            <span id="contentcal-week-label" class="widget-status-text"></span>
+            <button id="contentcal-next" class="glass-btn btn-small">▶</button>
+          </div>
+        </div>
+        <div id="contentcal-grid" class="contentcal-grid"></div>
+        <div id="contentcal-stats" class="contentcal-stats"></div>
+      </div>
+
+      <!-- Title & Hook Lab Widget -->
+      <div class="widget glass-card creator-widget-glow hooklab-widget slide-up" data-widget-id="hooklab" style="animation-delay: 3.7s;">
+        <div class="widget-header-row">
+          <h2>✍️ Hook Lab</h2>
+        </div>
+        <input type="text" id="hooklab-title" class="glass-input" placeholder="Working title..." style="margin-bottom:0.5rem;width:100%;box-sizing:border-box;">
+        <textarea id="hooklab-desc" class="glass-input" placeholder="Brief description (optional)..." style="width:100%;box-sizing:border-box;min-height:35px;resize:vertical;margin-bottom:0.5rem;font-size:0.85rem;"></textarea>
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+          <select id="hooklab-tone" class="glass-select" style="flex:1;">
+            <option value="beginner">Beginner</option>
+            <option value="advanced">Advanced</option>
+            <option value="story">Story</option>
+            <option value="controversial">Bold</option>
+          </select>
+          <select id="hooklab-platform" class="glass-select" style="flex:1;">
+            <option value="youtube">YouTube</option>
+            <option value="reels">Reel/Short</option>
+            <option value="x">X / Tweet</option>
+            <option value="newsletter">Newsletter</option>
+          </select>
+        </div>
+        <button id="hooklab-generate-btn" class="glass-btn btn-primary" style="width:100%;margin-bottom:0.5rem;">⚡ Generate</button>
+        <div id="hooklab-results" class="hooklab-results scrollable"></div>
+      </div>
+
+      <!-- Creator Energy Meter Widget -->
+      <div class="widget glass-card creator-widget-glow energymeter-widget slide-up" data-widget-id="energymeter" style="animation-delay: 3.8s;">
+        <div class="widget-header-row">
+          <h2>🔋 Creator Energy</h2>
+        </div>
+        <div class="energy-sliders">
+          <div class="energy-slider-row">
+            <label>Energy</label>
+            <input type="range" id="energy-slider" min="0" max="10" value="5" class="energy-range">
+            <span id="energy-val" class="energy-val">5</span>
+          </div>
+          <div class="energy-slider-row">
+            <label>Motivation</label>
+            <input type="range" id="motiv-slider" min="0" max="10" value="5" class="energy-range">
+            <span id="motiv-val" class="energy-val">5</span>
+          </div>
+          <div class="energy-slider-row">
+            <label>Stress</label>
+            <input type="range" id="stress-slider" min="0" max="10" value="3" class="energy-range stress-range">
+            <span id="stress-val" class="energy-val">3</span>
+          </div>
+        </div>
+        <button id="energy-save-btn" class="glass-btn btn-primary btn-small" style="width:100%;margin:0.5rem 0;">Save Check-in</button>
+        <div id="energy-summary" class="energy-summary"></div>
+        <canvas id="energy-chart" class="energy-chart" width="300" height="60"></canvas>
+      </div>
+
+      <!-- Monetization Tracker Widget -->
+      <div class="widget glass-card creator-widget-glow monetracker-widget slide-up" data-widget-id="monetracker" style="animation-delay: 3.9s;">
+        <div class="widget-header-row">
+          <h2>💰 Monetization</h2>
+          <div class="widget-header-controls">
+            <span id="monet-total" class="widget-status-text">$0/mo</span>
+          </div>
+        </div>
+        <div class="monet-yt-section">
+          <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+            <input type="number" id="monet-subs" class="glass-input" placeholder="Subscribers" style="flex:1;">
+            <input type="number" id="monet-hours" class="glass-input" placeholder="Watch Hrs" style="flex:1;">
+            <button id="monet-save-btn" class="glass-btn btn-primary btn-small">Update</button>
+          </div>
+          <div id="monet-progress"></div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.07);margin-top:0.5rem;padding-top:0.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+            <span style="font-size:0.8rem;color:var(--text-dim);">Income Streams</span>
+            <button id="monet-add-income-btn" class="glass-btn btn-small">+</button>
+          </div>
+          <div id="monet-income-list" class="monet-income-list scrollable"></div>
+          <div id="monet-risk" class="monet-risk"></div>
+        </div>
+      </div>
+
+      <!-- Experiment Tracker Widget -->
+      <div class="widget glass-card creator-widget-glow exptracker-widget slide-up" data-widget-id="exptracker" style="animation-delay: 4.0s;">
+        <div class="widget-header-row">
+          <h2>🧪 Experiments</h2>
+          <div class="widget-header-controls">
+            <button id="exp-add-btn" class="glass-btn btn-primary btn-small">+</button>
+          </div>
+        </div>
+        <div id="exp-list" class="exp-list scrollable"></div>
+      <!-- Thumbnail & Hook Checker Widget -->
+      <div class="widget glass-card creator-widget-glow thumbcheck-widget slide-up" data-widget-id="thumbcheck" style="animation-delay: 4.1s;">
+        <div class="widget-header-row">
+          <h2>🖼️ Thumbnail & Hook</h2>
+        </div>
+        <input type="text" id="thumbcheck-text" class="glass-input" placeholder="Thumbnail text (max 5 words)..." style="margin-bottom:0.5rem;width:100%;box-sizing:border-box;">
+        <input type="text" id="thumbcheck-hook" class="glass-input" placeholder="First line / hook..." style="margin-bottom:0.5rem;width:100%;box-sizing:border-box;">
+        <button id="thumbcheck-btn" class="glass-btn btn-primary" style="width:100%;margin-bottom:0.5rem;">🔍 Analyze</button>
+        <div id="thumbcheck-results" class="thumbcheck-results scrollable"></div>
+      </div>
+
+      <!-- Sponsorship CRM Widget -->
+      <div class="widget glass-card creator-widget-glow sponsorcrm-widget slide-up" data-widget-id="sponsorcrm" style="animation-delay: 4.2s;">
+        <div class="widget-header-row">
+          <h2>🤝 Sponsorship CRM</h2>
+          <div class="widget-header-controls">
+            <button id="sponsorcrm-rates-btn" class="glass-btn btn-small" title="Rate Card">📋</button>
+            <button id="sponsorcrm-add-btn" class="glass-btn btn-primary btn-small">+</button>
+          </div>
+        </div>
+        <div id="sponsorcrm-list" class="sponsorcrm-list scrollable"></div>
+      </div>
+
+      <!-- Platform Dependency Radar Widget -->
+      <div class="widget glass-card creator-widget-glow platformradar-widget slide-up" data-widget-id="platformradar" style="animation-delay: 4.3s;">
+        <div class="widget-header-row">
+          <h2>🕸️ Platform Radar</h2>
+          <div class="widget-header-controls">
+            <button id="radar-edit-btn" class="glass-btn btn-small" title="Edit Data">✏️</button>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:center; align-items:center; flex-grow:1; margin:0.5rem 0;">
+          <canvas id="radar-chart" width="280" height="200" style="max-width:100%;"></canvas>
+        </div>
+        <div id="radar-summary" class="radar-summary"></div>
+      </div>
+
+      <!-- Backup Checklist Widget -->
+      <div class="widget glass-card creator-widget-glow backupcheck-widget slide-up" data-widget-id="backupcheck" style="animation-delay: 4.4s;">
+        <div class="widget-header-row">
+          <h2>🛟 Security & Backup</h2>
+          <div class="widget-header-controls">
+            <span id="backupcheck-month" class="widget-status-text"></span>
+          </div>
+        </div>
+        <div id="backupcheck-list" class="backupcheck-list scrollable"></div>
+        <div id="backupcheck-progress" class="backupcheck-progress"></div>
+      </div>
+
+      <!-- ===== FLOWFORGE PRODUCTIVITY WIDGETS ===== -->
+
+      <!-- Habit Chains Widget -->
+      <div class="widget glass-card habitchain-widget slide-up" data-widget-id="habitchain" style="animation-delay: 4.5s;">
+        <div class="widget-header-row">
+          <h2>⚡ Habit Chains</h2>
+          <div class="widget-header-controls">
+            <span id="habitchain-streak" class="widget-status-text" style="color:var(--accent-yellow);">0</span>
+            <span style="font-size:11px;color:var(--text-tertiary);">🔥</span>
+            <button id="habitchain-add-btn" class="glass-btn btn-primary btn-small">+</button>
+          </div>
+        </div>
+        <div id="habitchain-form" style="display:none; margin-bottom:0.5rem;">
+          <input type="text" id="habitchain-name" class="glass-input" placeholder="Chain name..." style="margin-bottom:4px;">
+          <input type="text" id="habitchain-step1" class="glass-input" placeholder="Step 1: Trigger habit" style="margin-bottom:4px;">
+          <input type="text" id="habitchain-step2" class="glass-input" placeholder="Step 2: Then do...">
+          <div style="display:flex;gap:4px;margin-top:6px;justify-content:flex-end;">
+            <button id="habitchain-cancel" class="glass-btn btn-small">Cancel</button>
+            <button id="habitchain-save" class="glass-btn btn-primary btn-small">Save</button>
+          </div>
+        </div>
+        <div id="habitchain-list" class="habitchain-list scrollable"></div>
+      </div>
+
+      <!-- Time Blocks Widget -->
+      <div class="widget glass-card timeblocks-widget slide-up" data-widget-id="timeblocks" style="animation-delay: 4.6s;">
+        <div class="widget-header-row">
+          <h2>📅 Time Blocks</h2>
+          <div class="widget-header-controls">
+            <span id="timeblocks-count" class="widget-status-text">0</span>
+            <span style="font-size:11px;color:var(--text-tertiary);">blocks</span>
+          </div>
+        </div>
+        <div id="timeblocks-timeline" class="timeblocks-timeline scrollable"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.07);">
+          <span style="font-size:11px;color:var(--text-tertiary);">Planned:</span>
+          <span id="timeblocks-hours" style="font-size:13px;font-weight:700;">0h</span>
+        </div>
+      </div>
+
+      <!-- Deep Work Sessions Widget -->
+      <div class="widget glass-card deepworksession-widget slide-up" data-widget-id="deepworksession" style="animation-delay: 4.7s;">
+        <div class="widget-header-row">
+          <h2>🔥 Deep Work</h2>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+          <div class="timer-stat-box" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 0.5rem; border-radius: 8px;">
+            <div id="dws-total" style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">0h</div>
+            <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Focus</div>
+          </div>
+          <div class="timer-stat-box" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 0.5rem; border-radius: 8px;">
+            <div id="dws-sessions" style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">0</div>
+            <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Sessions</div>
+          </div>
+          <div class="timer-stat-box" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 0.5rem; border-radius: 8px;">
+            <div id="dws-quality" style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">--</div>
+            <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Quality</div>
+          </div>
+        </div>
+        <div id="dws-list" class="dws-list scrollable"></div>
+      </div>
+
+      <!-- Momentum Queue Widget -->
+      <div class="widget glass-card momentumqueue-widget slide-up" data-widget-id="momentumqueue" style="animation-delay: 4.8s;">
+        <div class="widget-header-row">
+          <h2>🚀 Momentum</h2>
+          <div class="widget-header-controls">
+            <span id="momentum-done" class="widget-status-text" style="color:var(--accent-green);">0</span>
+            <span style="font-size:11px;color:var(--text-tertiary);">done</span>
+            <span style="margin:0 2px;color:var(--text-tertiary);">·</span>
+            <span id="momentum-pending" class="widget-status-text">0</span>
+            <span style="font-size:11px;color:var(--text-tertiary);">pending</span>
+          </div>
+        </div>
+        <div id="momentum-list-widget" class="momentum-list-widget scrollable"></div>
+      </div>
+
+      <!-- Clipboard History Widget -->
+      <div class="widget glass-card clipboard-widget slide-up" data-widget-id="clipboard" style="animation-delay: 4.9s;">
+        <div class="widget-header-row">
+          <h2>📋 Clipboard History</h2>
+          <div class="widget-header-controls">
+            <button id="clear-clipboard-btn" class="glass-btn btn-small" title="Clear History">🗑️</button>
+          </div>
+        </div>
+        <div id="clipboard-list" class="clipboard-list scrollable">
+          <div style="text-align:center;padding:2rem;color:var(--text-tertiary);font-size:0.9rem;">
+            Copy something on any page to see it here!
+          </div>
+        </div>
+      </div>
+
+      <!-- No Zero Day Widget -->
+      <div class="widget glass-card nozeroday-widget slide-up" data-widget-id="nozeroday" style="animation-delay: 4.9s;">
+        <div class="widget-header-row">
+          <h2>🔴 No Zero Days</h2>
+          <div class="widget-header-controls">
+            <span id="nzd-streak-widget" class="widget-status-text" style="color:var(--accent-yellow);">0</span>
+            <span style="font-size:11px;">🔥</span>
+            <span style="margin:0 2px;color:var(--text-tertiary);">·</span>
+            <span id="nzd-pct-widget" class="widget-status-text">0%</span>
+          </div>
+        </div>
+        <div id="nzd-list-widget" class="nzd-list-widget scrollable"></div>
+      </div>
+
     </section>
     <!-- ===== END WIDGETS GRID ===== -->
 
@@ -815,5 +1127,26 @@
   <script src="js/iamdecoder.js"></script>
   <script src="js/materialpalette.js"></script>
   <script src="js/bookmarks.js"></script>
+  <!-- Creator Mode Widgets -->
+  <script src="js/ideabacklog.js"></script>
+  <script src="js/postprompt.js"></script>
+  <script src="js/contentcal.js"></script>
+  <script src="js/hooklab.js"></script>
+  <script src="js/energymeter.js"></script>
+  <script src="js/monetracker.js"></script>
+  <script src="js/exptracker.js"></script>
+  <script src="js/thumbcheck.js"></script>
+  <script src="js/sponsorcrm.js"></script>
+  <script src="js/platformradar.js"></script>
+  <script src="js/backupcheck.js"></script>
+  <!-- FlowForge Productivity Widgets -->
+  <script src="js/flowforgesync.js"></script>
+  <script src="js/celebration.js"></script>
+  <script src="js/habitchain.js"></script>
+  <script src="js/timeblocks.js"></script>
+  <script src="js/deepworksession.js"></script>
+  <script src="js/momentumqueue.js"></script>
+  <script src="js/clipboard.js"></script>
+  <script src="js/nozeroday.js"></script>
 </body>
 </html>

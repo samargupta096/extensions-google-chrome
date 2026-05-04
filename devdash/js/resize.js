@@ -15,51 +15,66 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ensure position:relative so handles position correctly
     widget.style.position = 'relative';
 
-    // ---------- Resize handle (bottom-right corner) ----------
-    const handle = document.createElement('div');
-    handle.className = 'resize-handle resize-d';
-    handle.title = 'Drag to resize';
-    widget.appendChild(handle);
-
+    // ---------- 8-way Resize handles ----------
+    const directions = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
+    
     let startX, startY, startW, startH;
 
-    handle.addEventListener('mousedown', (e) => {
-      // Respect dashboard lock
-      if (window.DevDashLock && window.DevDashLock.isLocked()) return;
+    directions.forEach(dir => {
+      const handle = document.createElement('div');
+      handle.className = `resize-handle resize-${dir}`;
+      if (dir === 'se') handle.title = 'Drag to resize';
+      widget.appendChild(handle);
 
-      e.preventDefault();
-      e.stopPropagation();           // don't trigger drag-and-drop
-      startX = e.clientX;
-      startY = e.clientY;
-      startW = widget.offsetWidth;
-      startH = widget.offsetHeight;
+      handle.addEventListener('mousedown', (e) => {
+        if (window.DevDashLock && window.DevDashLock.isLocked()) return;
 
-      const onMove = (me) => {
-        let newW = startW + (me.clientX - startX);
-        let newH = startH + (me.clientY - startY);
-        newW = Math.min(MAX_W, Math.max(MIN_W, newW));
-        newH = Math.min(MAX_H, Math.max(MIN_H, newH));
-        widget.style.width  = newW + 'px';
-        widget.style.height = newH + 'px';
-      };
+        e.preventDefault();
+        e.stopPropagation(); // don't trigger drag-and-drop
+        startX = e.clientX;
+        startY = e.clientY;
+        startW = widget.offsetWidth;
+        startH = widget.offsetHeight;
 
-      const onUp = () => {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-        saveSize(widget);
-      };
+        const onMove = (me) => {
+          let deltaX = me.clientX - startX;
+          let deltaY = me.clientY - startY;
+          let newW = startW;
+          let newH = startH;
 
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
+          // Compute new dimensions based on handle direction
+          if (dir.includes('e')) newW = startW + deltaX;
+          if (dir.includes('w')) newW = startW - deltaX;
+          if (dir.includes('s')) newH = startH + deltaY;
+          if (dir.includes('n')) newH = startH - deltaY;
 
-    // ---------- Double-click corner → reset to default ----------
-    handle.addEventListener('dblclick', (e) => {
-      if (window.DevDashLock && window.DevDashLock.isLocked()) return;
-      e.stopPropagation();
-      widget.style.width  = DEFAULT_W + 'px';
-      widget.style.height = DEFAULT_H + 'px';
-      saveSize(widget);
+          newW = Math.min(MAX_W, Math.max(MIN_W, newW));
+          newH = Math.min(MAX_H, Math.max(MIN_H, newH));
+
+          if (dir.includes('e') || dir.includes('w')) widget.style.width = newW + 'px';
+          if (dir.includes('s') || dir.includes('n')) widget.style.height = newH + 'px';
+        };
+
+        const onUp = () => {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          saveSize(widget);
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+
+      // Double-click on 'se' to reset
+      if (dir === 'se') {
+        handle.addEventListener('dblclick', (e) => {
+          if (window.DevDashLock && window.DevDashLock.isLocked()) return;
+          e.stopPropagation();
+          widget.style.width  = DEFAULT_W + 'px';
+          widget.style.height = DEFAULT_H + 'px';
+          saveSize(widget);
+        });
+      }
     });
   });
 

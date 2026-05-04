@@ -71,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   engineOptions.forEach(opt => {
-    opt.addEventListener('click', () => {
+    opt.addEventListener('click', (e) => {
+      e.stopPropagation();
       setEngine(opt.dataset.engine);
       engineDropdown.classList.remove('active');
     });

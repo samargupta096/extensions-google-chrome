@@ -31,7 +31,40 @@ document.addEventListener('DOMContentLoaded', () => {
       textSpan.addEventListener('click', () => {
         todos[index].completed = !todos[index].completed;
         saveTodos();
-        renderTodos();
+        if (todos[index].completed) {
+          li.classList.add('completed');
+        } else {
+          li.classList.remove('completed');
+        }
+      });
+
+      // Inline editing
+      textSpan.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'glass-input inline-edit-input';
+        input.value = todo.text;
+        input.style.width = '100%';
+        
+        const saveEdit = () => {
+          const newText = input.value.trim();
+          if (newText && newText !== todo.text) {
+            todos[index].text = newText;
+            saveTodos();
+          }
+          renderTodos();
+        };
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') saveEdit();
+          if (e.key === 'Escape') renderTodos();
+        });
+
+        input.addEventListener('blur', saveEdit);
+
+        textSpan.replaceWith(input);
+        input.focus();
       });
 
       const deleteBtn = document.createElement('button');

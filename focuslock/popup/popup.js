@@ -14,6 +14,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSessionControls();
   initSettings();
   startStatusPoll();
+
+  const dashboardBtn = $('dashboardBtn');
+  const expandBtn = $('expandBtn');
+  
+  if (dashboardBtn) {
+    dashboardBtn.onclick = () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('dashboard/dashboard.html') });
+    };
+  }
+
+  if (expandBtn) {
+    expandBtn.onclick = () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('fullpage.html') });
+    };
+  }
 });
 
 // ─── Tabs ───
