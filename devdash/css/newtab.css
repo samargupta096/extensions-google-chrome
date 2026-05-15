@@ -447,6 +447,7 @@ button {
   margin: 0;
   overflow-y: auto;
   flex-grow: 1;
+  min-height: 0;
 }
 
 /* Scrollbar styling for item-list */
@@ -479,6 +480,7 @@ button {
   gap: 0.5rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
 }
 .item-list li.completed .item-text {
   text-decoration: line-through;
@@ -656,6 +658,9 @@ button {
   flex-direction: column;
   gap: 0.75rem;
   padding-right: 0.5rem;
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .clipboard-item {
@@ -663,10 +668,10 @@ button {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px 15px;
   cursor: pointer;
   transition: all 0.2s ease;
-  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .clipboard-item:hover {
@@ -677,11 +682,12 @@ button {
 
 .clipboard-text {
   font-size: 0.85rem;
+  line-height: 1.5;
   color: var(--text-main);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
   max-width: 100%;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .copy-badge {
@@ -1304,6 +1310,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-height: 0;
 }
 .news-item {
   display: flex !important;
@@ -1312,6 +1319,7 @@ button {
   gap: 0.2rem;
   padding: 0.6rem 0 !important;
   border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  flex-shrink: 0;
 }
 .news-title {
   color: var(--text-main);
@@ -1320,7 +1328,7 @@ button {
   font-weight: 500;
   line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   transition: color 0.2s;
@@ -1510,9 +1518,9 @@ button {
   background: rgba(0, 0, 0, 0.4);
   border-radius: 6px;
   min-height: 80px;
-  max-height: 150px;
   overflow-y: auto;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  flex-grow: 1;
 }
 .regex-result {
   font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
@@ -1669,7 +1677,7 @@ button {
   font-size: 0.8rem;
   color: #a6e22e; /* green-ish typical of JSON strings */
   overflow: auto;
-  max-height: 150px;
+  min-height: 0;
   white-space: pre-wrap;
 }
 
@@ -1769,7 +1777,7 @@ button {
   margin: 0;
   flex-grow: 1;
   overflow-y: auto;
-  max-height: 180px;
+  min-height: 0;
 }
 .uuid-item {
   display: flex;
@@ -2145,9 +2153,10 @@ button {
 }
 
 .scrollable {
-  max-height: 120px;
   overflow-y: auto;
   padding-right: 4px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .scrollable::-webkit-scrollbar {
@@ -2190,7 +2199,7 @@ button {
   font-size: 0.75rem;
   color: #a8c7fa;
   margin: 0;
-  max-height: 150px;
+  min-height: 0;
 }
 
 /* Color Utility Widget */
@@ -2364,7 +2373,8 @@ button {
 
 /* Cron Sentinel Widget */
 .cron-job-list {
-  max-height: 200px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .cron-item {
@@ -2456,10 +2466,11 @@ button {
 }
 
 .http-code-list {
-  max-height: 200px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .http-code-item {
@@ -2577,10 +2588,11 @@ button {
    Command CheatSheet Widget
    ==================================================== */
 .cheat-list {
-  max-height: 220px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .cheat-item {
@@ -2604,11 +2616,11 @@ button {
   background: rgba(0, 0, 0, 0.3);
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
   flex-shrink: 0;
   max-width: 45%;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .cheat-desc {
@@ -2617,8 +2629,8 @@ button {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .cheat-copy-btn {
@@ -2639,10 +2651,11 @@ button {
    Cloud Region Compass Widget
    ==================================================== */
 .region-list {
-  max-height: 220px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .region-item {
@@ -2693,10 +2706,11 @@ button {
 }
 
 .env-var-list {
-  max-height: 180px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .env-var-item {
@@ -2726,8 +2740,8 @@ button {
   color: var(--text-dim);
   flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .env-copy-btn, .env-del-btn {
@@ -2776,10 +2790,11 @@ button {
    Docker Status Monitor Widget
    ==================================================== */
 .docker-list {
-  max-height: 220px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .docker-item {
@@ -2871,10 +2886,11 @@ button {
 }
 
 .mat-palette-grid {
-  max-height: 220px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .mat-palette-row {
@@ -3362,8 +3378,8 @@ button {
   color: var(--text-main);
   flex-grow: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .idea-item-tags {
@@ -3877,8 +3893,9 @@ button {
 }
 
 .monet-income-list {
-  max-height: 100px;
   overflow-y: auto;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .monet-income-row {
@@ -3895,8 +3912,8 @@ button {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .monet-income-input-wrap {
@@ -4340,7 +4357,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: 220px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .hc-chain {
@@ -4423,7 +4441,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  max-height: 200px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .tb-block {
@@ -4480,7 +4499,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  max-height: 150px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .dws-item {
@@ -4497,8 +4517,8 @@ button {
   color: var(--text-main);
   flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .dws-dur {
@@ -4523,7 +4543,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  max-height: 200px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .mom-item {
@@ -4555,8 +4576,8 @@ button {
   color: var(--text-main);
   flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .mom-item.done .mom-text {
@@ -4579,7 +4600,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  max-height: 200px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .nzd-item {
@@ -4628,8 +4650,8 @@ button {
   color: var(--text-main);
   flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 .nzd-item.done .nzd-name-w {

@@ -20,27 +20,55 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderGraph(username) {
     if (!username) return;
     
-    // 1. Contribution Graph
-    // Using github-readme-activity-graph with transparent background (bg_color=00000000)
     const graphContainer = document.getElementById('github-graph-container');
+    const statsContainer = document.getElementById('github-stats-card');
+
     if (graphContainer) {
-      graphContainer.innerHTML = `<img src="https://github-readme-activity-graph.vercel.app/graph?username=${username}&bg_color=00000000&color=4facfe&line=4facfe&point=fff&hide_border=true&area=true" alt="${username}'s GitHub Activity" style="width: 100%; border-radius: 8px;"/>`;
+      graphContainer.innerHTML = `<div class="news-loading">⏳ Loading activity graph...</div>`;
+      const img = new Image();
+      img.src = `https://github-readme-activity-graph.vercel.app/graph?username=${username}&bg_color=00000000&color=4facfe&line=4facfe&point=fff&hide_border=true&area=true`;
+      img.alt = `${username}'s GitHub Activity`;
+      img.style.width = '100%';
+      img.style.borderRadius = '8px';
+      img.onload = () => {
+        graphContainer.innerHTML = '';
+        graphContainer.appendChild(img);
+      };
+      img.onerror = () => {
+        graphContainer.innerHTML = `<p class="placeholder-text" style="color:#ff6b6b;">⚠️ Failed to load activity graph.</p>`;
+      };
     }
 
-    // 2. Stats Card
-    const statsContainer = document.getElementById('github-stats-card');
     if (statsContainer) {
-      // Using github-readme-stats with transparent theme
+      statsContainer.innerHTML = `<div class="news-loading">⏳ Loading stats...</div>`;
       const statsUrl = `https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true&theme=transparent&hide_border=true&title_color=4facfe&icon_color=4facfe&text_color=ffffff&bg_color=00000000`;
-      statsContainer.innerHTML = `<img src="${statsUrl}" alt="${username}'s Stats" style="width: 100%; border-radius: 8px;"/>`;
+      const img = new Image();
+      img.src = statsUrl;
+      img.alt = `${username}'s Stats`;
+      img.style.width = '100%';
+      img.style.borderRadius = '8px';
+      img.onload = () => {
+        statsContainer.innerHTML = '';
+        statsContainer.appendChild(img);
+      };
+      img.onerror = () => {
+        statsContainer.innerHTML = `<p class="placeholder-text" style="color:#ff6b6b;">⚠️ Failed to load stats card.</p>`;
+      };
     }
   }
 
   saveBtn.addEventListener('click', () => {
     const username = usernameInput.value.trim();
     if (username) {
-      chrome.storage.local.set({ githubUsername: username });
-      renderGraph(username);
+      saveBtn.textContent = '...';
+      saveBtn.disabled = true;
+      chrome.storage.local.set({ githubUsername: username }, () => {
+        renderGraph(username);
+        setTimeout(() => {
+          saveBtn.textContent = 'Set';
+          saveBtn.disabled = false;
+        }, 1000);
+      });
     }
   });
 
