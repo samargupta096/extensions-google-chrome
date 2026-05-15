@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let visibleWidgets = [...defaultVisible];
 
   const templates = {
-    all: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'github', 'githubstats', 'news', 'ghmonitor', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday', 'clipboard'],
-    dev: ['github', 'githubstats', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'clipboard'],
+    all: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'github', 'news', 'ghmonitor', 'sysmonitor', 'ollama', 'stackoverflow', 'worldclock', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday', 'clipboard'],
+    dev: ['github', 'ghmonitor', 'sysmonitor', 'regex', 'epoch', 'npmtracker', 'bundlesize', 'jsonformatter', 'jwt', 'base64', 'uuid', 'stackoverflow', 'ollama', 'apitester', 'colorutility', 'traceviewer', 'cronsentinel', 'httpref', 'dppxconverter', 'cmdcheat', 'regioncompass', 'envvault', 'intentbuilder', 'dockermon', 'iamdecoder', 'materialpalette', 'clipboard'],
     productivity: ['quote', 'weather', 'goals', 'todo', 'links', 'timer', 'scratchpad', 'habitchain', 'timeblocks', 'deepworksession', 'momentumqueue', 'nozeroday', 'clipboard'],
-    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'githubstats', 'clipboard'],
+    info: ['news', 'stackoverflow', 'worldclock', 'weather', 'github', 'clipboard'],
     creator: ['postprompt', 'ideabacklog', 'contentcal', 'hooklab', 'energymeter', 'monetracker', 'exptracker', 'thumbcheck', 'sponsorcrm', 'platformradar', 'backupcheck', 'quote', 'timer', 'ollama', 'clipboard'],
     custom: [] // Customized/Personalized
   };
@@ -44,8 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="timer" checked> Focus Timer</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="todo" checked> Today's Tasks</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="links" checked> Quick Links</label>
-        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="github" checked> GitHub Graph</label>
-        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="githubstats" checked> GitHub Stats</label>
+        <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="github" checked> GitHub Insights</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="news" checked> Tech News</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="ghmonitor" checked> PR Monitor</label>
         <label draggable="true"><span class="list-drag-handle">⠿</span><input type="checkbox" value="scratchpad" checked> Scratchpad</label>

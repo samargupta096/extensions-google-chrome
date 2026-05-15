@@ -11,6 +11,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!progressEl) return;
 
+  // Add settings and sync buttons if they don't exist
+  const widgetEl = document.querySelector('[data-widget-id="monetracker"]');
+  const headerControls = widgetEl?.querySelector('.widget-header-controls');
+  
+  if (headerControls && !document.getElementById('monet-sync-btn')) {
+    const syncBtn = document.createElement('button');
+    syncBtn.id = 'monet-sync-btn';
+    syncBtn.className = 'glass-btn btn-small';
+    syncBtn.title = 'Sync with YouTube API';
+    syncBtn.textContent = '↻';
+    syncBtn.style.marginRight = '4px';
+    headerControls.prepend(syncBtn);
+
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id = 'monet-config-btn';
+    settingsBtn.className = 'glass-btn btn-small';
+    settingsBtn.title = 'API Settings';
+    settingsBtn.textContent = '⚙️';
+    settingsBtn.style.marginRight = '4px';
+    headerControls.prepend(settingsBtn);
+
+    settingsBtn.addEventListener('click', () => window.CreatorSettings?.showModal());
+    syncBtn.addEventListener('click', () => fetchYouTubeStats());
+  }
+
   const STORAGE_KEY = 'creator_monetization';
   let data = { subs: 0, watchHours: 0, income: [] };
 
@@ -26,6 +51,48 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProgress();
     renderIncome();
   });
+
+  async function fetchYouTubeStats() {
+    const syncBtn = document.getElementById('monet-sync-btn');
+    if (!window.CreatorSettings) return;
+    
+    const config = await window.CreatorSettings.getConfig();
+    if (!config.youtubeApiKey || !config.youtubeChannelId) {
+      alert('Please set your YouTube API Key and Channel ID in settings first.');
+      window.CreatorSettings.showModal();
+      return;
+    }
+
+    if (syncBtn) syncBtn.textContent = '⌛';
+    
+    try {
+      const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${config.youtubeChannelId}&key=${config.youtubeApiKey}`;
+      const res = await fetch(url);
+      const json = await res.json();
+
+      if (json.items && json.items.length > 0) {
+        const stats = json.items[0].statistics;
+        data.subs = parseInt(stats.subscriberCount) || data.subs;
+        
+        if (subsInput) subsInput.value = data.subs;
+        save();
+        renderProgress();
+        if (syncBtn) syncBtn.textContent = '✅';
+        
+        // Notify other widgets
+        window.dispatchEvent(new CustomEvent('creator-data-synced', { 
+          detail: { platform: 'YouTube', value: data.subs } 
+        }));
+      } else {
+        throw new Error('Channel not found or API error');
+      }
+    } catch (e) {
+      console.error('YouTube Sync Failed:', e);
+      if (syncBtn) syncBtn.textContent = '❌';
+    } finally {
+      setTimeout(() => { if (syncBtn) syncBtn.textContent = '↻'; }, 2000);
+    }
+  }
 
   function save() {
     chrome.storage.local.set({ [STORAGE_KEY]: data });
@@ -82,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `).join('');
 
-    // Bind amount changes
     incomeEl.querySelectorAll('.monet-amount-input').forEach(inp => {
       inp.addEventListener('change', () => {
         const idx = parseInt(inp.dataset.idx);
@@ -108,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const total = income.reduce((s, i) => s + (i.amount || 0), 0);
     if (totalEl) totalEl.textContent = `$${total.toLocaleString()}/mo`;
 
-    // Risk check
     if (riskEl && total > 0) {
       const max = Math.max(...income.map(i => i.amount || 0));
       const maxPct = (max / total) * 100;

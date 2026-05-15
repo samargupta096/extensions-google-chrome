@@ -5,8 +5,7 @@
 <h1 align="center">🚀 DevDash</h1>
 
 <p align="center">
-  <strong>The Ultimate Developer Productivity Dashboard for Your New Tab</strong><br>
-  <em>41+ widgets · Fully customizable · 100% local & private · Zero cloud dependency</em>
+  DevDash is a local‑first new‑tab dashboard for developers and creators that cuts context switching and helps you ship more work in less time — with your to‑dos, dev tools, system stats, and AI all in one focused view.
 </p>
 
 <p align="center">

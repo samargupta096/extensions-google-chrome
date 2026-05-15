@@ -38,8 +38,13 @@
     "https://api.github.com/*",
     "https://api.openweathermap.org/*",
     "https://api.stackexchange.com/*",
-    "https://ghchart.rshah.org/*"
+    "https://ghchart.rshah.org/*",
+    "https://github-readme-stats.vercel.app/*",
+    "https://github-readme-activity-graph.vercel.app/*"
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; img-src 'self' https://* data:;"
+  },
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

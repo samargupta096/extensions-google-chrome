@@ -26,6 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSummary();
   });
 
+  // Listen for sync events from other widgets
+  window.addEventListener('creator-data-synced', (e) => {
+    const { platform, value } = e.detail;
+    if (radarData.hasOwnProperty(platform)) {
+      radarData[platform] = value;
+      save();
+      renderChart();
+      renderSummary();
+    }
+  });
+
   function save() {
     chrome.storage.local.set({ [STORAGE_KEY]: radarData });
   }
@@ -42,12 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cx = w / 2;
     const cy = h / 2;
-    const radius = Math.min(w, h) / 2 - 25; // padding for labels
+    const radius = Math.min(w, h) / 2 - 25; 
     const labels = Object.keys(radarData);
     const values = Object.values(radarData);
     const maxVal = Math.max(...values, 1);
     
-    // Draw background grid
     ctx.strokeStyle = 'rgba(255,255,255,0.1)';
     ctx.lineWidth = 1;
     for (let level = 1; level <= 4; level++) {
@@ -64,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.stroke();
     }
 
-    // Draw axes & labels
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
     ctx.font = '10px Inter, sans-serif';
     ctx.textAlign = 'center';
@@ -75,28 +84,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const x = cx + Math.cos(angle) * radius;
       const y = cy + Math.sin(angle) * radius;
       
-      // axis line
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(x, y);
       ctx.stroke();
 
-      // label
       const lx = cx + Math.cos(angle) * (radius + 15);
       const ly = cy + Math.sin(angle) * (radius + 15);
       ctx.fillText(labels[i], lx, ly);
     }
 
-    // Draw data polygon
     ctx.beginPath();
     for (let i = 0; i < labels.length; i++) {
       const val = radarData[labels[i]] || 0;
-      // use log scale for better visualization of disparity
       const logMax = Math.log10(maxVal);
       const logVal = val > 0 ? Math.log10(val) : 0;
       const ratio = logMax > 0 ? logVal / logMax : 0;
       
-      const r = radius * Math.max(0.1, ratio); // min 10% for visibility
+      const r = radius * Math.max(0.1, ratio); 
       const angle = (Math.PI * 2 * i) / labels.length - Math.PI / 2;
       const x = cx + Math.cos(angle) * r;
       const y = cy + Math.sin(angle) * r;
@@ -106,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     ctx.closePath();
     
-    // Fill and stroke
     ctx.fillStyle = 'rgba(79, 172, 254, 0.3)';
     ctx.fill();
     ctx.strokeStyle = '#4facfe';
