@@ -1,4 +1,9 @@
 // background.js — Focus Timer & Blocking Engine
+
+// ─── Side Panel: open DevDash beside the active tab ───
+chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
+  .catch(() => { /* sidePanel API unavailable */ });
+
 let timeRemaining = 25 * 60;
 let isRunning = false;
 let currentMode = 'work';

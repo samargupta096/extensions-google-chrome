@@ -1,4 +1,5 @@
-// Ollama Chat Widget — Chat with local Ollama instance
+// AI Chat Widget — Multi-Provider Chat Engine
+// Supports: Ollama (local), OpenRouter, OpenAI, Groq, Google Gemini
 document.addEventListener('DOMContentLoaded', () => {
   const chatMessages = document.getElementById('ollama-messages');
   const chatInput = document.getElementById('ollama-input');
@@ -7,181 +8,426 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusDot = document.getElementById('ollama-status-dot');
   const statusText = document.getElementById('ollama-status-text');
   const clearBtn = document.getElementById('ollama-clear-btn');
+  const settingsBtn = document.getElementById('ai-settings-btn');
 
   if (!chatMessages || !chatInput) return;
 
-  const OLLAMA_BASE = 'http://localhost:11434';
   let isConnected = false;
   let isStreaming = false;
   const conversationHistory = [];
-  
-  let aiConfig = {
-    provider: 'ollama', // 'ollama' or 'openrouter'
-    openRouterKey: '',
-    openRouterModel: 'openai/gpt-4o'
+  let cachedModels = {};          // keyed by provider id
+
+  /* ═══════════════════════════════════════════════════════════
+     Provider Registry
+     ═══════════════════════════════════════════════════════════ */
+  const PROVIDERS = {
+    ollama: {
+      name: 'Ollama (Local)',
+      requiresKey: false,
+      defaultBaseUrl: 'http://localhost:11434',
+      defaultModel: '',
+      // --- models ---
+      modelsUrl(cfg)     { return `${cfg.baseUrl || 'http://localhost:11434'}/api/tags`; },
+      modelsHeaders()    { return {}; },
+      parseModels(json)  { return (json.models || []).map(m => m.name); },
+      modelLabel(id)     { return id.split(':')[0]; },
+      // --- chat ---
+      chatUrl(cfg)       { return `${cfg.baseUrl || 'http://localhost:11434'}/api/chat`; },
+      chatHeaders()      { return { 'Content-Type': 'application/json' }; },
+      buildBody(model, messages) {
+        return JSON.stringify({ model, messages, stream: true });
+      },
+      parseStream: 'ndjson'
+    },
+
+    openrouter: {
+      name: 'OpenRouter',
+      requiresKey: true,
+      defaultModel: 'openai/gpt-4o',
+      modelsUrl()        { return 'https://openrouter.ai/api/v1/models'; },
+      modelsHeaders(cfg) { return { 'Authorization': `Bearer ${cfg.apiKey}` }; },
+      parseModels(json)  { return (json.data || []).map(m => m.id).sort(); },
+      modelLabel(id)     { return id.split('/').pop(); },
+      chatUrl()          { return 'https://openrouter.ai/api/v1/chat/completions'; },
+      chatHeaders(cfg)   {
+        return {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cfg.apiKey}`,
+          'HTTP-Referer': 'https://github.com/samargupta096/devdash',
+          'X-Title': 'DevDash'
+        };
+      },
+      buildBody(model, messages) {
+        return JSON.stringify({ model, messages, stream: true });
+      },
+      parseStream: 'sse'
+    },
+
+    openai: {
+      name: 'OpenAI',
+      requiresKey: true,
+      defaultModel: 'gpt-4o',
+      modelsUrl()        { return 'https://api.openai.com/v1/models'; },
+      modelsHeaders(cfg) { return { 'Authorization': `Bearer ${cfg.apiKey}` }; },
+      parseModels(json)  {
+        return (json.data || [])
+          .map(m => m.id)
+          .filter(id => /^(gpt-|o[1-9]|chatgpt)/.test(id))
+          .sort();
+      },
+      modelLabel(id)     { return id; },
+      chatUrl()          { return 'https://api.openai.com/v1/chat/completions'; },
+      chatHeaders(cfg)   {
+        return {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cfg.apiKey}`
+        };
+      },
+      buildBody(model, messages) {
+        return JSON.stringify({ model, messages, stream: true });
+      },
+      parseStream: 'sse'
+    },
+
+    groq: {
+      name: 'Groq',
+      requiresKey: true,
+      defaultModel: '',
+      modelsUrl()        { return 'https://api.groq.com/openai/v1/models'; },
+      modelsHeaders(cfg) { return { 'Authorization': `Bearer ${cfg.apiKey}` }; },
+      parseModels(json)  {
+        return (json.data || [])
+          .map(m => m.id)
+          .filter(id => !/whisper/.test(id))
+          .sort();
+      },
+      modelLabel(id)     { return id; },
+      chatUrl()          { return 'https://api.groq.com/openai/v1/chat/completions'; },
+      chatHeaders(cfg)   {
+        return {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cfg.apiKey}`
+        };
+      },
+      buildBody(model, messages) {
+        return JSON.stringify({ model, messages, stream: true });
+      },
+      parseStream: 'sse'
+    },
+
+    gemini: {
+      name: 'Google Gemini',
+      requiresKey: true,
+      defaultModel: '',
+      modelsUrl(cfg)     { return `https://generativelanguage.googleapis.com/v1beta/models?key=${cfg.apiKey}&pageSize=100`; },
+      modelsHeaders()    { return {}; },
+      parseModels(json)  {
+        return (json.models || [])
+          .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+          .map(m => m.name.replace('models/', ''))
+          .sort();
+      },
+      modelLabel(id)     { return id; },
+      chatUrl(cfg, model){ return `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${cfg.apiKey}`; },
+      chatHeaders()      { return { 'Content-Type': 'application/json' }; },
+      buildBody(_model, messages) {
+        // Translate OpenAI-style messages → Gemini contents format
+        const contents = messages.map(m => ({
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: m.content }]
+        }));
+        return JSON.stringify({ contents });
+      },
+      parseStream: 'gemini-sse'
+    }
   };
 
-  const settingsBtn = document.getElementById('ai-settings-btn');
+  /* ═══════════════════════════════════════════════════════════
+     Config Management
+     ═══════════════════════════════════════════════════════════ */
+  const DEFAULT_CONFIG = {
+    provider: 'ollama',
+    providers: {}
+  };
+  // Initialise defaults for every provider
+  for (const [key, p] of Object.entries(PROVIDERS)) {
+    DEFAULT_CONFIG.providers[key] = {
+      apiKey: '',
+      model: p.defaultModel || '',
+      ...(p.defaultBaseUrl ? { baseUrl: p.defaultBaseUrl } : {})
+    };
+  }
 
-  // Load API key initially
+  let aiConfig = structuredClone(DEFAULT_CONFIG);
+
+  function migrateOldConfig(raw) {
+    // Old format: { provider, openRouterKey, openRouterModel, ollamaModel }
+    if (raw && raw.openRouterKey !== undefined && !raw.providers) {
+      const migrated = structuredClone(DEFAULT_CONFIG);
+      migrated.provider = raw.provider || 'ollama';
+      if (raw.openRouterKey) migrated.providers.openrouter.apiKey = raw.openRouterKey;
+      if (raw.openRouterModel) migrated.providers.openrouter.model = raw.openRouterModel;
+      if (raw.ollamaModel) migrated.providers.ollama.model = raw.ollamaModel;
+      return migrated;
+    }
+    return null;
+  }
+
+  // Load config
   chrome.storage.local.get(['aiConfig'], (res) => {
     if (res.aiConfig) {
-      aiConfig = { ...aiConfig, ...res.aiConfig };
+      const migrated = migrateOldConfig(res.aiConfig);
+      if (migrated) {
+        aiConfig = migrated;
+        chrome.storage.local.set({ aiConfig });
+      } else {
+        // Merge stored config over defaults (handles new providers added later)
+        aiConfig = { ...structuredClone(DEFAULT_CONFIG), ...res.aiConfig };
+        aiConfig.providers = { ...structuredClone(DEFAULT_CONFIG.providers), ...res.aiConfig.providers };
+      }
     }
     checkConnection();
   });
 
-  // Settings Modal
-  settingsBtn && settingsBtn.addEventListener('click', () => {
-    const overlay = document.createElement('div');
-    overlay.className = 'env-modal-overlay';
-    overlay.innerHTML = `
-      <div class="env-modal glass-card" style="width:320px;padding:1.5rem;border-radius:var(--widget-radius);animation:modalScaleIn 0.2s ease-out;">
-        <h3 style="margin:0 0 1rem 0;">⚙️ AI Settings</h3>
-        
-        <div style="margin-bottom: 1rem;">
-          <label style="font-size:0.8rem;color:var(--text-dim);display:block;margin-bottom:0.5rem;">AI Provider</label>
-          <div style="display:flex;gap:1rem;">
-            <label style="font-size:0.85rem;cursor:pointer;">
-              <input type="radio" name="ai-provider" value="ollama" ${aiConfig.provider === 'ollama' ? 'checked' : ''}> Local Ollama
-            </label>
-            <label style="font-size:0.85rem;cursor:pointer;">
-              <input type="radio" name="ai-provider" value="openrouter" ${aiConfig.provider === 'openrouter' ? 'checked' : ''}> OpenRouter (Cloud)
-            </label>
-          </div>
-        </div>
+  function saveConfig() {
+    chrome.storage.local.set({ aiConfig });
+  }
 
-        <div id="or-settings" style="display: ${aiConfig.provider === 'openrouter' ? 'block' : 'none'};">
-          <label style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.3rem;display:block;">OpenRouter API Key</label>
-          <input type="password" id="ai-or-key" class="glass-input" style="width:100%;margin-bottom:0.75rem;box-sizing:border-box;" placeholder="sk-or-v1-..." value="${aiConfig.openRouterKey}">
-        </div>
+  function activeProvider()    { return PROVIDERS[aiConfig.provider]; }
+  function activeProviderCfg() { return aiConfig.providers[aiConfig.provider] || {}; }
 
-        <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1rem;">
-          <button id="ai-settings-cancel" class="glass-btn">Cancel</button>
-          <button id="ai-settings-save" class="glass-btn btn-primary">Save</button>
-        </div>
-      </div>`;
-    document.body.appendChild(overlay);
-
-    const providerRadios = overlay.querySelectorAll('input[name="ai-provider"]');
-    const orSettings = overlay.querySelector('#or-settings');
-    
-    providerRadios.forEach(r => {
-      r.addEventListener('change', (e) => {
-        if (e.target.value === 'openrouter') {
-          orSettings.style.display = 'block';
-        } else {
-          orSettings.style.display = 'none';
-        }
-      });
-    });
-
-    overlay.querySelector('#ai-settings-cancel').addEventListener('click', () => document.body.removeChild(overlay));
-    overlay.querySelector('#ai-settings-save').addEventListener('click', () => {
-      aiConfig.provider = overlay.querySelector('input[name="ai-provider"]:checked').value;
-      aiConfig.openRouterKey = overlay.querySelector('#ai-or-key').value.trim();
-      
-      chrome.storage.local.set({ aiConfig });
-      document.body.removeChild(overlay);
-      modelSelect.innerHTML = '<option value="">Loading...</option>';
-      checkConnection();
-    });
-  });
-
-  let cachedOrModels = [];
-
-  // Check connections and load models
+  /* ═══════════════════════════════════════════════════════════
+     Connection & Model Fetching
+     ═══════════════════════════════════════════════════════════ */
   async function checkConnection() {
-    if (aiConfig.provider === 'ollama') {
-      try {
-        const res = await fetch(`${OLLAMA_BASE}/api/tags`, { signal: AbortSignal.timeout(2000) });
-        if (res.ok) {
-          const data = await res.json();
-          isConnected = true;
-          setStatus();
-          populateModels(data.models ? data.models.map(m => m.name) : [], 'ollama');
-        } else {
-          throw new Error();
-        }
-      } catch {
-        isConnected = false;
-        setStatus();
-        modelSelect.innerHTML = '<option value="">Ollama Offline</option>';
-      }
-    } else {
-      // OpenRouter selected
-      isConnected = !!aiConfig.openRouterKey;
-      setStatus();
-      if (isConnected) {
-        if (cachedOrModels.length === 0) {
-          try {
-            const res = await fetch('https://openrouter.ai/api/v1/models');
-            if (res.ok) {
-              const data = await res.json();
-              cachedOrModels = data.data.map(m => m.id).sort((a,b) => a.localeCompare(b));
-            }
-          } catch(e) {
-            console.warn('Failed to fetch OpenRouter models:', e);
-          }
-        }
-        populateModels(cachedOrModels, 'openrouter');
-      } else {
-        modelSelect.innerHTML = '<option value="">Missing API Key</option>';
-      }
-    }
-  }
+    const pid = aiConfig.provider;
+    const p = PROVIDERS[pid];
+    const cfg = activeProviderCfg();
 
-  function setStatus() {
-    if (statusDot) {
-      statusDot.className = `ollama-status-dot ${isConnected ? 'connected' : 'disconnected'}`;
-      statusDot.style.backgroundColor = ''; // reset to default green
-      statusDot.style.boxShadow = '';
-    }
-    if (statusText) {
-      if (aiConfig.provider === 'openrouter') {
-        statusText.textContent = isConnected ? 'OpenRouter API' : 'Missing API Key';
-      } else {
-        statusText.textContent = isConnected ? '' : 'Ollama offline';
-      }
-    }
-  }
-
-  function populateModels(models, provider) {
-    if (!modelSelect) return;
-    modelSelect.innerHTML = '';
-    
-    if (models.length === 0) {
-      modelSelect.innerHTML = '<option value="">No models available</option>';
+    // If key is required but missing
+    if (p.requiresKey && !cfg.apiKey) {
+      isConnected = false;
+      setStatus('Missing API Key');
+      modelSelect.innerHTML = '<option value="">Set API Key in ⚙️</option>';
       return;
     }
 
+    try {
+      const url = p.modelsUrl(cfg);
+      const headers = p.modelsHeaders(cfg);
+      const res = await fetch(url, { headers, signal: AbortSignal.timeout(5000) });
+
+      if (!res.ok) throw new Error(`${res.status}`);
+
+      const data = await res.json();
+      const models = p.parseModels(data);
+      cachedModels[pid] = models;
+      isConnected = true;
+      setStatus(p.name);
+      populateModels(models, pid);
+    } catch (e) {
+      isConnected = false;
+      setStatus(`${p.name} offline`);
+      modelSelect.innerHTML = `<option value="">${p.name} unavailable</option>`;
+    }
+  }
+
+  function setStatus(label) {
+    if (statusDot) {
+      statusDot.className = `ollama-status-dot ${isConnected ? 'connected' : 'disconnected'}`;
+      statusDot.style.backgroundColor = '';
+      statusDot.style.boxShadow = '';
+    }
+    if (statusText) {
+      statusText.textContent = isConnected ? label : (label || 'Offline');
+    }
+  }
+
+  function populateModels(models, providerId) {
+    if (!modelSelect) return;
+    modelSelect.innerHTML = '';
+
+    if (models.length === 0) {
+      modelSelect.innerHTML = '<option value="">No models found</option>';
+      return;
+    }
+
+    const p = PROVIDERS[providerId];
     models.forEach(m => {
       const opt = document.createElement('option');
       opt.value = m;
-      opt.textContent = provider === 'ollama' ? m.split(':')[0] : m.split('/').pop();
+      opt.textContent = p.modelLabel(m);
       modelSelect.appendChild(opt);
     });
 
-    const savedModel = provider === 'ollama' ? aiConfig.ollamaModel : aiConfig.openRouterModel;
-    if (savedModel && models.includes(savedModel)) {
-      modelSelect.value = savedModel;
+    const cfg = aiConfig.providers[providerId];
+    if (cfg.model && models.includes(cfg.model)) {
+      modelSelect.value = cfg.model;
     } else if (models.length > 0) {
       modelSelect.value = models[0];
-      if (provider === 'ollama') aiConfig.ollamaModel = models[0];
-      else aiConfig.openRouterModel = models[0];
-      chrome.storage.local.set({ aiConfig });
+      cfg.model = models[0];
+      saveConfig();
     }
   }
 
   modelSelect && modelSelect.addEventListener('change', () => {
-    if (aiConfig.provider === 'ollama') {
-      aiConfig.ollamaModel = modelSelect.value;
-    } else {
-      aiConfig.openRouterModel = modelSelect.value;
-    }
-    chrome.storage.local.set({ aiConfig });
+    const cfg = aiConfig.providers[aiConfig.provider];
+    cfg.model = modelSelect.value;
+    saveConfig();
   });
 
+  /* ═══════════════════════════════════════════════════════════
+     Settings Modal
+     ═══════════════════════════════════════════════════════════ */
+  settingsBtn && settingsBtn.addEventListener('click', () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'env-modal-overlay';
+
+    // Build provider options
+    const providerOpts = Object.entries(PROVIDERS).map(([key, p]) =>
+      `<option value="${key}" ${aiConfig.provider === key ? 'selected' : ''}>${p.name}</option>`
+    ).join('');
+
+    const currentPid = aiConfig.provider;
+    const currentCfg = aiConfig.providers[currentPid] || {};
+    const currentP = PROVIDERS[currentPid];
+
+    overlay.innerHTML = `
+      <div class="env-modal glass-card ai-settings-modal" style="animation:modalScaleIn 0.2s ease-out;">
+        <h3 style="margin:0 0 1.25rem 0;font-size:1.1rem;">🤖 AI Provider Settings</h3>
+
+        <div class="ai-settings-field">
+          <label class="ai-settings-label">Provider</label>
+          <select id="ai-provider-select" class="glass-select ai-provider-select">
+            ${providerOpts}
+          </select>
+        </div>
+
+        <div id="ai-key-section" class="ai-settings-field" style="display:${currentP.requiresKey ? 'block' : 'none'}">
+          <label class="ai-settings-label">API Key</label>
+          <div class="ai-key-row">
+            <input type="password" id="ai-api-key" class="glass-input ai-key-input"
+                   placeholder="Enter API key..." value="${currentCfg.apiKey || ''}">
+            <button id="ai-toggle-key" class="glass-btn btn-small ai-toggle-key-btn" title="Show/Hide">👁️</button>
+          </div>
+          <div id="ai-key-hint" class="ai-key-hint">${getKeyHint(currentPid)}</div>
+        </div>
+
+        <div id="ai-base-url-section" class="ai-settings-field" style="display:${currentPid === 'ollama' ? 'block' : 'none'}">
+          <label class="ai-settings-label">Base URL</label>
+          <input type="text" id="ai-base-url" class="glass-input"
+                 placeholder="http://localhost:11434" value="${currentCfg.baseUrl || ''}">
+        </div>
+
+        <div id="ai-test-section" class="ai-settings-field">
+          <button id="ai-test-btn" class="glass-btn btn-small ai-test-btn">🔌 Test Connection</button>
+          <span id="ai-test-result" class="ai-test-result"></span>
+        </div>
+
+        <div class="ai-settings-actions">
+          <button id="ai-settings-cancel" class="glass-btn">Cancel</button>
+          <button id="ai-settings-save" class="glass-btn btn-primary">Save</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(overlay);
+
+    // ── Wire up events ──
+    const providerSelect = overlay.querySelector('#ai-provider-select');
+    const keySection = overlay.querySelector('#ai-key-section');
+    const keyInput = overlay.querySelector('#ai-api-key');
+    const keyHint = overlay.querySelector('#ai-key-hint');
+    const baseUrlSection = overlay.querySelector('#ai-base-url-section');
+    const baseUrlInput = overlay.querySelector('#ai-base-url');
+    const toggleKeyBtn = overlay.querySelector('#ai-toggle-key');
+    const testBtn = overlay.querySelector('#ai-test-btn');
+    const testResult = overlay.querySelector('#ai-test-result');
+
+    providerSelect.addEventListener('change', () => {
+      const pid = providerSelect.value;
+      const p = PROVIDERS[pid];
+      const cfg = aiConfig.providers[pid] || {};
+
+      keySection.style.display = p.requiresKey ? 'block' : 'none';
+      keyInput.value = cfg.apiKey || '';
+      keyHint.textContent = getKeyHint(pid);
+      baseUrlSection.style.display = pid === 'ollama' ? 'block' : 'none';
+      baseUrlInput.value = cfg.baseUrl || '';
+      testResult.textContent = '';
+    });
+
+    toggleKeyBtn.addEventListener('click', () => {
+      keyInput.type = keyInput.type === 'password' ? 'text' : 'password';
+    });
+
+    testBtn.addEventListener('click', async () => {
+      const pid = providerSelect.value;
+      const p = PROVIDERS[pid];
+      const tempCfg = {
+        apiKey: keyInput.value.trim(),
+        baseUrl: baseUrlInput.value.trim() || PROVIDERS[pid].defaultBaseUrl || ''
+      };
+
+      testResult.textContent = '⏳ Testing...';
+      testResult.style.color = 'var(--text-dim)';
+
+      try {
+        const url = p.modelsUrl(tempCfg);
+        const headers = p.modelsHeaders(tempCfg);
+        const res = await fetch(url, { headers, signal: AbortSignal.timeout(5000) });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const models = p.parseModels(data);
+        testResult.textContent = `✅ Connected — ${models.length} models`;
+        testResult.style.color = '#4ade80';
+      } catch (e) {
+        testResult.textContent = `❌ Failed: ${e.message}`;
+        testResult.style.color = '#ff6b6b';
+      }
+    });
+
+    overlay.querySelector('#ai-settings-cancel').addEventListener('click', () => {
+      document.body.removeChild(overlay);
+    });
+
+    overlay.querySelector('#ai-settings-save').addEventListener('click', () => {
+      const pid = providerSelect.value;
+      aiConfig.provider = pid;
+
+      // Save key for the selected provider
+      if (!aiConfig.providers[pid]) aiConfig.providers[pid] = {};
+      aiConfig.providers[pid].apiKey = keyInput.value.trim();
+
+      if (pid === 'ollama') {
+        aiConfig.providers[pid].baseUrl = baseUrlInput.value.trim() || 'http://localhost:11434';
+      }
+
+      saveConfig();
+      document.body.removeChild(overlay);
+      modelSelect.innerHTML = '<option value="">Loading...</option>';
+      checkConnection();
+    });
+
+    // Close on overlay click
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) document.body.removeChild(overlay);
+    });
+  });
+
+  function getKeyHint(pid) {
+    const hints = {
+      ollama: '',
+      openrouter: 'Get key at openrouter.ai/keys',
+      openai: 'Get key at platform.openai.com/api-keys',
+      groq: 'Get key at console.groq.com/keys',
+      gemini: 'Get key at aistudio.google.dev/apikey'
+    };
+    return hints[pid] || '';
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Message Rendering
+     ═══════════════════════════════════════════════════════════ */
   function appendMessage(role, content, isStreamingMessage = false) {
     const div = document.createElement('div');
     div.className = `ollama-message ${role}`;
@@ -197,32 +443,29 @@ document.addEventListener('DOMContentLoaded', () => {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   }
 
+  /* ═══════════════════════════════════════════════════════════
+     Send Message — Routes to the active provider
+     ═══════════════════════════════════════════════════════════ */
   async function sendMessage() {
     if (isStreaming || !chatInput.value.trim()) return;
-    
-    const provider = aiConfig.provider;
-    let modelId = '';
 
-    if (provider === 'ollama') {
-      modelId = modelSelect?.value;
-      if (!isConnected) {
-        appendMessage('assistant', '⚠️ Local Ollama is offline. Please start it with `OLLAMA_ORIGINS="*" ollama serve`.');
-        return;
-      }
-      if (!modelId) {
-        appendMessage('assistant', '⚠️ No Ollama model selected.');
-        return;
-      }
-    } else {
-      modelId = modelSelect?.value;
-      if (!aiConfig.openRouterKey) {
-        appendMessage('assistant', '⚠️ OpenRouter API key missing. Please add it in settings (⚙️).');
-        return;
-      }
-      if (!modelId) {
-        appendMessage('assistant', '⚠️ No OpenRouter model selected.');
-        return;
-      }
+    const pid = aiConfig.provider;
+    const p = PROVIDERS[pid];
+    const cfg = activeProviderCfg();
+    const modelId = modelSelect?.value;
+
+    // Validate
+    if (p.requiresKey && !cfg.apiKey) {
+      appendMessage('assistant', `⚠️ ${p.name} API key missing. Click ⚙️ to add it.`);
+      return;
+    }
+    if (!isConnected) {
+      appendMessage('assistant', `⚠️ ${p.name} is offline. Check connection in ⚙️.`);
+      return;
+    }
+    if (!modelId) {
+      appendMessage('assistant', `⚠️ No model selected for ${p.name}.`);
+      return;
     }
 
     const userText = chatInput.value.trim();
@@ -240,24 +483,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let fullResponse = '';
 
     try {
-      if (provider === 'ollama') {
-        const res = await fetch(`${OLLAMA_BASE}/api/chat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: modelId,
-            messages: conversationHistory,
-            stream: true,
-          })
-        });
+      const url = p.chatUrl(cfg, modelId);
+      const headers = p.chatHeaders(cfg);
+      const body = p.buildBody(modelId, conversationHistory);
 
-        if (!res.ok) throw new Error(`Server returned ${res.status}`);
-        
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        contentSpan.textContent = '';
-        let buffer = '';
+      const res = await fetch(url, { method: 'POST', headers, body });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`${p.name} Error: ${res.status} ${errText.substring(0, 200)}`);
+      }
 
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      contentSpan.textContent = '';
+      let buffer = '';
+
+      if (p.parseStream === 'ndjson') {
+        // ── Ollama NDJSON stream ──
         while (true) {
           const { done, value } = await reader.read();
           if (value) {
@@ -280,32 +522,8 @@ document.addEventListener('DOMContentLoaded', () => {
           if (done) break;
         }
 
-      } else if (provider === 'openrouter') {
-        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${aiConfig.openRouterKey}`,
-            'HTTP-Referer': 'https://github.com/samargupta096/devdash',
-            'X-Title': 'DevDash'
-          },
-          body: JSON.stringify({
-            model: modelId,
-            messages: conversationHistory,
-            stream: true
-          })
-        });
-
-        if (!res.ok) {
-          const errText = await res.text();
-          throw new Error(`OpenRouter Error: ${res.status} ${errText}`);
-        }
-
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        contentSpan.textContent = '';
-        let buffer = '';
-
+      } else if (p.parseStream === 'sse') {
+        // ── OpenAI-compatible SSE stream (OpenAI, OpenRouter, Groq) ──
         while (true) {
           const { done, value } = await reader.read();
           if (value) {
@@ -333,13 +551,46 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
           }
         }
+
+      } else if (p.parseStream === 'gemini-sse') {
+        // ── Google Gemini SSE stream ──
+        while (true) {
+          const { done, value } = await reader.read();
+          if (value) {
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+            for (let line of lines) {
+              line = line.trim();
+              if (!line) continue;
+              if (line.startsWith('data: ')) {
+                const dataStr = line.substring(6);
+                if (dataStr === '[DONE]') continue;
+                try {
+                  const json = JSON.parse(dataStr);
+                  const parts = json.candidates?.[0]?.content?.parts || [];
+                  for (const part of parts) {
+                    if (part.text) {
+                      fullResponse += part.text;
+                      contentSpan.innerHTML = escapeHtml(fullResponse) + '▋';
+                      chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+          if (done) {
+            contentSpan.innerHTML = escapeHtml(fullResponse);
+            break;
+          }
+        }
       }
 
       conversationHistory.push({ role: 'assistant', content: fullResponse });
     } catch (e) {
       console.error('Chat Error:', e);
-      let errorMsg = `Error: ${e.message}`;
-      contentSpan.innerHTML = `<span style="color: #ff6b6b;">${errorMsg}</span>`;
+      contentSpan.innerHTML = `<span style="color: #ff6b6b;">Error: ${escapeHtml(e.message)}</span>`;
     } finally {
       isStreaming = false;
       sendBtn.disabled = false;
@@ -348,6 +599,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  /* ═══════════════════════════════════════════════════════════
+     Event Listeners
+     ═══════════════════════════════════════════════════════════ */
   sendBtn && sendBtn.addEventListener('click', sendMessage);
   chatInput && chatInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -363,9 +617,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   clearBtn && clearBtn.addEventListener('click', () => {
     conversationHistory.length = 0;
-    chatMessages.innerHTML = '<div class="ollama-welcome">Ask me anything... 💡</div>';
+    chatMessages.innerHTML = '<div class="ollama-welcome">Ask me anything... 💡<br><small>Ollama · OpenAI · Groq · Gemini · OpenRouter</small></div>';
   });
 
-  // Re-check every 30s
+  // Re-check connection every 30s
   setInterval(checkConnection, 30000);
 });

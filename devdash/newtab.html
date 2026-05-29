@@ -315,6 +315,60 @@
         </div>
       </div>
 
+      <!-- Extension Self-Monitor Widget -->
+      <div class="widget glass-card extmonitor-widget slide-up" data-widget-id="extmonitor" style="animation-delay: 0.95s;">
+        <div class="widget-header-row">
+          <h2>🧠 Extension Monitor</h2>
+          <div class="widget-header-controls">
+            <span id="extmon-uptime" class="widget-status-text">0s</span>
+            <button id="extmon-gc-btn" class="glass-btn btn-small" title="Force GC Hint">🗑️</button>
+          </div>
+        </div>
+        <div class="extmonitor-stats">
+          <div class="sysmonitor-row">
+            <div class="sysmonitor-label">
+              <span>JS Heap</span>
+              <span id="extmon-heap-label" class="sysmonitor-value">0 / 0 MB</span>
+            </div>
+            <div class="sysmonitor-bar-track">
+              <div id="extmon-heap-bar" class="sysmonitor-bar-fill bar-low"></div>
+            </div>
+          </div>
+          <div class="sysmonitor-row">
+            <div class="sysmonitor-label">
+              <span>DOM Nodes</span>
+              <span id="extmon-dom-label" class="sysmonitor-value">0</span>
+            </div>
+            <div class="sysmonitor-bar-track">
+              <div id="extmon-dom-bar" class="sysmonitor-bar-fill bar-low"></div>
+            </div>
+          </div>
+          <div class="sysmonitor-row">
+            <div class="sysmonitor-label">
+              <span>Storage</span>
+              <span id="extmon-storage-label" class="sysmonitor-value">0 KB</span>
+            </div>
+            <div class="sysmonitor-bar-track">
+              <div id="extmon-storage-bar" class="sysmonitor-bar-fill bar-low"></div>
+            </div>
+          </div>
+        </div>
+        <div class="extmonitor-chips">
+          <div class="extmon-chip">
+            <span class="extmon-chip-label">Widgets</span>
+            <span id="extmon-widgets" class="extmon-chip-value">0</span>
+          </div>
+          <div class="extmon-chip">
+            <span class="extmon-chip-label">Heap Limit</span>
+            <span id="extmon-heap-limit" class="extmon-chip-value">0 MB</span>
+          </div>
+          <div class="extmon-chip">
+            <span class="extmon-chip-label">Scripts</span>
+            <span id="extmon-scripts" class="extmon-chip-value">0</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Ollama Chat Widget -->
       <div class="widget glass-card ollama-widget slide-up" data-widget-id="ollama" style="animation-delay: 1.0s;">
         <div class="widget-header-row">
@@ -330,7 +384,7 @@
           </div>
         </div>
         <div id="ollama-messages" class="ollama-messages">
-          <div class="ollama-welcome">Ask me anything... 💡<br><small>Local Ollama or OpenRouter</small></div>
+          <div class="ollama-welcome">Ask me anything... 💡<br><small>Ollama · OpenAI · Groq · Gemini · OpenRouter</small></div>
         </div>
         <div class="ollama-input-row">
           <textarea
@@ -1100,6 +1154,7 @@
   <script src="js/news.js"></script>
   <script src="js/scratchpad.js"></script>
   <script src="js/sysmonitor.js"></script>
+  <script src="js/extmonitor.js"></script>
   <script src="js/ghmonitor.js"></script>
   <script src="js/ollama.js"></script>
   <script src="js/worldclock.js"></script>
